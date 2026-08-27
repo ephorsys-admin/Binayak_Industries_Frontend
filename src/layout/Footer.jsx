@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from ".././assets/logo.png"
 import {
     MapPin,
     Phone,
@@ -32,7 +33,6 @@ const Footer = () => {
 
     return (
         <footer className="relative overflow-hidden bg-[#F7F9FC] px-3 pb-4 pt-10 sm:px-5 lg:px-8">
-{/* main */}
             <div className="relative mx-auto max-w-362.5 overflow-hidden rounded-[35px] bg-[#031525] text-white shadow-[0_25px_80px_rgba(3,21,37,0.28)] sm:rounded-[45px] lg:rounded-[55px]">
 
 
@@ -49,7 +49,7 @@ const Footer = () => {
                 <div className="absolute left-0 right-0 top-0 h-0.5 bg-linear-to-r from-transparent via-[#D9A441] to-transparent" />
 
             {/* top bar */}
-                <div className="relative px-5 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-12 lg:px-16 lg:pb-12 lg:pt-14">
+                <div className="relative px-5 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-12 lg:px-16 lg:pb-8 lg:pt-10">
 
                     <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
 
@@ -141,9 +141,9 @@ const Footer = () => {
                                     <div className="absolute inset-0 rounded-full bg-[#0875B5]/20 blur-2xl" />
 
                                     <img
-                                        src="/logo.png"
+                                        src={logo}
                                         alt="Binayak"
-                                        className="relative h-auto w-42.5 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
+                                        className="relative h-auto w-32 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
                                     />
 
                                 </div>
