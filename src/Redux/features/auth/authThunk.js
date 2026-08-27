@@ -216,7 +216,7 @@ export const verifyForgotOtp =
 
       const { data } =
         await api.post(
-          "/admin/verify-otp",
+          "/admin/verify-forgot-otp",
           {
             email,
             otp,
@@ -263,7 +263,7 @@ export const resetForgotPassword =
   (
     email,
     otp,
-    password,
+    newPassword,
     confirmPassword
   ) => async (dispatch) => {
 
@@ -277,7 +277,7 @@ export const resetForgotPassword =
           {
             email,
             otp,
-            password,
+            newPassword,
             confirmPassword,
           }
         );
