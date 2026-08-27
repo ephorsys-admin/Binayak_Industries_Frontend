@@ -121,5 +121,6 @@ const ArtisanalCategories = ({ activeCategory, onSelectCategory }) => {
     </section>
   );
 };
+// dbdhb
 
 export default ArtisanalCategories;
