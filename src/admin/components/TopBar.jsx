@@ -20,9 +20,9 @@ const TopBar = ({ setSidebarOpen }) => {
 
     // ADMIN DATA
     // 
-    
+
     const adminName = admin?.name || "Admin Name";
-    const adminEmail = admin?.email || "";
+    // const adminEmail = admin?.email || "";
     const adminRole = admin?.role || "admin Role"
 
 
