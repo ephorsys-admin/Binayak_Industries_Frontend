@@ -1,16 +1,31 @@
 import {
     Menu,
     User,
-    LogOut,
     Maximize,
     Minimize,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const TopBar = ({ setSidebarOpen }) => {
+
+
+    // Redux 
+
+    const { admin } = useSelector((state) => state.auth);
     const [profileOpen, setProfileOpen] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+
+
+    // ADMIN DATA
+
+    const adminName = admin?.name || "Admin Name";
+    const adminEmail = admin?.email || "";
+    const adminRole = admin?.role || "admin Role"
+
+
+
 
     // Fullscreen
     const toggleFullscreen = () => {
@@ -91,7 +106,7 @@ const TopBar = ({ setSidebarOpen }) => {
                     }}
                     className="text-[15px] font-medium tracking-widest text-slate-800"
                 >
-                    NAME
+                    BINAYAK INDUSTRIES
                 </motion.span>
             </div>
 
@@ -121,11 +136,11 @@ const TopBar = ({ setSidebarOpen }) => {
                         {/* Static User Info */}
                         <div className="hidden sm:block text-right">
                             <p className="text-[13px] font-medium text-slate-800 leading-tight">
-                                Admin
+                                {adminName}
                             </p>
 
                             <p className="text-[11px] uppercase tracking-wider text-slate-400 leading-tight">
-                                Administrator
+                                {adminRole}
                             </p>
                         </div>
 
@@ -163,16 +178,17 @@ const TopBar = ({ setSidebarOpen }) => {
                                 {/* Identity */}
                                 <div className="flex items-center gap-2.5 px-3.5 py-3 border-b border-slate-100">
                                     <div className="w-9 h-9 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-[13px] font-medium text-blue-700 shrink-0">
-                                        AD
+                                        <User size={18} />
+
                                     </div>
 
                                     <div>
                                         <p className="text-[13px] font-medium text-slate-800">
-                                            Admin
+                                            {adminName}
                                         </p>
 
                                         <p className="text-[11px] text-slate-400 capitalize">
-                                            Administrator
+                                            {adminRole}
                                         </p>
                                     </div>
                                 </div>

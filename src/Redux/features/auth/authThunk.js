@@ -12,27 +12,69 @@ import {
   passwordResetSuccess,
 } from "./authSlice";
 
+
 // =====================================================
 // LOGIN
 // =====================================================
-
 export const loginAdmin = (formData) => async (dispatch) => {
   try {
     dispatch(authStart());
 
-    const { data } = await api.post("/admin/login", formData);
+    const { data } = await api.post(
+      "/admin/login",
+      formData
+    );
+    const accessToken = data?.accessToken;
+    const admin = data?.admin;
 
-    dispatch(loginSuccess(data.data));
+    // =================================================
+    // CHECK ACCESS TOKEN
+    // =================================================
 
-    toast.success(data.message || "Login successful");
+    if (!accessToken) {
+      throw new Error(
+        "Access token not received"
+      );
+    }
+
+    // =================================================
+    // SAVE ACCESS TOKEN
+    // =================================================
+
+    localStorage.setItem(
+      "accessToken",
+      accessToken
+    );
+
+    // =================================================
+    // REDUX
+    // =================================================
+
+    dispatch(
+      loginSuccess({
+        admin,
+        accessToken,
+      })
+    );
+
+    toast.success(
+      data.message || "Login successful"
+    );
 
     return {
       success: true,
     };
-  } catch (error) {
-    const msg = error.response?.data?.message || "Something went wrong";
 
-    dispatch(authFailure(msg));
+  } catch (error) {
+
+    const msg =
+      error.response?.data?.message ||
+      error.message ||
+      "Something went wrong";
+
+    dispatch(
+      authFailure(msg)
+    );
 
     toast.error(msg);
 
@@ -41,24 +83,65 @@ export const loginAdmin = (formData) => async (dispatch) => {
     };
   }
 };
+
 
 // =====================================================
 // LOGOUT
 // =====================================================
 
 export const logOutAdmin = () => async (dispatch) => {
+
   try {
-    const { data } = await api.post("/admin/logout");
 
-    dispatch(logoutSuccess());
+    dispatch(authStart());
 
-    toast.success(data.message || "Logout successful");
+    // =================================================
+    // ACCESS TOKEN WILL AUTOMATICALLY BE ATTACHED
+    // BY api.js INTERCEPTOR
+    // =================================================
+
+    const { data } = await api.post(
+      "/admin/logout"
+    );
+
+    // =================================================
+    // REMOVE TOKENS
+    // =================================================
+
+    localStorage.removeItem(
+      "accessToken"
+    );
+
+    localStorage.removeItem(
+      "refreshToken"
+    );
+
+    // =================================================
+    // REDUX LOGOUT
+    // =================================================
+
+    dispatch(
+      logoutSuccess()
+    );
+
+    toast.success(
+      data.message ||
+      "Logout successful"
+    );
 
     return {
       success: true,
     };
+
   } catch (error) {
-    const msg = error.response?.data?.message || "Logout failed";
+
+    const msg =
+      error.response?.data?.message ||
+      "Logout failed";
+
+    dispatch(
+      authFailure(msg)
+    );
 
     toast.error(msg);
 
@@ -67,99 +150,160 @@ export const logOutAdmin = () => async (dispatch) => {
     };
   }
 };
+
 
 // =====================================================
 // SEND OTP
 // =====================================================
 
-export const sendForgotPasswordOtp = (email) => async (dispatch) => {
-  try {
-    dispatch(authStart());
+export const sendForgotPasswordOtp =
+  (email) => async (dispatch) => {
 
-    const { data } = await api.post("/admin/forgot-password", {
-      email,
-    });
+    try {
 
-    dispatch(otpSentSuccess(email));
+      dispatch(authStart());
 
-    toast.success(data.message);
+      const { data } =
+        await api.post(
+          "/admin/forgot-password",
+          {
+            email,
+          }
+        );
 
-    return {
-      success: true,
-    };
-  } catch (error) {
-    const msg = error.response?.data?.message || "Failed to send OTP";
+      dispatch(
+        otpSentSuccess(email)
+      );
 
-    dispatch(authFailure(msg));
+      toast.success(
+        data.message ||
+        "OTP sent successfully"
+      );
 
-    toast.error(msg);
+      return {
+        success: true,
+      };
 
-    return {
-      success: false,
-    };
-  }
-};
+    } catch (error) {
+
+      const msg =
+        error.response?.data?.message ||
+        "Failed to send OTP";
+
+      dispatch(
+        authFailure(msg)
+      );
+
+      toast.error(msg);
+
+      return {
+        success: false,
+      };
+    }
+  };
+
 
 // =====================================================
 // VERIFY OTP
 // =====================================================
 
-export const verifyForgotOtp = (email, otp) => async (dispatch) => {
-  try {
-    dispatch(authStart());
+export const verifyForgotOtp =
+  (email, otp) => async (dispatch) => {
 
-    const { data } = await api.post("/admin/verify-otp", {
-      email,
-      otp,
-    });
+    try {
 
-    dispatch(otpVerifiedSuccess());
+      dispatch(authStart());
 
-    toast.success(data.message);
+      const { data } =
+        await api.post(
+          "/admin/verify-otp",
+          {
+            email,
+            otp,
+          }
+        );
 
-    return {
-      success: true,
-    };
-  } catch (error) {
-    const msg = error.response?.data?.message || "Invalid OTP";
+      dispatch(
+        otpVerifiedSuccess()
+      );
 
-    dispatch(authFailure(msg));
+      toast.success(
+        data.message ||
+        "OTP verified successfully"
+      );
 
-    toast.error(msg);
+      return {
+        success: true,
+      };
 
-    return {
-      success: false,
-    };
-  }
-};
+    } catch (error) {
+
+      const msg =
+        error.response?.data?.message ||
+        "Invalid OTP";
+
+      dispatch(
+        authFailure(msg)
+      );
+
+      toast.error(msg);
+
+      return {
+        success: false,
+      };
+    }
+  };
+
 
 // =====================================================
 // RESET PASSWORD
 // =====================================================
 
 export const resetForgotPassword =
-  (email, otp, password, confirmPassword) => async (dispatch) => {
+  (
+    email,
+    otp,
+    password,
+    confirmPassword
+  ) => async (dispatch) => {
+
     try {
+
       dispatch(authStart());
 
-      const { data } = await api.post("/admin/reset-password", {
-        email,
-        otp,
-        password,
-        confirmPassword,
-      });
+      const { data } =
+        await api.post(
+          "/admin/reset-password",
+          {
+            email,
+            otp,
+            password,
+            confirmPassword,
+          }
+        );
 
-      dispatch(passwordResetSuccess());
+      dispatch(
+        passwordResetSuccess()
+      );
 
-      toast.success(data.message);
+      toast.success(
+        data.message ||
+        "Password reset successful"
+      );
 
       return {
         success: true,
       };
-    } catch (error) {
-      const msg = error.response?.data?.message || "Password reset failed";
 
-      dispatch(authFailure(msg));
+    } catch (error) {
+
+      const msg =
+        error.response?.data?.message ||
+        "Password reset failed";
+
+      dispatch(
+        authFailure(msg)
+      );
 
       toast.error(msg);
 

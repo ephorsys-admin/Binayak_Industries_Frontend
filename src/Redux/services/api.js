@@ -1,13 +1,30 @@
 import axios from "axios";
 
 const api = axios.create({
-    // Local Development
-    // baseURL: "http://localhost:8800/api/v1",
-
-    // Production
-    // baseURL: "",
+    baseURL: "http://localhost:5502/api/v1",
 
     withCredentials: true,
 });
+
+// =====================================================
+// REQUEST INTERCEPTOR
+// =====================================================
+
+api.interceptors.request.use(
+    (config) => {
+        const accessToken =
+            localStorage.getItem("accessToken");
+
+        if (accessToken) {
+            config.headers.Authorization =
+                `Bearer ${accessToken}`;
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 export default api;

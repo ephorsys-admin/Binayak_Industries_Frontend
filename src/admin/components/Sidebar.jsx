@@ -69,7 +69,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
                         <div>
                             <p className="text-md font-extrabold tracking-tight leading-tight">
-                                NAME
+                                BN LOGO
                             </p>
                         </div>
                     </div>
