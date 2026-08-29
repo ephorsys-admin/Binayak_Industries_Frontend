@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import about from "../../assets/about.png"
+import about from "../../assets/about.png";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -42,9 +42,9 @@ const AboutHero = () => {
           MAIN CONTAINER
       ====================================================== */}
 
-      <div className="relative mx-auto max-w-362 px-5 py-14 sm:px-8 sm:py-20 lg:px-14 lg:py-16">
+      <div className="relative mx-auto max-w-362 px-5 py-10 sm:px-8 sm:py-20 lg:px-14 lg:py-16">
 
-        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+        <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-2 lg:gap-20">
 
 
           {/* =================================================
@@ -62,35 +62,31 @@ const AboutHero = () => {
             className="relative z-10"
           >
 
-            {/* -----------------------------------------------
-                TOP LABEL
-            ------------------------------------------------ */}
+            {/* TOP LABEL */}
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="mb-6 flex items-center gap-3"
+              className="mb-5 flex items-center gap-3 sm:mb-6"
             >
 
               <span className="h-px w-9 bg-[#FFC43D]" />
 
-              <span className="text-[10px] font-bold uppercase tracking-[3px] text-[#FFC43D]">
+              <span className="text-[9px] font-bold uppercase tracking-[3px] text-[#FFC43D] sm:text-[10px]">
                 About Binayak
               </span>
 
               <Sparkles
-                size={13}
+                size={12}
                 className="text-[#FFC43D]"
               />
 
             </motion.div>
 
 
-            {/* -----------------------------------------------
-                HEADING
-            ------------------------------------------------ */}
+            {/* HEADING */}
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -100,7 +96,7 @@ const AboutHero = () => {
                 delay: 0.1,
                 duration: 0.7,
               }}
-              className="max-w-[680px] text-[42px] font-extrabold leading-[1.05] tracking-[-1.5px] text-white sm:text-5xl lg:text-[62px]"
+              className="max-w-[680px] text-[34px] font-extrabold leading-[1.07] tracking-[-1.2px] text-white sm:text-5xl lg:text-[62px]"
             >
 
               Bringing the{" "}
@@ -113,16 +109,14 @@ const AboutHero = () => {
 
               </span>
 
-              <span className="mt-2 block">
+              <span className="mt-1 block sm:mt-2">
                 to every table.
               </span>
 
             </motion.h1>
 
 
-            {/* -----------------------------------------------
-                DESCRIPTION
-            ------------------------------------------------ */}
+            {/* DESCRIPTION */}
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -132,7 +126,7 @@ const AboutHero = () => {
                 delay: 0.25,
                 duration: 0.6,
               }}
-              className="mt-7 max-w-[570px] text-sm leading-7 text-[#80A7BF] sm:text-[15px]"
+              className="mt-5 max-w-[570px] text-[13px] leading-6 text-[#80A7BF] sm:mt-7 sm:text-[15px] sm:leading-7"
             >
               Binayak brings together the rich flavours of traditional Indian
               snacks and sweets with a commitment to quality, freshness and
@@ -141,9 +135,7 @@ const AboutHero = () => {
             </motion.p>
 
 
-            {/* -----------------------------------------------
-                BUTTONS
-            ------------------------------------------------ */}
+            {/* BUTTONS */}
 
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -153,21 +145,21 @@ const AboutHero = () => {
                 delay: 0.4,
                 duration: 0.6,
               }}
-              className="mt-8 flex flex-wrap gap-4"
+              className="mt-6 flex flex-wrap gap-3 sm:mt-8 sm:gap-4"
             >
 
               {/* Primary button */}
 
               <Link
                 to="/products"
-                className="group flex items-center gap-3 rounded-full bg-[#FFC43D] px-6 py-3.5 text-[10px] font-extrabold uppercase tracking-[1.5px] text-[#031525] transition-all duration-300 hover:-translate-y-1 hover:bg-[#FFD15B] hover:shadow-[0_12px_30px_rgba(255,196,61,0.18)]"
+                className="group flex items-center gap-2.5 rounded-full bg-[#FFC43D] px-5 py-3 text-[9px] font-extrabold uppercase tracking-[1.3px] text-[#031525] transition-all duration-300 hover:-translate-y-1 hover:bg-[#FFD15B] hover:shadow-[0_12px_30px_rgba(255,196,61,0.18)] sm:px-6 sm:py-3.5 sm:text-[10px] sm:tracking-[1.5px]"
               >
 
                 Explore Our Products
 
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#031525] text-[#FFC43D] transition-transform duration-300 group-hover:translate-x-1">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#031525] text-[#FFC43D] transition-transform duration-300 group-hover:translate-x-1 sm:h-7 sm:w-7">
 
-                  <ArrowRight size={13} />
+                  <ArrowRight size={12} />
 
                 </span>
 
@@ -178,13 +170,13 @@ const AboutHero = () => {
 
               <Link
                 to="/contact"
-                className="group flex items-center gap-2 rounded-full border border-[#31546B] bg-transparent px-6 py-3.5 text-[10px] font-bold uppercase tracking-[1.5px] text-white transition-all duration-300 hover:-translate-y-1 hover:border-[#FFC43D] hover:text-[#FFC43D]"
+                className="group flex items-center gap-2 rounded-full border border-[#31546B] bg-transparent px-5 py-3 text-[9px] font-bold uppercase tracking-[1.3px] text-white transition-all duration-300 hover:-translate-y-1 hover:border-[#FFC43D] hover:text-[#FFC43D] sm:px-6 sm:py-3.5 sm:text-[10px] sm:tracking-[1.5px]"
               >
 
                 Contact Us
 
                 <ArrowUpRight
-                  size={14}
+                  size={13}
                   className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
                 />
 
@@ -205,17 +197,17 @@ const AboutHero = () => {
                 delay: 0.6,
                 duration: 0.6,
               }}
-              className="mt-10 flex flex-wrap items-center gap-6"
+              className="mt-7 flex flex-wrap items-center gap-4 sm:mt-10 sm:gap-6"
             >
 
               {/* Feature 1 */}
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 sm:gap-3">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#31546B] bg-[#092A42]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#31546B] bg-[#092A42] sm:h-10 sm:w-10">
 
                   <ShieldCheck
-                    size={17}
+                    size={15}
                     className="text-[#FFC43D]"
                   />
 
@@ -223,11 +215,11 @@ const AboutHero = () => {
 
                 <div>
 
-                  <p className="text-[10px] font-bold text-white">
+                  <p className="text-[9px] font-bold text-white sm:text-[10px]">
                     Quality First
                   </p>
 
-                  <p className="mt-0.5 text-[8px] text-[#7095AB]">
+                  <p className="mt-0.5 text-[7px] text-[#7095AB] sm:text-[8px]">
                     Carefully selected
                   </p>
 
@@ -236,17 +228,17 @@ const AboutHero = () => {
               </div>
 
 
-              <div className="h-8 w-px bg-[#31546B]" />
+              <div className="h-7 w-px bg-[#31546B] sm:h-8" />
 
 
               {/* Feature 2 */}
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 sm:gap-3">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#31546B] bg-[#092A42]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#31546B] bg-[#092A42] sm:h-10 sm:w-10">
 
                   <Heart
-                    size={16}
+                    size={15}
                     className="text-[#FFC43D]"
                   />
 
@@ -254,11 +246,11 @@ const AboutHero = () => {
 
                 <div>
 
-                  <p className="text-[10px] font-bold text-white">
+                  <p className="text-[9px] font-bold text-white sm:text-[10px]">
                     Made With Care
                   </p>
 
-                  <p className="mt-0.5 text-[8px] text-[#7095AB]">
+                  <p className="mt-0.5 text-[7px] text-[#7095AB] sm:text-[8px]">
                     Crafted with love
                   </p>
 
@@ -304,18 +296,18 @@ const AboutHero = () => {
               className="relative z-10"
             >
 
-              <div className="rounded-[32px] border border-[#1C4B68] bg-[#092A42] p-2 shadow-[0_25px_70px_rgba(0,0,0,0.35)]">
+              <div className="rounded-[27px] border border-[#1C4B68] bg-[#092A42] p-1.5 shadow-[0_25px_70px_rgba(0,0,0,0.35)] sm:rounded-[32px] sm:p-2">
 
                 {/* Inner border */}
 
-                <div className="rounded-[26px] border border-[#31546B]/60 p-1">
+                <div className="rounded-[22px] border border-[#31546B]/60 p-1 sm:rounded-[26px]">
 
-                  <div className="group relative overflow-hidden rounded-[21px]">
+                  <div className="group relative overflow-hidden rounded-[18px] sm:rounded-[21px]">
 
                     <img
                       src={about}
                       alt="Traditional Indian snacks and sweets"
-                      className="h-[350px] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:h-[420px] lg:h-[475px]"
+                      className="h-[285px] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:h-[420px] lg:h-[475px]"
                     />
 
 
@@ -326,22 +318,22 @@ const AboutHero = () => {
 
                     {/* Image content */}
 
-                    <div className="absolute bottom-7 left-7 right-7">
+                    <div className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
 
-                      <div className="mb-3 flex items-center gap-2">
+                      <div className="mb-2 flex items-center gap-2 sm:mb-3">
 
                         <Sparkles
-                          size={13}
+                          size={12}
                           className="text-[#FFC43D]"
                         />
 
-                        <span className="text-[9px] font-bold uppercase tracking-[2.5px] text-[#FFC43D]">
+                        <span className="text-[8px] font-bold uppercase tracking-[2px] text-[#FFC43D] sm:text-[9px] sm:tracking-[2.5px]">
                           Authentic Indian Flavours
                         </span>
 
                       </div>
 
-                      <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
+                      <h2 className="text-xl font-extrabold text-white sm:text-3xl">
                         Tradition in every bite.
                       </h2>
 
@@ -359,6 +351,8 @@ const AboutHero = () => {
 
             {/* =================================================
                 TOP FLOATING CARD
+                Desktop remains exactly as before.
+                Mobile is made smaller and moved inward.
             ================================================== */}
 
             <motion.div
@@ -369,29 +363,29 @@ const AboutHero = () => {
                 delay: 0.55,
                 duration: 0.5,
               }}
-              className="absolute -right-2 top-5 z-20 sm:-right-6 sm:top-8"
+              className="absolute right-2 top-3 z-20 sm:-right-6 sm:top-8"
             >
 
-              <div className="rounded-2xl border border-[#31546B] bg-[#092A42] px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.3)]">
+              <div className="rounded-xl border border-[#31546B] bg-[#092A42]/95 px-3 py-2.5 shadow-[0_15px_40px_rgba(0,0,0,0.3)] backdrop-blur-sm sm:rounded-2xl sm:px-5 sm:py-4">
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2.5 sm:gap-4">
 
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFC43D]/10">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFC43D]/10 sm:h-10 sm:w-10 sm:rounded-xl">
 
                     <Star
-                      size={17}
-                      className="fill-[#FFC43D] text-[#FFC43D]"
+                      size={14}
+                      className="fill-[#FFC43D] text-[#FFC43D] sm:h-[17px] sm:w-[17px]"
                     />
 
                   </div>
 
                   <div>
 
-                    <p className="text-[8px] font-bold uppercase tracking-[1.5px] text-[#7095AB]">
+                    <p className="text-[7px] font-bold uppercase tracking-[1.2px] text-[#7095AB] sm:text-[8px] sm:tracking-[1.5px]">
                       Our Promise
                     </p>
 
-                    <p className="mt-1 text-[11px] font-extrabold text-white">
+                    <p className="mt-0.5 text-[9px] font-extrabold text-white sm:mt-1 sm:text-[11px]">
                       Quality & Authenticity
                     </p>
 
@@ -407,6 +401,10 @@ const AboutHero = () => {
 
             {/* =================================================
                 BOTTOM FLOATING CARD
+
+                IMPORTANT:
+                Hidden ONLY on phone screens.
+                Desktop/tablet remains unchanged.
             ================================================== */}
 
             <motion.div
@@ -417,10 +415,10 @@ const AboutHero = () => {
                 delay: 0.7,
                 duration: 0.5,
               }}
-              className="absolute -bottom-4 left-0 z-20 sm:-left-6 sm:bottom-6"
+              className="absolute -bottom-4 left-0 z-20 hidden sm:-left-6 sm:bottom-6 sm:block"
             >
 
-              <div className="rounded-2xl border border-[#31546B] bg-[#061F33] px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.35)] mb-30 mr-7">
+              <div className="mb-30 mr-7 rounded-2xl border border-[#31546B] bg-[#061F33] px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.35)]">
 
                 <div className="flex items-center gap-4">
 
@@ -477,7 +475,7 @@ const AboutHero = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute bottom-[18%] right-[2%] z-20 h-3 w-3 rounded-full bg-[#FFC43D]"
+              className="absolute bottom-[18%] right-[2%] z-20 hidden h-3 w-3 rounded-full bg-[#FFC43D] sm:block"
             />
 
           </motion.div>
@@ -491,7 +489,7 @@ const AboutHero = () => {
           BOTTOM TRANSITION
       ====================================================== */}
 
-      <div className="relative h-10 bg-[#F7F9FB]">
+      <div className="relative h-8 bg-[#F7F9FB] sm:h-10">
 
         <div className="absolute -top-8 left-0 h-8 w-full rounded-t-[50%] bg-[#031525]" />
 

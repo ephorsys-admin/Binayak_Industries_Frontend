@@ -82,7 +82,7 @@ const accentStyles = {
 
 const AboutValues = () => {
   return (
-    <section className="relative overflow-hidden bg-white px-5 py-20 sm:px-8 lg:px-14 lg:pt-17 lg:pb-2">
+    <section className="relative overflow-hidden bg-white px-5 py-5 sm:px-8 lg:px-14 lg:pt-17 lg:pb-2">
 
       {/* =====================================================
           SOFT BACKGROUND DECORATION

@@ -30,7 +30,7 @@ const categories = [
 
 const AboutCategories = () => {
   return (
-    <section className="bg-white px-5 py-20 sm:px-10 lg:px-16">
+    <section className="bg-white px-5 py-10 sm:px-10 lg:px-16">
 
       <div className="mx-auto max-w-300">
 

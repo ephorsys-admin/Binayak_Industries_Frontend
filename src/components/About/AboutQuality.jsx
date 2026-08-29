@@ -25,7 +25,7 @@ const qualityPoints = [
 
 const AboutQuality = () => {
   return (
-    <section className="bg-[#F7F9FC] px-5 py-20 sm:px-10 lg:px-16">
+    <section className="bg-[#F7F9FC] px-5 py-5 sm:px-10 lg:px-16">
 
       <div className="mx-auto grid max-w-300 items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
 

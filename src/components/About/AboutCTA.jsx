@@ -4,7 +4,7 @@ import about4 from "../../assets/about4.png";
 
 const AboutCTA = () => {
   return (
-    <section className="bg-[#F7F9FC] px-5 pb-20 sm:px-10 lg:px-16">
+    <section className="bg-[#F7F9FC] px-5 pb-4 sm:px-10 lg:px-16">
 
       <div
         className="
