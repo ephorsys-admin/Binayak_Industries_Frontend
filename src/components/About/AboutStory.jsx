@@ -1,7 +1,8 @@
-import React from 'react';
+
+import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ShieldCheck, Heart, Award, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import about1 from '../../assets/about1.png';
+
 
 const milestones = [
   { value: '30+', label: 'Years of Heritage', icon: Award },
@@ -10,34 +11,39 @@ const milestones = [
   { value: '25+', label: 'Authentic Snack Varieties', icon: Heart },
 ];
 
-const AboutStory = () => {
+const AboutStory = () => {  
   return (
-    <div className="bg-white border border-stone-200/80 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-2xs">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        
-        {/* Left: Artisanal Visual Card (5 cols) */}
-        <div className="lg:col-span-5 relative">
-          <div className="relative rounded-2xl overflow-hidden bg-stone-900 border border-stone-200 shadow-md group">
-            <img
-              src={about1}
-              alt="Traditional Indian snacks and sweets crafting"
-              className="w-full h-72 sm:h-96 lg:h-[440px] object-cover object-center group-hover:scale-103 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/20 to-transparent" />
-            
-            {/* Overlay Tag */}
-            <div className="absolute bottom-5 left-5 right-5 space-y-1.5 text-white">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-[#ffd25d] text-[11px] font-bold">
-                <Sparkles className="w-3.5 h-3.5 text-[#ffd25d]" />
-                <span>Authentic Halwai Legacy</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold font-serif-heading">
-                Tradition in Every Golden Crisp
-              </h3>
-              <p className="text-xs text-stone-300">
-                Crafted using age-old recipe books and pure brass kadhais.
-              </p>
-            </div>
+    <section className="relative overflow-hidden bg-[#F7F9FC] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-2 lg:pb-17">
+
+      {/*BACKGROUND GLOW*/}
+
+      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-[#0875B5]/5 blur-[100px]" />
+
+      <div className="pointer-events-none absolute -right-32 bottom-10 h-80 w-80 rounded-full bg-[#D9A441]/8 blur-[110px]" />
+
+
+      <div className="mx-auto max-w-300">
+
+        {/*SECTION HEADING*/}
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-7 sm:mb-10"
+        >
+
+          <div className="flex items-center gap-3">
+
+            <span className="h-[2px] w-8 bg-[#D9A441]" />
+
+            <span className="text-[9px] font-bold uppercase tracking-[3px] text-[#B38328] sm:text-[10px]">
+              About Binayak
+            </span>
+
+            <span className="h-[2px] w-8 bg-[#D9A441]" />
+
           </div>
 
           {/* Floating Guarantee Badge */}
@@ -50,7 +56,7 @@ const AboutStory = () => {
               <p className="text-[10px] text-stone-300">Zero Palm Oil or Preservatives</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right: Narrative & Heritage Info (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
@@ -109,7 +115,10 @@ const AboutStory = () => {
         </div>
 
       </div>
-    </div>
+
+    
+
+    </section>
   );
 };
 
