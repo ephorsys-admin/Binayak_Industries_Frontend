@@ -1,103 +1,111 @@
+import React from 'react';
 import {
-  CheckCircle2,
+  ShieldCheck,
   Leaf,
   PackageCheck,
-  BadgeCheck,
-} from "lucide-react";
+  CheckCircle2,
+  Sparkles,
+  Flame,
+  Award,
+} from 'lucide-react';
 
 const qualityPoints = [
   {
+    icon: Flame,
+    title: '100% Cold-Pressed Groundnut Oil',
+    text: 'Zero palm oil, zero blended oils. High-grade single-press peanut oil delivers a clean, authentic crunch without grease or heavy aftertaste.',
+    badge: '0% PALM OIL',
+  },
+  {
     icon: Leaf,
-    title: "Carefully Selected Ingredients",
-    text: "We believe great taste starts with choosing ingredients with care.",
+    title: 'Daily Fresh-Batch Kitchen Frying',
+    text: 'Batches are fried fresh every morning between 6:00 AM – 2:00 PM. No old re-used oil, ensuring fresh aroma and maximum crispness.',
+    badge: 'DAILY FRESH',
   },
   {
     icon: PackageCheck,
-    title: "Fresh & Carefully Packed",
-    text: "Products are prepared and packed with attention to freshness and quality.",
+    title: 'FreshLock Multi-Layer Packaging',
+    text: 'Sealed immediately in food-grade foil barrier pouches with nitrogen flush to preserve crispiness for up to 90 days without chemical preservatives.',
+    badge: 'VACUUM SEALED',
   },
   {
-    icon: BadgeCheck,
-    title: "Consistent Quality",
-    text: "We aim to deliver the same familiar taste and quality with every order.",
+    icon: Award,
+    title: 'FSSAI Certified & Rigorously Tested',
+    text: 'Our kitchens adhere to strict food safety protocols, non-GMO besan testing, and traditional hygiene standards.',
+    badge: 'LAB TESTED',
   },
 ];
 
 const AboutQuality = () => {
   return (
-    <section className="bg-[#F7F9FC] px-5 py-5 sm:px-10 lg:px-16">
-
-      <div className="mx-auto grid max-w-300 items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-
-        {/* Left */}
-        <div>
-
-          <p className="text-[10px] font-bold uppercase tracking-[3px] text-[#B38328]">
-            Our Promise
-          </p>
-
-          <h2 className="mt-3 text-3xl font-bold leading-tight text-[#061A2C] sm:text-4xl">
-            Quality you can
-            <span className="text-[#B38328]"> taste.</span>
-          </h2>
-
-          <p className="mt-5 text-sm leading-7 text-[#637582]">
-            From traditional namkeens to festive sweets, our focus remains
-            on delivering products that customers can enjoy with confidence.
-          </p>
-
-          <div className="mt-7 flex items-center gap-3">
-
-            <CheckCircle2
-              size={19}
-              className="text-[#B38328]"
-            />
-
-            <span className="text-sm font-semibold text-[#061A2C]">
-              Tradition • Quality • Taste
-            </span>
-
+    <div className="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-9 lg:p-11 shadow-2xs">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        
+        {/* Left Column (5 cols) */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Kitchen & Quality Promise</span>
           </div>
 
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight leading-tight">
+              Purity & Freshness <span className="text-[#981b2e]">You Can Taste</span>
+            </h2>
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
+              We started Binayak with a simple conviction: <strong className="text-stone-900 font-bold">snacking should be pure, joyful, and wholesome.</strong> We source only premium Bikaneri besan, whole spices from dedicated spice farms, and pure cold-pressed groundnut oil.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/60 space-y-2 text-xs font-semibold text-stone-800">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Zero Artificial Food Colors or MSG</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Pure Gir Cow Desi Ghee in Sweets</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Small-Batch Artisan Frying</span>
+            </div>
+          </div>
         </div>
 
-
-        {/* Right */}
-        <div className="space-y-4">
-
-          {qualityPoints.map((item) => {
+        {/* Right Column Grid (7 cols) */}
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {qualityPoints.map((item, idx) => {
             const Icon = item.icon;
-
             return (
               <div
-                key={item.title}
-                className="group flex gap-5 rounded-[22px] border border-[#DCE3E8] bg-white p-5 shadow-[0_8px_30px_rgba(3,21,37,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D9A441]/50"
+                key={idx}
+                className="p-5 rounded-2xl bg-stone-50/70 border border-stone-200/80 hover:border-amber-400/60 hover:bg-amber-50/20 transition-all duration-300 space-y-2.5 flex flex-col justify-between"
               >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-[#981b2e] shadow-2xs">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-stone-200 text-stone-700">
+                      {item.badge}
+                    </span>
+                  </div>
 
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#061A2C] text-[#F5C451] transition group-hover:bg-[#D9A441] group-hover:text-[#061A2C]">
-                  <Icon size={20} />
-                </div>
-
-                <div>
-
-                  <h3 className="text-sm font-bold text-[#061A2C]">
+                  <h3 className="text-sm font-bold font-brand text-stone-900">
                     {item.title}
                   </h3>
-
-                  <p className="mt-1 text-xs leading-5 text-[#71828D]">
+                  <p className="text-xs text-stone-600 leading-relaxed">
                     {item.text}
                   </p>
-
                 </div>
-
               </div>
             );
           })}
-
         </div>
 
       </div>
-    </section>
+    </div>
   );
 };
 

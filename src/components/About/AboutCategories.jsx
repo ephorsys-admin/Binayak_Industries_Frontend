@@ -1,119 +1,108 @@
-import { ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import about2 from "../../assets/about2.png"
-import about3 from "../../assets/about3.png"
-import about4 from "../../assets/about4.png"
+import React from 'react';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import about2 from '../../assets/about2.png';
+import about3 from '../../assets/about3.png';
+import about4 from '../../assets/about4.png';
 
 const categories = [
   {
-    number: "01",
-    title: "Namkeen & Sev",
-    description:
-      "Classic savoury favourites including sev, bhujia and crunchy namkeen.",
+    number: '01',
+    title: 'Namkeen & Ratlami Sev',
+    tag: 'Spicy & Savoury',
+    description: 'Classic savoury favourites including Ratlami Sev, Hing Bhujia, and crunchy Bhavnagri gathiya fried in 100% groundnut oil.',
     image: about2,
+    link: '/explore',
   },
   {
-    number: "02",
-    title: "Snack Mixes",
-    description:
-      "Delicious sweet and savoury mixtures perfect for everyday snacking.",
+    number: '02',
+    title: 'Chivda & Snack Mixes',
+    tag: 'Sweet & Tangy',
+    description: 'Delicious Khatta Meetha mixtures, Diet roasted chivda, and dry fruit mixtures perfect for everyday evening chai sessions.',
     image: about3,
+    link: '/explore',
   },
   {
-    number: "03",
-    title: "Traditional Sweets",
-    description:
-      "Indian sweets and ladoos made for celebrations, gifting and special moments.",
-    image:about4,
+    number: '03',
+    title: 'Desi Sweets & Hampers',
+    tag: 'Pure Cow Ghee',
+    description: 'Traditional Besan Ladoos, royal Kaju Katli, and festive velvet gift boxes made for celebrations, weddings, and gifting.',
+    image: about4,
+    link: '/explore',
   },
 ];
 
 const AboutCategories = () => {
   return (
-    <section className="bg-white px-5 py-10 sm:px-10 lg:px-16">
-
-      <div className="mx-auto max-w-300">
-
-        {/* Heading */}
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-
-          <div>
-
-            <p className="text-[10px] font-bold uppercase tracking-[3px] text-[#B38328]">
-              What We Offer
-            </p>
-
-            <h2 className="mt-3 text-3xl font-bold text-[#061A2C] sm:text-4xl">
-              Flavours for every
-              <span className="text-[#B38328]"> occasion.</span>
-            </h2>
-
+    <div className="space-y-5 sm:space-y-6">
+      
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-[#981b2e] text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Artisanal Specialties</span>
           </div>
-
-          <Link
-            to="/products"
-            className="group flex w-fit items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#061A2C]"
-          >
-            Explore All Products
-
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#061A2C] text-white transition-all group-hover:bg-[#D9A441] group-hover:text-[#061A2C]">
-              <ArrowUpRight size={14} />
-            </span>
-          </Link>
-
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
+            Crafted for <span className="text-[#981b2e]">Every Craving</span>
+          </h2>
         </div>
 
-
-        {/* Categories */}
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-
-          {categories.map((category) => (
-            <Link
-              to="/products"
-              key={category.title}
-              className="group relative overflow-hidden rounded-[28px] bg-[#061A2C]"
-            >
-
-              <img
-                src={category.image}
-                alt={category.title}
-                className="h-87.5 w-full object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-              />
-
-              <div className="absolute inset-0 bg-linear-to-t from-[#031525] via-[#031525]/30 to-transparent" />
-
-              <div className="absolute left-6 right-6 top-6 flex justify-between">
-
-                <span className="text-[10px] font-bold tracking-[2px] text-[#F5C451]">
-                  {category.number}
-                </span>
-
-                <ArrowUpRight
-                  size={18}
-                  className="text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                />
-
-              </div>
-
-              <div className="absolute bottom-6 left-6 right-6">
-
-                <h3 className="text-xl font-bold text-white">
-                  {category.title}
-                </h3>
-
-                <p className="mt-2 text-xs leading-5 text-[#C0CED7]">
-                  {category.description}
-                </p>
-
-              </div>
-
-            </Link>
-          ))}
-
-        </div>
-
+        <Link
+          to="/explore"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#981b2e] hover:text-[#801424] transition-colors self-start sm:self-auto"
+        >
+          <span>View All 25+ Snacks</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
-    </section>
+
+      {/* 3 Categories Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        {categories.map((cat) => (
+          <Link
+            to={cat.link}
+            key={cat.title}
+            className="group relative rounded-3xl overflow-hidden bg-stone-950 border border-stone-800 shadow-md min-h-[340px] sm:min-h-[380px] flex flex-col justify-between p-6 cursor-pointer"
+          >
+            {/* Background Image */}
+            <img
+              src={cat.image}
+              alt={cat.title}
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-70 group-hover:scale-105 group-hover:opacity-85 transition-all duration-700 pointer-events-none"
+            />
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-transparent pointer-events-none" />
+
+            {/* Top Bar */}
+            <div className="relative z-10 flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-[#ffd25d] bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10">
+                {cat.number}
+              </span>
+              <span className="text-[11px] font-bold text-stone-200 bg-white/10 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/15">
+                {cat.tag}
+              </span>
+            </div>
+
+            {/* Bottom Content */}
+            <div className="relative z-10 space-y-2">
+              <h3 className="text-xl font-black font-brand text-white group-hover:text-[#ffd25d] transition-colors">
+                {cat.title}
+              </h3>
+              <p className="text-xs text-stone-300 leading-relaxed line-clamp-2">
+                {cat.description}
+              </p>
+              <div className="pt-2 flex items-center gap-1.5 text-xs font-bold text-[#ffd25d]">
+                <span>Explore Catalog</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+    </div>
   );
 };
 
