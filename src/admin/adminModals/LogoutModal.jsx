@@ -1,29 +1,25 @@
 import { LogOut, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { logOutAdmin } from "../../Redux/features/auth/authThunk";
 
 const LogoutModal = ({ onClose }) => {
-
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { loading } = useSelector(
         (state) => state.auth
     );
 
     const handleLogout = async () => {
-
         if (loading) {
             return;
         }
 
-        const result = await dispatch(
-            logOutAdmin()
-        );
-
-        if (result.success) {
-            onClose();
-        }
+        await dispatch(logOutAdmin());
+        onClose();
+        navigate("/admin");
     };
 
     return (

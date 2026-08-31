@@ -88,65 +88,23 @@ export const loginAdmin = (formData) => async (dispatch) => {
 // =====================================================
 // LOGOUT
 // =====================================================
-
+// LOGOUT
+// =====================================================
 export const logOutAdmin = () => async (dispatch) => {
-
   try {
-
     dispatch(authStart());
-
-    // =================================================
-    // ACCESS TOKEN WILL AUTOMATICALLY BE ATTACHED
-    // BY api.js INTERCEPTOR
-    // =================================================
-
-    const { data } = await api.post(
-      "/admin/logout"
-    );
-
-    // =================================================
-    // REMOVE TOKENS
-    // =================================================
-
-    localStorage.removeItem(
-      "accessToken"
-    );
-
-    localStorage.removeItem(
-      "refreshToken"
-    );
-
-    // =================================================
-    // REDUX LOGOUT
-    // =================================================
-
-    dispatch(
-      logoutSuccess()
-    );
-
-    toast.success(
-      data.message ||
-      "Logout successful"
-    );
-
+    await api.post("/admin/logout");
+  } catch (error) {
+    // If backend token is already expired, continue local logout cleanly
+    console.warn("Logout note:", error.response?.data?.message || error.message);
+  } finally {
+    // ALWAYS clear tokens and reset Redux auth state
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    dispatch(logoutSuccess());
+    toast.success("Logged out successfully");
     return {
       success: true,
-    };
-
-  } catch (error) {
-
-    const msg =
-      error.response?.data?.message ||
-      "Logout failed";
-
-    dispatch(
-      authFailure(msg)
-    );
-
-    toast.error(msg);
-
-    return {
-      success: false,
     };
   }
 };
