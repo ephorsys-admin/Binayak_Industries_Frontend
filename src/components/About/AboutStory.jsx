@@ -1,4 +1,3 @@
-import React from 'react';
 import { Sparkles, ArrowRight, ShieldCheck, Heart, Award, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import about1 from '../../assets/about1.png';

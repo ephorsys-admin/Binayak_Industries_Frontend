@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BgHero from '../ui/BgHero';
 import heroBannerImg from '../../assets/hero_banner.jpg';
 import cleanHeroImg from '../../assets/clean_snacks_hero.jpg';
