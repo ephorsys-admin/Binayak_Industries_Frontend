@@ -160,9 +160,7 @@ const Home = () => {
         {/* 1. Multi-Slide Interactive Hero Section */}
         <HeroSection />
 
-        {/* 2. Live Kitchen Frying Pulse & Dispatch Countdown */}
-        <KitchenLiveBanner />
-
+        
         {/* 3. Brand Trust 4-Pill Bar (100% Groundnut Oil, 15-20 Min Express, etc.) */}
         <BrandTrustSection />
 

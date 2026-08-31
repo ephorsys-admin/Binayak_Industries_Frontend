@@ -9,8 +9,9 @@ import { MobileBottomNav } from "../../components/Home";
 const About = () => {
   return (
     <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
+      
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
-        
+
         {/* 1. Hero Banner */}
         <AboutHero />
 
@@ -31,13 +32,10 @@ const About = () => {
 
       </div>
 
-      {/* hello */}
-
       {/* 7. Mobile Bottom Navigation Bar */}
       <MobileBottomNav cartCount={0} />
+
     </div>
-    
-  
   );
 };
 

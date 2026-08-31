@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BgHero from '../ui/BgHero';
 import heroBannerImg from '../../assets/hero_banner.jpg';
 import cleanHeroImg from '../../assets/clean_snacks_hero.jpg';
@@ -60,11 +60,11 @@ const slides = [
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-rotate slides every 6 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -72,7 +72,7 @@ const HeroSection = () => {
 
   return (
     <div className="relative group">
-      {/* Hero Banner Component */}
+
       <BgHero
         key={slide.id}
         badgeText={slide.badgeText}
@@ -85,32 +85,35 @@ const HeroSection = () => {
         theme={slide.theme}
         trustPoints={slide.trustPoints}
       >
-        {/* Dual Action Buttons (Responsive on mobile) */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-0.5 sm:pt-2">
+
           <Link
             to={slide.ctaLink}
             className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white font-black text-xs sm:text-sm shadow-lg transition-all group/btn cursor-pointer"
           >
             <span>{slide.ctaText}</span>
+
             <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
+
           <Link
             to="/explore"
             className="hidden sm:inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white text-[11px] sm:text-xs font-bold border border-white/20 backdrop-blur-xs transition-all cursor-pointer"
           >
             <span>Browse 25+ Snacks</span>
           </Link>
+
         </div>
       </BgHero>
 
-      {/* Slide Navigation Controls - Positioned cleanly on mobile without overlapping text/buttons */}
       <div className="absolute bottom-2.5 sm:bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-7 z-20 flex items-center gap-1.5 sm:gap-2">
-        
-        {/* Prev Arrow (Desktop) */}
+
         <button
           type="button"
           onClick={() =>
-            setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
+            setCurrentSlide((prev) =>
+              prev === 0 ? slides.length - 1 : prev - 1
+            )
           }
           className="hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/40 hover:bg-black/60 text-white/80 hover:text-white backdrop-blur-md items-center justify-center transition-all cursor-pointer border border-white/10"
           aria-label="Previous Slide"
@@ -118,7 +121,6 @@ const HeroSection = () => {
           <ChevronLeft className="w-4 h-4" />
         </button>
 
-        {/* Slide Indicators / Dots */}
         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/15 shadow-sm">
           {slides.map((_, idx) => (
             <button
@@ -135,10 +137,11 @@ const HeroSection = () => {
           ))}
         </div>
 
-        {/* Next Arrow (Desktop) */}
         <button
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
+          onClick={() =>
+            setCurrentSlide((prev) => (prev + 1) % slides.length)
+          }
           className="hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/40 hover:bg-black/60 text-white/80 hover:text-white backdrop-blur-md items-center justify-center transition-all cursor-pointer border border-white/10"
           aria-label="Next Slide"
         >
@@ -146,6 +149,7 @@ const HeroSection = () => {
         </button>
 
       </div>
+
     </div>
   );
 };
