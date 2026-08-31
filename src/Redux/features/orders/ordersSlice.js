@@ -19,6 +19,26 @@ export const ordersSlice = createSlice({
       state.orders.unshift(newOrder);
       state.selectedOrder = newOrder;
     },
+    updateOrderStatus: (state, action) => {
+      const { id, status } = action.payload;
+      const order = state.orders.find((o) => o.id === id);
+      if (order) {
+        order.status = status;
+        if (status === 'preparing') {
+          order.statusLabel = 'Freshly Frying in Morning Batch';
+          order.statusStep = 1;
+        } else if (status === 'in-transit') {
+          order.statusLabel = 'Dispatched - In Transit with Courier';
+          order.statusStep = 2;
+        } else if (status === 'delivered') {
+          order.statusLabel = 'Delivered to Customer Doorstep';
+          order.statusStep = 3;
+        } else if (status === 'cancelled') {
+          order.statusLabel = 'Cancelled & Refunded';
+          order.statusStep = -1;
+        }
+      }
+    },
     cancelOrder: (state, action) => {
       const { orderId, reason } = action.payload;
       const order = state.orders.find((o) => o.id === orderId);
@@ -27,7 +47,7 @@ export const ordersSlice = createSlice({
         order.statusLabel = 'Cancelled & Refunded';
         order.statusStep = -1;
         order.cancelReason = reason || 'Customer requested cancellation';
-        order.refundStatus = `₹${order.pricing.totalAmount} Full Refund Credited to original source`;
+        order.refundStatus = `₹${order.pricing?.totalAmount || 0} Full Refund Credited to original source`;
         toast.success(`Order #${orderId} has been cancelled.`);
       }
     },
@@ -48,6 +68,7 @@ export const ordersSlice = createSlice({
 
 export const {
   createOrder,
+  updateOrderStatus,
   cancelOrder,
   addReview,
   setSelectedOrder,

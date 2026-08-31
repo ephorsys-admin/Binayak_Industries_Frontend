@@ -1,205 +1,169 @@
 import {
-    Menu,
-    User,
-    Maximize,
-    Minimize,
+  Menu,
+  User,
+  Maximize,
+  Minimize,
+  LogOut,
+  Sparkles,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logOutAdmin } from "../../Redux/features/auth/authThunk";
+import binayakLogo from "../../assets/logo.png";
 
 const TopBar = ({ setSidebarOpen }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { admin } = useSelector((state) => state.auth);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const adminName = admin?.name || "Manoj Kumar";
+  const adminRole = admin?.role || "Super Admin";
 
-    // Redux 
+  // Fullscreen toggle
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
-    const { admin } = useSelector((state) => state.auth);
-    const [profileOpen, setProfileOpen] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
-
-
-    // ADMIN DATA
-    // 
-
-    const adminName = admin?.name || "Admin Name";
-    // const adminEmail = admin?.email || "";
-    const adminRole = admin?.role || "admin Role"
-
-
-
-
-    // Fullscreen
-    const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
     };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
-    // Detect fullscreen change
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".profile-dropdown")) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-        document.addEventListener(
-            "fullscreenchange",
-            handleFullscreenChange
-        );
+  const handleLogout = async () => {
+    await dispatch(logOutAdmin());
+    navigate("/admin");
+  };
 
-        return () => {
-            document.removeEventListener(
-                "fullscreenchange",
-                handleFullscreenChange
-            );
-        };
-    }, []);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (!e.target.closest(".profile-dropdown")) {
-                setProfileOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener(
-                "mousedown",
-                handleClickOutside
-            );
-        };
-    }, []);
-
-    return (
-        <motion.header
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-                duration: 0.4,
-                ease: "easeOut",
-            }}
-            className="relative z-10 bg-white border-b border-slate-200 px-6 h-15 flex items-center justify-between shrink-0"
+  return (
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{
+        duration: 0.4,
+        ease: "easeOut",
+      }}
+      className="relative z-10 bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between shrink-0 shadow-2xs"
+    >
+      {/* Left: Mobile Hamburger & Brand Title */}
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* Mobile Hamburger Drawer Button */}
+        <motion.button
+          whileTap={{ scale: 0.92 }}
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-100 transition cursor-pointer"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open sidebar"
         >
-            {/* Left */}
-            <div className="flex items-center gap-3">
-                {/* Mobile Sidebar */}
-                <motion.button
-                    whileTap={{ scale: 0.92 }}
-                    className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition cursor-pointer"
-                    onClick={() => setSidebarOpen(true)}
-                    aria-label="Open sidebar"
-                >
-                    <Menu size={18} />
-                </motion.button>
+          <Menu size={18} />
+        </motion.button>
 
-                {/* Logo / Brand */}
-                <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                        duration: 0.4,
-                        delay: 0.1,
-                        ease: "easeOut",
-                    }}
-                    className="text-[15px] font-medium tracking-widest text-slate-800"
-                >
-                    BINAYAK INDUSTRIES
-                </motion.span>
+        {/* Brand Logo & Name */}
+        <div className="flex items-center gap-2">
+          <img
+            src={binayakLogo}
+            alt="Binayak Logo"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow-xs"
+          />
+          <span className="text-xs sm:text-sm font-black tracking-wider text-[#0a2540] font-brand">
+            BINAYAK <span className="text-[#981b2e]">INDUSTRIES</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Right: Fullscreen & User Profile */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Fullscreen Button */}
+        <motion.button
+          whileTap={{ scale: 0.92 }}
+          onClick={toggleFullscreen}
+          className="hidden sm:flex w-8 h-8 rounded-xl border border-stone-200 items-center justify-center text-stone-600 hover:bg-stone-100 transition cursor-pointer"
+          aria-label="Toggle fullscreen"
+        >
+          {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+        </motion.button>
+
+        {/* Profile Dropdown */}
+        <div className="relative profile-dropdown">
+          <motion.button
+            onClick={() => setProfileOpen((prev) => !prev)}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl hover:bg-stone-100 transition cursor-pointer border border-transparent hover:border-stone-200"
+          >
+            {/* User Details (Desktop) */}
+            <div className="hidden md:block text-right">
+              <p className="text-xs font-bold text-stone-900 leading-tight">
+                {adminName}
+              </p>
+              <p className="text-[10px] uppercase font-black tracking-wider text-[#981b2e] leading-tight">
+                {adminRole}
+              </p>
             </div>
 
-            {/* Right */}
-            <div className="flex items-center gap-3">
-                {/* Fullscreen */}
-                <motion.button
-                    whileTap={{ scale: 0.92 }}
-                    onClick={toggleFullscreen}
-                    className="w-8 h-8 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition cursor-pointer"
-                    aria-label="Toggle fullscreen"
-                >
-                    {isFullscreen ? (
-                        <Minimize size={18} />
-                    ) : (
-                        <Maximize size={18} />
-                    )}
-                </motion.button>
+            {/* Avatar Pill */}
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0a2540] border-2 border-white shadow-xs flex items-center justify-center text-[#ffd25d] font-black text-xs">
+              <span>{adminName.charAt(0)}</span>
+            </div>
+          </motion.button>
 
-                {/* Profile */}
-                <div className="relative profile-dropdown">
-                    <motion.button
-                        onClick={() => setProfileOpen((prev) => !prev)}
-                        whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 px-2 py-1 rounded-xl hover:bg-slate-50 transition cursor-pointer"
-                    >
-                        {/* Static User Info */}
-                        <div className="hidden sm:block text-right">
-                            <p className="text-[13px] font-medium text-slate-800 leading-tight">
-                                {adminName}
-                            </p>
-
-                            <p className="text-[11px] uppercase tracking-wider text-slate-400 leading-tight">
-                                {adminRole}
-                            </p>
-                        </div>
-
-                        {/* User Icon */}
-                        <div className="w-9 h-9 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
-                            <User size={18} />
-                        </div>
-                    </motion.button>
-
-                    {/* Dropdown */}
-                    <AnimatePresence>
-                        {profileOpen && (
-                            <motion.div
-                                initial={{
-                                    opacity: 0,
-                                    y: -8,
-                                    scale: 0.96,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                    y: 0,
-                                    scale: 1,
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                    y: -8,
-                                    scale: 0.96,
-                                }}
-                                transition={{
-                                    duration: 0.2,
-                                    ease: "easeOut",
-                                }}
-                                className="absolute right-0 mt-2.5 w-52 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden z-50"
-                            >
-                                {/* Identity */}
-                                <div className="flex items-center gap-2.5 px-3.5 py-3 border-b border-slate-100">
-                                    <div className="w-9 h-9 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-[13px] font-medium text-blue-700 shrink-0">
-                                        <User size={18} />
-
-                                    </div>
-
-                                    <div>
-                                        <p className="text-[13px] font-medium text-slate-800">
-                                            {adminName}
-                                        </p>
-
-                                        <p className="text-[11px] text-slate-400 capitalize">
-                                            {adminRole}
-                                        </p>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+          {/* Profile Dropdown Menu */}
+          <AnimatePresence>
+            {profileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="absolute right-0 mt-2 w-56 bg-white border border-stone-200 rounded-2xl shadow-xl overflow-hidden z-50 p-1.5 animate-in fade-in"
+              >
+                <div className="px-3 py-2 border-b border-stone-100 mb-1">
+                  <p className="text-xs font-bold text-stone-900 truncate">
+                    {adminName}
+                  </p>
+                  <p className="text-[10px] text-stone-400 capitalize">
+                    {adminRole}
+                  </p>
                 </div>
-            </div>
-        </motion.header>
-    );
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+                >
+                  <LogOut size={15} />
+                  <span>Logout</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.header>
+  );
 };
 
 export default TopBar;
