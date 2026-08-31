@@ -26,8 +26,6 @@ const Footer = () => {
     const customerLinks = [
         { name: "FAQ", path: "/faq" },
         { name: "Shipping", path: "/shipping" },
-        { name: "Returns", path: "/returns" },
-        { name: "Privacy Policy", path: "/privacy" },
         { name: "Terms & Conditions", path: "/terms" },
     ];
 
