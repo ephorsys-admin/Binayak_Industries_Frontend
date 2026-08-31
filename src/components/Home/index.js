@@ -10,3 +10,4 @@ export { default as FaqSection } from './FaqSection';
 export { default as NewsletterSection } from './NewsletterSection';
 export { default as FloatingCartBar } from './FloatingCartBar';
 export { default as MobileBottomNav } from './MobileBottomNav';
+export { default as KitchenLiveBanner } from './KitchenLiveBanner';
