@@ -1,4 +1,3 @@
-import React from 'react';
 import BgHero from '../ui/BgHero';
 import aboutImg from '../../assets/about.png';
 import { Sparkles } from 'lucide-react';
