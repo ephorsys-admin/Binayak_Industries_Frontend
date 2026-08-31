@@ -17,6 +17,9 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+import { useSelector } from 'react-redux';
+import { selectCartTotalCount } from '../Redux/features/cart/cartSlice';
+
 const savedAddresses = [
   { id: 1, label: 'Home', pincode: '302017', address: 'Flat 402, Royal Residency, Jaipur' },
   { id: 2, label: 'Office', pincode: '302001', address: 'Corporate Tower B, C-Scheme, Jaipur' },
@@ -29,7 +32,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(2);
+  const cartCount = useSelector(selectCartTotalCount);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const locationRef = useRef(null);
@@ -267,7 +270,7 @@ const Navbar = () => {
             </nav>
 
             {/* Circular Search Button (Mobile/Tablet) */}
-            <div className="relative md:hidden" ref={searchRef}>
+            <div className="md:hidden" ref={searchRef}>
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -277,42 +280,61 @@ const Navbar = () => {
                 <Search className="w-4 h-4 text-stone-700" />
               </button>
 
-              {/* Popover Search Box */}
+              {/* Full-width Responsive Mobile Search Bar Overlay */}
               {isSearchOpen && (
-                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-xl border border-stone-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <form onSubmit={handleSearchSubmit} className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                    <input
-                      type="text"
-                      autoFocus
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search sweets & snacks..."
-                      className="w-full pl-9 pr-8 py-2 text-xs bg-stone-100 rounded-xl focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-300"
-                    />
-                    {searchQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-600 rounded-full cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    )}
+                <div className="fixed inset-x-0 top-0 h-16 sm:h-20 bg-white px-3 sm:px-4 z-50 flex items-center gap-2 shadow-lg border-b border-stone-200 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <form onSubmit={handleSearchSubmit} className="relative flex-1 flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <input
+                        type="text"
+                        autoFocus
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search for sev, bhujia, sweets, etc."
+                        className="w-full pl-10 pr-9 py-2 text-xs bg-stone-100 rounded-full focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-300 border border-stone-200 text-stone-900"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchQuery('')}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-600 rounded-full cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-[#981b2e] hover:bg-[#801424] text-white text-xs font-bold rounded-full transition-all shrink-0 cursor-pointer shadow-xs"
+                    >
+                      Search
+                    </button>
                   </form>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="p-2 rounded-full text-stone-500 hover:bg-stone-100 cursor-pointer shrink-0"
+                    aria-label="Close search"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
               )}
             </div>
 
-            {/* Shopping Cart Button */}
+            {/* Shopping Cart Button (FoodieDash Crimson Pill Style on Desktop) */}
             <Link
               to="/cart"
-              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0a2540] hover:bg-[#061727] active:scale-95 text-white flex items-center justify-center transition-all group shrink-0 shadow-xs cursor-pointer"
+              className="relative px-3.5 sm:px-4 py-2 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white flex items-center gap-2 transition-all group shrink-0 shadow-sm cursor-pointer"
               aria-label="Shopping Cart"
             >
               <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-108 transition-transform" />
+              <span className="hidden sm:inline text-xs font-black">Cart</span>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 sm:min-w-5 sm:h-5 px-1 bg-[#ffd25d] text-stone-950 text-[9px] sm:text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-xs">
+                <span className="min-w-4.5 h-4.5 sm:min-w-5 sm:h-5 px-1 bg-[#ffd25d] text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center border border-amber-300 shadow-xs">
                   {cartCount}
                 </span>
               )}

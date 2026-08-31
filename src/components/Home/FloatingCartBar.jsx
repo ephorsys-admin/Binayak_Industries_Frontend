@@ -1,8 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ChevronRight } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { selectCartTotalCount, selectCartSubtotal } from '../../Redux/features/cart/cartSlice';
 
-const FloatingCartBar = ({ totalCount, totalPrice }) => {
+const FloatingCartBar = ({ totalCount: propCount, totalPrice: propPrice }) => {
+  const reduxCount = useSelector(selectCartTotalCount);
+  const reduxPrice = useSelector(selectCartSubtotal);
+
+  const totalCount = propCount !== undefined ? propCount : reduxCount;
+  const totalPrice = propPrice !== undefined ? propPrice : reduxPrice;
+
   if (totalCount <= 0) return null;
 
   return (

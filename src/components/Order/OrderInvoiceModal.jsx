@@ -92,7 +92,10 @@ const OrderInvoiceModal = ({ order, onClose }) => {
               <p className="font-bold text-stone-900 mt-1">{order.shippingAddress.name}</p>
               <p className="text-stone-600 leading-relaxed">{order.shippingAddress.addressLine}</p>
               <p className="text-stone-600">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</p>
-              <p className="text-stone-600">Phone: {order.shippingAddress.phone}</p>
+              <p className="text-stone-600 font-mono">Phone: +91 {order.shippingAddress.phone}</p>
+              {order.shippingAddress.email && (
+                <p className="text-stone-600">Email: {order.shippingAddress.email}</p>
+              )}
             </div>
 
             <div className="sm:text-right">
@@ -122,7 +125,7 @@ const OrderInvoiceModal = ({ order, onClose }) => {
                       <p className="font-bold text-stone-900">{item.title}</p>
                       <span className="text-[10px] text-stone-500">{item.oilType}</span>
                     </td>
-                    <td className="py-2.5 text-center font-medium text-stone-600">{item.packSize}</td>
+                    <td className="py-2.5 text-center font-medium text-stone-600">{item.packSize || item.weight}</td>
                     <td className="py-2.5 text-center font-bold text-stone-900">{item.quantity}</td>
                     <td className="py-2.5 text-right text-stone-600">₹{item.price}</td>
                     <td className="py-2.5 text-right font-bold text-stone-900">₹{item.price * item.quantity}</td>

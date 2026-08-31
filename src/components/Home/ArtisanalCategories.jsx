@@ -1,177 +1,191 @@
-import React, { useRef } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  UtensilsCrossed, 
-  Sparkles, 
-  Cookie, 
-  Nut, 
-  Gift, 
-  Candy,
-  Check
-} from 'lucide-react';
+import React from 'react';
+import { ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+import ratlamiSevImg from '../../assets/ratlami_sev.jpg';
+import khattaMeethaImg from '../../assets/khatta_meetha.jpg';
+import roastedCashewsImg from '../../assets/roasted_cashews.jpg';
+import desiSweetsImg from '../../assets/desi_sweets.jpg';
+import murukkuImg from '../../assets/murukku_crisps.jpg';
+import mathriImg from '../../assets/mathri_namkeen.jpg';
 
 const categoriesList = [
   {
-    id: 'all',
-    name: 'All Snacks',
-    badge: '25+ Items',
-    icon: Sparkles,
-    bg: 'bg-stone-100',
-    border: 'border-stone-200',
-    iconColor: 'text-stone-900',
-  },
-  {
     id: 'sev-bhujia',
     name: 'Sev & Bhujia',
-    badge: '🔥 Bestseller',
-    icon: UtensilsCrossed,
-    bg: 'bg-rose-50',
-    border: 'border-rose-100',
-    iconColor: 'text-[#981b2e]',
+    shortName: 'Sev',
+    subtitle: 'Ratlami & Bikaneri',
+    image: ratlamiSevImg,
   },
   {
     id: 'chivda-mix',
-    name: 'Chivda & Mix',
-    badge: 'Chai Special',
-    icon: Sparkles,
-    bg: 'bg-amber-50',
-    border: 'border-amber-100',
-    iconColor: 'text-amber-700',
-  },
-  {
-    id: 'murukku-crisps',
-    name: 'Murukku & Crisps',
-    badge: 'Super Crisp',
-    icon: Cookie,
-    bg: 'bg-orange-50',
-    border: 'border-orange-100',
-    iconColor: 'text-orange-700',
-  },
-  {
-    id: 'roasted-cashews',
-    name: 'Roasted Nuts',
-    badge: 'Premium W240',
-    icon: Nut,
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-100',
-    iconColor: 'text-emerald-700',
+    name: 'Chivda Mix',
+    shortName: 'Chivda',
+    subtitle: 'Khatta Meetha',
+    image: khattaMeethaImg,
   },
   {
     id: 'desi-sweets',
     name: 'Desi Sweets',
-    badge: 'Pure Cow Ghee',
-    icon: Candy,
-    bg: 'bg-amber-50',
-    border: 'border-amber-100',
-    iconColor: 'text-amber-800',
+    shortName: 'Sweets',
+    subtitle: 'Pure Cow Ghee',
+    image: desiSweetsImg,
   },
   {
-    id: 'festive-hampers',
-    name: 'Gift Hampers',
-    badge: 'Brass Tins',
-    icon: Gift,
-    bg: 'bg-purple-50',
-    border: 'border-purple-100',
-    iconColor: 'text-purple-700',
+    id: 'roasted-cashews',
+    name: 'Roasted Nuts',
+    shortName: 'Nuts',
+    subtitle: 'Cashews & Almonds',
+    image: roastedCashewsImg,
+  },
+  {
+    id: 'murukku-crisps',
+    name: 'Murukku Crisps',
+    shortName: 'Murukku',
+    subtitle: 'Butter Chakli',
+    image: murukkuImg,
+  },
+  {
+    id: 'mathri-namkeen',
+    name: 'Mathri & Khasta',
+    shortName: 'Mathri',
+    subtitle: 'Ajwain Crisps',
+    image: mathriImg,
   },
 ];
 
 const ArtisanalCategories = ({ activeCategory, onSelectCategory }) => {
-  const scrollRef = useRef(null);
-
-  const handleScroll = (dir) => {
-    if (scrollRef.current) {
-      const scrollAmt = dir === 'left' ? -240 : 240;
-      scrollRef.current.scrollBy({ left: scrollAmt, behavior: 'smooth' });
-    }
-  };
-
   return (
     <section className="space-y-3 py-1">
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-0.5">
-          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-900 text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
-            <span>Daily Fresh Selection</span>
-          </div>
-          <h2 className="text-lg sm:text-2xl lg:text-3xl font-black text-stone-900 tracking-tight font-serif-heading">
-            Artisanal Snack Categories
+      {/* ========================================================================= */}
+      {/* 1. MOBILE VIEW ONLY (sm:hidden) - Exact "Cravings" Circular Style         */}
+      {/* ========================================================================= */}
+      <div className="sm:hidden space-y-2.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-black text-stone-900 font-brand tracking-tight">
+            Cravings
           </h2>
+          <Link
+            to="/explore"
+            className="text-xs font-bold text-[#981b2e] flex items-center gap-0.5"
+          >
+            <span>See all</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
-        {/* Scroll Buttons (Desktop only, mobile swipes naturally) */}
-        <div className="hidden sm:flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => handleScroll('left')}
-            className="w-8 h-8 rounded-full border border-stone-200 bg-white hover:bg-stone-50 flex items-center justify-center text-stone-600 shadow-2xs transition-all active:scale-95 cursor-pointer"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScroll('right')}
-            className="w-8 h-8 rounded-full border border-stone-200 bg-white hover:bg-stone-50 flex items-center justify-center text-stone-600 shadow-2xs transition-all active:scale-95 cursor-pointer"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+        {/* Horizontal Row of Rounded / Circular Food Cards */}
+        <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
+          {categoriesList.map((cat) => {
+            const isSelected = activeCategory === cat.id;
+            return (
+              <div
+                key={cat.id}
+                onClick={() => {
+                  if (onSelectCategory) {
+                    onSelectCategory(isSelected ? 'all' : cat.id);
+                  }
+                }}
+                className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group"
+              >
+                {/* Circular / Rounded Square Dish Container */}
+                <div
+                  className={`w-16 h-16 rounded-2xl p-1 bg-white border shadow-xs flex items-center justify-center transition-all ${
+                    isSelected
+                      ? 'border-[#981b2e] ring-2 ring-rose-300 scale-105'
+                      : 'border-stone-200 group-hover:border-stone-400'
+                  }`}
+                >
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover rounded-xl group-hover:scale-108 transition-transform"
+                  />
+                </div>
+                <span
+                  className={`text-[11px] text-center font-bold tracking-tight ${
+                    isSelected ? 'text-[#981b2e] font-black' : 'text-stone-700'
+                  }`}
+                >
+                  {cat.shortName}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Categories Scrollable Track */}
-      <div
-        ref={scrollRef}
-        className="flex items-stretch gap-2.5 sm:gap-3.5 overflow-x-auto pb-2 pt-0.5 scrollbar-none scroll-smooth snap-x snap-mandatory"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {categoriesList.map((item) => {
-          const Icon = item.icon;
-          const isSelected = activeCategory === item.id;
+      {/* ========================================================================= */}
+      {/* 2. DESKTOP VIEW ONLY (hidden sm:block) - FoodieDash Popular Cuisines Card */}
+      {/* ========================================================================= */}
+      <div className="hidden sm:block space-y-3.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+              Popular Cuisines
+            </h2>
+            <p className="text-xs text-stone-500">
+              Explore authentic hand-fried delicacies crafted in single-press groundnut oil.
+            </p>
+          </div>
 
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onSelectCategory && onSelectCategory(item.id)}
-              className={`snap-start shrink-0 min-w-[95px] xs:min-w-[110px] sm:min-w-[125px] lg:min-w-[135px] bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 border transition-all duration-300 flex flex-col items-center justify-between text-center group cursor-pointer relative ${
-                isSelected
-                  ? 'border-[#0a2540] ring-2 ring-[#0a2540]/15 shadow-md -translate-y-0.5 bg-stone-50/50'
-                  : 'border-stone-200/80 hover:border-stone-300 hover:shadow-xs'
-              }`}
-            >
-              {/* Selected Check Indicator */}
-              {isSelected && (
-                <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#0a2540] text-white flex items-center justify-center shadow-xs">
-                  <Check className="w-2 h-2 sm:w-2.5 sm:h-2.5 stroke-[3]" />
-                </div>
-              )}
+          <Link
+            to="/explore"
+            className="text-xs sm:text-sm font-bold text-[#981b2e] hover:text-[#801424] flex items-center gap-1 group cursor-pointer"
+          >
+            <span>See All Categories</span>
+            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
 
-              {/* Circle Halo Icon */}
+        {/* 6 Horizontal Cards Grid */}
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-3.5">
+          {categoriesList.map((cat) => {
+            const isSelected = activeCategory === cat.id;
+
+            return (
               <div
-                className={`w-11 h-11 xs:w-13 xs:h-13 sm:w-15 sm:h-15 rounded-full ${item.bg} ${item.border} border flex items-center justify-center mb-1.5 sm:mb-2 shadow-2xs group-hover:scale-108 transition-all duration-300 ${
-                  isSelected ? 'scale-105 ring-3 ring-[#0a2540]/10' : ''
+                key={cat.id}
+                onClick={() => {
+                  if (onSelectCategory) {
+                    onSelectCategory(isSelected ? 'all' : cat.id);
+                  }
+                }}
+                className={`group relative rounded-2xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border ${
+                  isSelected
+                    ? 'ring-3 ring-[#981b2e] border-transparent shadow-lg scale-102'
+                    : 'border-stone-200/80 hover:-translate-y-1'
                 }`}
               >
-                <Icon className={`w-5 h-5 sm:w-7 sm:h-7 ${item.iconColor} transition-transform group-hover:rotate-6`} />
-              </div>
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                />
 
-              {/* Title & Badge */}
-              <div className="space-y-0.5 w-full">
-                <span className={`block text-[11px] sm:text-sm font-bold leading-tight truncate ${
-                  isSelected ? 'text-[#0a2540] font-black' : 'text-stone-800 group-hover:text-[#981b2e]'
-                }`}>
-                  {item.name}
-                </span>
-                <span className="block text-[9px] sm:text-[10px] text-stone-400 font-medium truncate">
-                  {item.badge}
-                </span>
+                {/* Bottom Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+                {/* Category label at bottom left */}
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10 space-y-0.5">
+                  <h3 className="text-xs sm:text-sm font-bold font-brand text-white leading-tight drop-shadow-sm group-hover:text-[#ffd25d] transition-colors">
+                    {cat.name}
+                  </h3>
+                  <span className="text-[10px] text-stone-300 block font-medium">
+                    {cat.subtitle}
+                  </span>
+                </div>
+
+                {isSelected && (
+                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-[#981b2e] text-white text-[9px] font-black uppercase shadow-xs">
+                    Active
+                  </div>
+                )}
               </div>
-            </button>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

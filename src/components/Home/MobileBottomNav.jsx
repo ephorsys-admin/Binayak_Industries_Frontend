@@ -7,10 +7,15 @@ import {
   Clock, 
   Info 
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { selectCartTotalCount } from '../../Redux/features/cart/cartSlice';
 
-const MobileBottomNav = ({ cartCount = 0 }) => {
+const MobileBottomNav = ({ cartCount: propCount }) => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const reduxCount = useSelector(selectCartTotalCount);
+
+  const cartCount = propCount !== undefined ? propCount : reduxCount;
 
   const navItems = [
     { name: 'Home', path: '/', icon: HomeIcon },

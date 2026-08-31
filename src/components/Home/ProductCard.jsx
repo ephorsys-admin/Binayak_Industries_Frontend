@@ -1,14 +1,26 @@
-import React from 'react';
-import { Star, Plus, Minus, ShieldCheck, Flame } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, Plus, Minus, Heart, Clock, Bike, Flame, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
+  const [isLiked, setIsLiked] = useState(false);
   const originalPrice = Math.round(product.price * 1.25);
 
+  const handleToggleLike = (e) => {
+    e.stopPropagation();
+    setIsLiked(!isLiked);
+    if (!isLiked) {
+      toast.success(`Saved ${product.title} to your Favorites!`);
+    } else {
+      toast('Removed from Favorites', { icon: '🤍' });
+    }
+  };
+
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative">
+    <div className="bg-white rounded-3xl p-3 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative">
       <div>
-        {/* Product Image & Badges */}
-        <div className="relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 mb-2 sm:mb-3">
+        {/* Product Image Box */}
+        <div className="relative aspect-[16/11] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-stone-100 mb-3">
           <img
             src={product.image}
             alt={product.title}
@@ -16,87 +28,114 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             loading="lazy"
           />
 
-          {/* Top-Left Badges (Compact on mobile to avoid collision) */}
-          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 flex items-center gap-1 z-10 max-w-[60%]">
-            {product.isBestseller && (
-              <span className="bg-[#0a2540] text-white text-[8px] sm:text-[9px] font-black uppercase px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full tracking-wider shadow-xs truncate">
-                <span className="xs:hidden">🔥 BEST</span>
-                <span className="hidden xs:inline">🔥 BESTSELLER</span>
+          {/* Floating Wishlist Heart (Top Right) */}
+          <button
+            type="button"
+            onClick={handleToggleLike}
+            className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/90 hover:bg-white backdrop-blur-md flex items-center justify-center text-stone-700 shadow-md transition-transform hover:scale-110 active:scale-95 cursor-pointer"
+            aria-label="Add to Wishlist"
+          >
+            <Heart
+              className={`w-4 h-4 transition-colors ${
+                isLiked ? 'text-rose-600 fill-rose-600' : 'text-stone-600'
+              }`}
+            />
+          </button>
+
+          {/* Bottom Overlay on Image: Rating & Bestseller / Promoted Tag (Matching Reference Image) */}
+          <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between gap-1 z-10">
+            {/* Green Rating Pill */}
+            <span className="bg-white/95 backdrop-blur-md text-stone-900 text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-xs border border-stone-100">
+              <Star className="w-3 h-3 fill-emerald-600 text-emerald-600" />
+              <span>{product.rating || '4.8'}</span>
+              <span className="text-stone-400 font-normal text-[10px]">(1.2k)</span>
+            </span>
+
+            {/* Red Bestseller / Promoted Tag */}
+            {product.isBestseller ? (
+              <span className="bg-[#981b2e] text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-xs">
+                Bestseller
+              </span>
+            ) : (
+              <span className="bg-[#0a2540] text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-md shadow-xs">
+                Fresh Batch
               </span>
             )}
           </div>
+        </div>
 
-          {/* Top-Right Star Rating (Compact on mobile) */}
-          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10">
-            <span className="bg-white/95 backdrop-blur-xs text-stone-900 text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs border border-stone-100">
-              <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 fill-amber-500 shrink-0" />
-              <span>{product.rating}</span>
-            </span>
+        {/* Product Brand & Title */}
+        <div className="space-y-0.5 mb-2">
+          <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block">
+            Binayak Industries
+          </span>
+          <h3 className="text-sm sm:text-base font-bold text-stone-900 font-brand leading-snug group-hover:text-[#981b2e] transition-colors line-clamp-1">
+            {product.title}
+          </h3>
+          <p className="text-[11px] text-stone-500 line-clamp-1">
+            {product.categoryName || 'Sev & Namkeen'} • {product.oilType || '100% Groundnut Oil'}
+          </p>
+        </div>
+
+        {/* Bottom Delivery Info Badges (Matching Reference Image: 20-30 min & Free Delivery pills) */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex-1 py-1.5 px-2 rounded-xl bg-stone-50 border border-stone-200/80 flex items-center justify-center gap-1 text-[10px] sm:text-[11px] font-bold text-stone-700">
+            <Clock className="w-3 h-3 text-[#981b2e]" />
+            <span>20-30 min</span>
+          </div>
+
+          <div className="flex-1 py-1.5 px-2 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center gap-1 text-[10px] sm:text-[11px] font-bold text-emerald-800">
+            <Bike className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Free Delivery</span>
           </div>
         </div>
-
-        {/* Oil Feature Tag */}
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[8px] sm:text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-0.5 truncate max-w-full">
-            <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600 shrink-0" />
-            <span className="truncate">100% Groundnut Oil</span>
-          </span>
-        </div>
-
-        {/* Product Title & Weight */}
-        <h3 className="text-xs sm:text-sm lg:text-base font-bold text-stone-900 leading-snug group-hover:text-[#981b2e] transition-colors line-clamp-1">
-          {product.title}
-        </h3>
-        <p className="text-[10px] sm:text-xs text-stone-500 font-medium mb-2 sm:mb-3">
-          Pack: {product.weight}
-        </p>
       </div>
 
-      {/* Price & Quantity / Add Controls */}
-      <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-stone-100 gap-1">
+      {/* Price & Add to Cart Controls */}
+      <div className="flex items-center justify-between pt-2 border-t border-stone-100 gap-1">
         <div className="min-w-0">
-          <div className="flex items-baseline gap-1">
-            <span className="text-sm sm:text-lg lg:text-xl font-black text-stone-900 font-brand">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-base sm:text-lg font-black text-stone-900 font-brand">
               ₹{product.price}
             </span>
-            <span className="text-[9px] sm:text-[11px] text-stone-400 line-through truncate">
+            <span className="text-[11px] text-stone-400 line-through truncate">
               ₹{originalPrice}
             </span>
           </div>
-          <span className="text-[8px] sm:text-[9px] font-extrabold text-emerald-600 block truncate">
+          <span className="text-[9px] font-extrabold text-emerald-600 block">
             Save 20%
           </span>
         </div>
 
         {product.quantity > 0 ? (
-          <div className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-2.5 py-1 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-[11px] sm:text-xs shadow-xs border border-amber-300 shrink-0">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-xs shadow-xs border border-amber-300 shrink-0">
             <button
               type="button"
               onClick={() => onDecrement(product.id)}
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-75 focus:outline-none cursor-pointer"
+              className="w-4 h-4 flex items-center justify-center hover:opacity-75 focus:outline-none cursor-pointer"
               aria-label="Decrease quantity"
             >
-              <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
+              <Minus className="w-3 h-3 stroke-[3]" />
             </button>
-            <span className="min-w-2.5 text-center text-[10px] sm:text-xs font-black">
+            <span className="min-w-3 text-center text-xs font-black">
               {product.quantity}
             </span>
             <button
               type="button"
               onClick={() => onIncrement(product.id)}
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-75 focus:outline-none cursor-pointer"
+              className="w-4 h-4 flex items-center justify-center hover:opacity-75 focus:outline-none cursor-pointer"
               aria-label="Increase quantity"
             >
-              <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
+              <Plus className="w-3 h-3 stroke-[3]" />
             </button>
           </div>
         ) : (
           <button
             type="button"
             onClick={() => onAdd(product.id)}
-            className="px-2.5 xs:px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full bg-[#0a2540] hover:bg-[#061727] text-white text-[10px] sm:text-xs font-black transition-all active:scale-95 shadow-xs flex items-center gap-0.5 sm:gap-1 shrink-0 cursor-pointer"
+            className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white text-xs font-black transition-all shadow-sm flex items-center gap-1 shrink-0 cursor-pointer"
           >
-            <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Add</span>
           </button>
         )}
