@@ -4,6 +4,7 @@ import AboutHero from "../../components/About/AboutHero";
 import AboutQuality from "../../components/About/AboutQuality";
 import AboutStory from "../../components/About/AboutStory";
 import AboutValues from "../../components/About/AboutValues";
+import { MobileBottomNav } from "../../components/Home";
 
 const About = () => {
   return (
@@ -16,16 +17,26 @@ const About = () => {
         {/* 2. Heritage & Story Section */}
         <AboutStory />
 
-        <main className="overflow-hidden bg-[#F7F9FC]">
-      <AboutHero />
-      <AboutStory />
-      <AboutValues />
-      <AboutCategories />
-      <AboutQuality />
-      <AboutCTA />
-    </main>
+        {/* 3. Core Principles & Values */}
+        <AboutValues />
+
+        {/* 4. Artisanal Categories Showcase */}
+        <AboutCategories />
+
+        {/* 5. Kitchen & Quality Standards */}
+        <AboutQuality />
+
+        {/* 6. Discover & Explore CTA Banner */}
+        <AboutCTA />
+
+      </div>
+
+      {/* hello */}
+
+      {/* 7. Mobile Bottom Navigation Bar */}
+      <MobileBottomNav cartCount={0} />
     </div>
-    </div>
+    
   
   );
 };
