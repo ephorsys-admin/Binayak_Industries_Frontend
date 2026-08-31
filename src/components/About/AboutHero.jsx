@@ -21,10 +21,10 @@ const AboutHero = () => {
       <div className="pointer-events-none absolute inset-0">
 
         {/* Soft blue glow */}
-        <div className="absolute -left-40 top-20 h-[420px] w-[420px] rounded-full bg-[#0B70A8]/10 blur-[120px]" />
+        <div className="absolute -left-40 top-20 h-105 w-105 rounded-full bg-[#0B70A8]/10 blur-[120px]" />
 
         {/* Soft yellow glow */}
-        <div className="absolute -right-40 bottom-0 h-[400px] w-[400px] rounded-full bg-[#FFC43D]/5 blur-[120px]" />
+        <div className="absolute -right-40 bottom-0 h-100 w-100 rounded-full bg-[#FFC43D]/5 blur-[120px]" />
 
         {/* Small decorative dots */}
         <div className="absolute left-[8%] top-[18%] h-1.5 w-1.5 rounded-full bg-[#FFC43D]" />
@@ -96,7 +96,7 @@ const AboutHero = () => {
                 delay: 0.1,
                 duration: 0.7,
               }}
-              className="max-w-[680px] text-[34px] font-extrabold leading-[1.07] tracking-[-1.2px] text-white sm:text-5xl lg:text-[62px]"
+              className="max-w-170 text-[34px] font-extrabold leading-[1.07] tracking-[-1.2px] text-white sm:text-5xl lg:text-[62px]"
             >
 
               Bringing the{" "}
@@ -105,7 +105,7 @@ const AboutHero = () => {
 
                 taste of tradition
 
-                <span className="absolute -bottom-1 left-0 h-[2px] w-full bg-[#FFC43D]/60" />
+                <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-[#FFC43D]/60" />
 
               </span>
 
@@ -126,7 +126,7 @@ const AboutHero = () => {
                 delay: 0.25,
                 duration: 0.6,
               }}
-              className="mt-5 max-w-[570px] text-[13px] leading-6 text-[#80A7BF] sm:mt-7 sm:text-[15px] sm:leading-7"
+              className="mt-5 max-w-142.5 text-[13px] leading-6 text-[#80A7BF] sm:mt-7 sm:text-[15px] sm:leading-7"
             >
               Binayak brings together the rich flavours of traditional Indian
               snacks and sweets with a commitment to quality, freshness and
@@ -277,7 +277,7 @@ const AboutHero = () => {
               delay: 0.15,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="relative mx-auto w-full max-w-[620px]"
+            className="relative mx-auto w-full max-w-155"
           >
 
             {/* =================================================
@@ -296,7 +296,7 @@ const AboutHero = () => {
               className="relative z-10"
             >
 
-              <div className="rounded-[27px] border border-[#1C4B68] bg-[#092A42] p-1.5 shadow-[0_25px_70px_rgba(0,0,0,0.35)] sm:rounded-[32px] sm:p-2">
+              <div className="rounded-[27px] border border-[#1C4B68] bg-[#092A42] p-1.5 shadow-[0_25px_70px_rgba(0,0,0,0.35)] sm:rounded-4xl sm:p-2">
 
                 {/* Inner border */}
 
@@ -307,13 +307,13 @@ const AboutHero = () => {
                     <img
                       src={about}
                       alt="Traditional Indian snacks and sweets"
-                      className="h-[285px] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:h-[420px] lg:h-[475px]"
+                      className="h-71.25 w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:h-105 lg:h-118.75"
                     />
 
 
                     {/* Image gradient */}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#031525] via-[#031525]/25 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#031525] via-[#031525]/25 to-transparent" />
 
 
                     {/* Image content */}
@@ -349,11 +349,7 @@ const AboutHero = () => {
 
 
 
-            {/* =================================================
-                TOP FLOATING CARD
-                Desktop remains exactly as before.
-                Mobile is made smaller and moved inward.
-            ================================================== */}
+            {/*TOP FLOATING CARD*/}
 
             <motion.div
               initial={{ opacity: 0, y: -15 }}
@@ -374,7 +370,7 @@ const AboutHero = () => {
 
                     <Star
                       size={14}
-                      className="fill-[#FFC43D] text-[#FFC43D] sm:h-[17px] sm:w-[17px]"
+                      className="fill-[#FFC43D] text-[#FFC43D] sm:h-4.25 sm:w-4.25"
                     />
 
                   </div>
@@ -399,13 +395,7 @@ const AboutHero = () => {
 
 
 
-            {/* =================================================
-                BOTTOM FLOATING CARD
-
-                IMPORTANT:
-                Hidden ONLY on phone screens.
-                Desktop/tablet remains unchanged.
-            ================================================== */}
+            {/*BOTTOM FLOATING CARD*/}
 
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -461,9 +451,7 @@ const AboutHero = () => {
 
 
 
-            {/* =================================================
-                SMALL GOLD DOT
-            ================================================== */}
+            {/*SMALL GOLD DOT*/}
 
             <motion.div
               animate={{
@@ -485,9 +473,7 @@ const AboutHero = () => {
       </div>
 
 
-      {/* =====================================================
-          BOTTOM TRANSITION
-      ====================================================== */}
+      {/*BOTTOM TRANSITION*/}
 
       <div className="relative h-8 bg-[#F7F9FB] sm:h-10">
 

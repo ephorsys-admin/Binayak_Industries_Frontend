@@ -7,20 +7,16 @@ const AboutStory = () => {
   return (
     <section className="relative overflow-hidden bg-[#F7F9FC] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-2 lg:pb-17">
 
-      {/* =====================================================
-          BACKGROUND GLOW
-      ====================================================== */}
+      {/*BACKGROUND GLOW*/}
 
       <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-[#0875B5]/5 blur-[100px]" />
 
       <div className="pointer-events-none absolute -right-32 bottom-10 h-80 w-80 rounded-full bg-[#D9A441]/8 blur-[110px]" />
 
 
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-300">
 
-        {/* =====================================================
-            SECTION HEADING
-        ====================================================== */}
+        {/*SECTION HEADING*/}
 
         <motion.div
           initial={{ opacity: 0, y: 15 }}
