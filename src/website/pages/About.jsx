@@ -34,6 +34,8 @@ const About = () => {
 
       </div>
 
+      {/* hello */}
+
       {/* 7. Mobile Bottom Navigation Bar */}
       <MobileBottomNav cartCount={0} />
     </div>
