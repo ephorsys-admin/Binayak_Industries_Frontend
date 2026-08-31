@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-
-import { motion } from 'framer-motion';
-=======
->>>>>>> feature/ananya
 import { Sparkles, ArrowRight, ShieldCheck, Heart, Award, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import about1 from "../../assets/about1.png"
 
 const milestones = [
   { value: '30+', label: 'Years of Heritage', icon: Award },
@@ -16,39 +11,6 @@ const milestones = [
 
 const AboutStory = () => {  
   return (
-<<<<<<< HEAD
-    <section className="relative overflow-hidden bg-[#F7F9FC] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-2 lg:pb-17">
-
-      {/*BACKGROUND GLOW*/}
-
-      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-[#0875B5]/5 blur-[100px]" />
-
-      <div className="pointer-events-none absolute -right-32 bottom-10 h-80 w-80 rounded-full bg-[#D9A441]/8 blur-[110px]" />
-
-
-      <div className="mx-auto max-w-300">
-
-        {/*SECTION HEADING*/}
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-7 sm:mb-10"
-        >
-
-          <div className="flex items-center gap-3">
-
-            <span className="h-[2px] w-8 bg-[#D9A441]" />
-
-            <span className="text-[9px] font-bold uppercase tracking-[3px] text-[#B38328] sm:text-[10px]">
-              About Binayak
-            </span>
-
-            <span className="h-[2px] w-8 bg-[#D9A441]" />
-
-=======
     <div className="bg-white border border-stone-200/80 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-2xs">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
@@ -75,7 +37,6 @@ const AboutStory = () => {
                 Crafted using age-old recipe books and pure brass kadhais.
               </p>
             </div>
->>>>>>> feature/ananya
           </div>
 
           {/* Floating Guarantee Badge */}
@@ -88,7 +49,7 @@ const AboutStory = () => {
               <p className="text-[10px] text-stone-300">Zero Palm Oil or Preservatives</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Right: Narrative & Heritage Info (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
@@ -150,7 +111,7 @@ const AboutStory = () => {
 
     
 
-    </section>
+    </div>
   );
 };
 
