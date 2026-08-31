@@ -15,8 +15,8 @@ import {
   MessageSquare,
   AlertCircle,
   Sparkles,
+  User,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const statusStyles = {
@@ -77,27 +77,42 @@ const OrderCard = ({
   return (
     <div className="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/80 p-4 sm:p-6 lg:p-7 shadow-2xs hover:shadow-sm transition-all duration-300 space-y-4 sm:space-y-5">
       
-      {/* 1. Header: Order ID, Date, Status, Total */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
+      {/* 1. Header: Order ID, Customer Name, Date, Status, Total */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-stone-100">
         
-        {/* Left: ID & Date */}
+        {/* Left: ID, Customer Name, & Date */}
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm sm:text-base font-black font-brand text-stone-900">
               Order #{order.id}
             </span>
             <span className="text-[11px] font-bold text-stone-400">
               • {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}
             </span>
+            {order.shippingAddress?.name && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0a2540] bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
+                <User className="w-3 h-3 text-[#981b2e]" />
+                <span>For: {order.shippingAddress.name}</span>
+              </span>
+            )}
           </div>
 
-          <p className="text-xs text-stone-500 font-medium">
-            Placed on {order.placedDate}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2 text-xs text-stone-500 font-medium">
+            <span>Placed on {order.placedDate}</span>
+            {order.shippingAddress?.city && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-0.5 text-stone-700 font-semibold">
+                  <MapPin className="w-3 h-3 text-[#981b2e]" />
+                  <span>{order.shippingAddress.city}, {order.shippingAddress.state}</span>
+                </span>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Right: Status Pill & Total Price */}
-        <div className="flex items-center justify-between sm:justify-end gap-3.5">
+        <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0">
           <div className="text-left sm:text-right">
             <span className="text-[10px] uppercase font-bold text-stone-400 block">Total Amount</span>
             <span className="text-base sm:text-lg font-black font-brand text-[#981b2e]">
@@ -208,7 +223,7 @@ const OrderCard = ({
                   {item.title}
                 </h4>
                 <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-500">
-                  <span className="font-medium">Pack: {item.packSize}</span>
+                  <span className="font-medium">Pack: {item.packSize || item.weight}</span>
                   <span>•</span>
                   <span>Qty: {item.quantity}</span>
                   <span>•</span>
@@ -236,10 +251,13 @@ const OrderCard = ({
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-stone-900">
                 <MapPin className="w-3.5 h-3.5 text-[#981b2e]" />
-                <span>Delivery Address ({order.shippingAddress.addressType})</span>
+                <span>Delivery Address ({order.shippingAddress.addressType || 'Home'})</span>
               </div>
-              <p>{order.shippingAddress.name} — {order.shippingAddress.phone}</p>
+              <p className="font-semibold text-stone-900">{order.shippingAddress.name} — <span className="font-mono text-stone-600">+91 {order.shippingAddress.phone}</span></p>
               <p>{order.shippingAddress.addressLine}, {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</p>
+              {order.shippingAddress.landmark && (
+                <p className="text-stone-500 italic">Landmark: {order.shippingAddress.landmark}</p>
+              )}
             </div>
 
             {/* Payment & Invoice Breakdown */}
@@ -253,6 +271,7 @@ const OrderCard = ({
               {order.pricing.discount > 0 && (
                 <p className="text-emerald-700 font-semibold">Discount ({order.pricing.couponCode}): -₹{order.pricing.discount}</p>
               )}
+              <p className="font-bold text-stone-900 pt-0.5">Grand Total: ₹{order.pricing.totalAmount}</p>
             </div>
           </div>
 
@@ -283,7 +302,7 @@ const OrderCard = ({
           onClick={() => setIsExpanded(!isExpanded)}
           className="inline-flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
         >
-          <span>{isExpanded ? 'Hide Details' : 'View Order Details'}</span>
+          <span>{isExpanded ? 'Hide Details' : 'View Order & Customer Details'}</span>
           {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
 

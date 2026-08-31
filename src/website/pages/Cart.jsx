@@ -11,101 +11,82 @@ import {
   Tag,
   CheckCircle2,
   Clock,
+  Lock,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { MobileBottomNav } from '../../components/Home';
-
-import ratlamiSevImg from '../../assets/ratlami_sev.jpg';
-import khattaMeethaImg from '../../assets/khatta_meetha.jpg';
-import roastedCashewsImg from '../../assets/roasted_cashews.jpg';
-
-const initialCartItems = [
-  {
-    id: 1,
-    title: 'Artisanal Ratlami Sev (Extra Clove)',
-    category: 'Sev & Bhujia',
-    weight: '500g Pack',
-    price: 240,
-    quantity: 2,
-    image: ratlamiSevImg,
-    oilType: '100% Groundnut Oil',
-  },
-  {
-    id: 2,
-    title: 'Royal Khatta Meetha Chivda Mix',
-    category: 'Chivda & Mix',
-    weight: '400g Pack',
-    price: 190,
-    quantity: 1,
-    image: khattaMeethaImg,
-    oilType: '100% Groundnut Oil',
-  },
-  {
-    id: 3,
-    title: 'Tandoori Spiced Roasted Cashews',
-    category: 'Roasted Nuts',
-    weight: '250g Tin',
-    price: 340,
-    quantity: 1,
-    image: roastedCashewsImg,
-    oilType: 'Dry Roasted',
-  },
-];
+import { CheckoutModal, OrderSuccessModal } from '../../components/Cart';
+import {
+  selectCartItems,
+  selectCartSubtotal,
+  selectCartDeliveryFee,
+  selectCartAppliedCoupon,
+  selectCartDiscountAmount,
+  selectCartTotalAmount,
+  incrementQuantity,
+  decrementQuantity,
+  removeFromCart,
+  applyCoupon,
+  removeCoupon,
+  clearCart,
+} from '../../Redux/features/cart/cartSlice';
+import { createOrder } from '../../Redux/features/orders/ordersSlice';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const subtotal = useSelector(selectCartSubtotal);
+  const deliveryFee = useSelector(selectCartDeliveryFee);
+  const appliedCoupon = useSelector(selectCartAppliedCoupon);
+  const discountAmount = useSelector(selectCartDiscountAmount);
+  const totalAmount = useSelector(selectCartTotalAmount);
+
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState('FESTIVE15');
-  const [discountAmount, setDiscountAmount] = useState(150);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [confirmedOrder, setConfirmedOrder] = useState(null);
 
   const handleIncrement = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+    dispatch(incrementQuantity(id));
   };
 
   const handleDecrement = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    dispatch(decrementQuantity(id));
   };
 
   const handleRemove = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-    toast.success('Item removed from cart');
+    dispatch(removeFromCart(id));
   };
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
-    if (couponCode.toUpperCase() === 'FESTIVE15' || couponCode.toUpperCase() === 'BINAYAK10') {
-      setAppliedCoupon(couponCode.toUpperCase());
-      setDiscountAmount(150);
-      toast.success(`Coupon ${couponCode.toUpperCase()} applied successfully!`);
+    const code = couponCode.trim().toUpperCase();
+    if (code === 'FESTIVE15' || code === 'BINAYAK10' || code === 'NAMKEEN20') {
+      const discount = code === 'NAMKEEN20' ? 200 : code === 'BINAYAK10' ? 100 : 150;
+      dispatch(applyCoupon({ code, discount }));
       setCouponCode('');
     } else {
-      toast.error('Invalid coupon code. Try FESTIVE15');
+      toast.error('Invalid promo code. Try FESTIVE15 or BINAYAK10');
     }
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const deliveryFee = subtotal > 500 ? 0 : 40;
-  const gstAmount = Math.round(subtotal * 0.05);
-  const totalAmount = Math.max(0, subtotal + deliveryFee - discountAmount);
+  const handleRemoveCoupon = () => {
+    dispatch(removeCoupon());
+  };
 
+  const handleOrderConfirmed = (newOrder) => {
+    dispatch(createOrder(newOrder));
+    dispatch(clearCart());
+    setIsCheckoutOpen(false);
+    setConfirmedOrder(newOrder);
+  };
+
+  const gstAmount = Math.round(subtotal * 0.05);
   const freeDeliveryThreshold = 500;
   const freeDeliveryProgress = Math.min(
     100,
-    Math.round((subtotal / freeDeliveryThreshold) * 100)
+    subtotal > 0 ? Math.round((subtotal / freeDeliveryThreshold) * 100) : 0
   );
 
   return (
@@ -201,7 +182,7 @@ const Cart = () => {
                         <h3 className="text-sm sm:text-base font-bold text-stone-900 font-brand truncate">
                           {item.title}
                         </h3>
-                        <p className="text-xs text-stone-500">Pack: {item.weight}</p>
+                        <p className="text-xs text-stone-500">Pack: {item.packSize || item.weight}</p>
                         <p className="text-xs font-black text-stone-900">₹{item.price} each</p>
                       </div>
                     </div>
@@ -296,8 +277,8 @@ const Cart = () => {
                     <span className="font-bold font-mono">✓ {appliedCoupon} (-₹{discountAmount})</span>
                     <button
                       type="button"
-                      onClick={() => setAppliedCoupon(null)}
-                      className="text-stone-400 hover:text-stone-600 font-bold"
+                      onClick={handleRemoveCoupon}
+                      className="text-stone-400 hover:text-stone-600 font-bold cursor-pointer"
                     >
                       ✕
                     </button>
@@ -344,10 +325,10 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Checkout CTA */}
+                {/* Checkout CTA -> Opens Checkout Details Modal */}
                 <button
                   type="button"
-                  onClick={() => toast.success('Proceeding to Razorpay / UPI Gateway...')}
+                  onClick={() => setIsCheckoutOpen(true)}
                   className="w-full py-3.5 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white text-xs sm:text-sm font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>Proceed to Secure Checkout</span>
@@ -365,6 +346,26 @@ const Cart = () => {
         )}
 
       </div>
+
+      {/* Delivery Details Checkout Popup Modal */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+        subtotal={subtotal}
+        deliveryFee={deliveryFee}
+        discountAmount={discountAmount}
+        appliedCoupon={appliedCoupon}
+        totalAmount={totalAmount}
+        onConfirmOrder={handleOrderConfirmed}
+      />
+
+      {/* Celebratory Order Confirmation Modal */}
+      <OrderSuccessModal
+        isOpen={!!confirmedOrder}
+        order={confirmedOrder}
+        onClose={() => setConfirmedOrder(null)}
+      />
 
       {/* Mobile Bottom Nav */}
       <MobileBottomNav cartCount={cartItems.length} />

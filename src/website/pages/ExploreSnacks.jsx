@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ArtisanalCategoryCircles,
   ExploreHeroBanner,
@@ -16,8 +17,21 @@ import {
 } from '../../components/Explore';
 import { FloatingCartBar, MobileBottomNav } from '../../components/Home';
 import { SearchX, Sparkles, RefreshCw } from 'lucide-react';
+import {
+  selectCartItems,
+  selectCartTotalCount,
+  selectCartSubtotal,
+  addToCart,
+  incrementQuantity,
+  decrementQuantity,
+} from '../../Redux/features/cart/cartSlice';
 
 const ExploreSnacks = () => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const totalCartCount = useSelector(selectCartTotalCount);
+  const totalCartPrice = useSelector(selectCartSubtotal);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
 
@@ -26,7 +40,6 @@ const ExploreSnacks = () => {
   const [activeFilterTag, setActiveFilterTag] = useState('all');
   const [activeMood, setActiveMood] = useState('all');
   const [sortBy, setSortBy] = useState('popular');
-  const [snacks, setSnacks] = useState(initialSnacksCatalog);
   const [quickViewSnack, setQuickViewSnack] = useState(null);
 
   // Sync search param when changed externally
@@ -47,37 +60,43 @@ const ExploreSnacks = () => {
     }
   };
 
-  // Quantity Handlers
+  // Synchronize snacks catalog with Redux cart quantities
+  const snacks = useMemo(() => {
+    return initialSnacksCatalog.map((snack) => {
+      const inCart = cartItems.find((c) => c.id === snack.id);
+      return {
+        ...snack,
+        quantity: inCart ? inCart.quantity : 0,
+      };
+    });
+  }, [cartItems]);
+
+  // Quantity Handlers using Redux
   const handleIncrement = (id) => {
-    setSnacks((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-    if (quickViewSnack && quickViewSnack.id === id) {
-      setQuickViewSnack((prev) => ({ ...prev, quantity: prev.quantity + 1 }));
-    }
+    dispatch(incrementQuantity(id));
   };
 
   const handleDecrement = (id) => {
-    setSnacks((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 0
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-    if (quickViewSnack && quickViewSnack.id === id && quickViewSnack.quantity > 0) {
-      setQuickViewSnack((prev) => ({ ...prev, quantity: prev.quantity - 1 }));
-    }
+    dispatch(decrementQuantity(id));
   };
 
   const handleAdd = (id) => {
-    setSnacks((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity: 1 } : item))
-    );
-    if (quickViewSnack && quickViewSnack.id === id) {
-      setQuickViewSnack((prev) => ({ ...prev, quantity: 1 }));
+    const snack = initialSnacksCatalog.find((s) => s.id === id);
+    if (snack) {
+      dispatch(
+        addToCart({
+          id: snack.id,
+          title: snack.title,
+          category: snack.categoryName || snack.category,
+          weight: snack.weight || 'Standard Pack',
+          packSize: snack.weight || 'Standard Pack',
+          price: snack.price,
+          originalPrice: snack.originalPrice,
+          quantity: 1,
+          image: snack.image,
+          oilType: snack.oilType,
+        })
+      );
     }
   };
 
@@ -151,51 +170,49 @@ const ExploreSnacks = () => {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === 'rating') {
       result.sort((a, b) => b.rating - a.rating);
-    } else if (sortBy === 'newest') {
-      result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-    } else {
-      // Default: popular (bestsellers first, then rating)
-      result.sort((a, b) => (b.isBestseller ? 1 : 0) - (a.isBestseller ? 1 : 0) || b.reviewsCount - a.reviewsCount);
     }
 
     return result;
   }, [snacks, activeCategory, searchQuery, activeFilterTag, activeMood, sortBy]);
 
-  // Cart stats
-  const totalCartCount = snacks.reduce((acc, item) => acc + item.quantity, 0);
-  const totalCartPrice = snacks.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  // Selected Category Info Object
+  const activeCategoryObj = useMemo(() => {
+    return categoriesList.find((c) => c.id === activeCategory);
+  }, [activeCategory]);
 
-  const activeCategoryObj = categoriesList.find((c) => c.id === activeCategory);
+  // Sync quick view snack quantity with cart
+  const activeQuickViewSnack = useMemo(() => {
+    if (!quickViewSnack) return null;
+    const inCart = cartItems.find((c) => c.id === quickViewSnack.id);
+    return {
+      ...quickViewSnack,
+      quantity: inCart ? inCart.quantity : 0,
+    };
+  }, [quickViewSnack, cartItems]);
 
   return (
-    <div className="min-h-screen pb-36 sm:pb-24 bg-stone-50/50">
-      <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-3.5 sm:space-y-6">
+    <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
         
-        {/* 1. Explore Hero Banner with Live Search & Tag Chips */}
+        {/* 1. Explore Hero Banner with Integrated Search Input */}
         <ExploreHeroBanner
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
-          activeFilterTag={activeFilterTag}
-          onSelectFilterTag={(tag) =>
-            setActiveFilterTag((prev) => (prev === tag ? 'all' : tag))
-          }
         />
 
-        {/* 2. Modern Circle Categories Selector */}
+        {/* 2. Artisanal Categories Scrollable Row */}
         <ArtisanalCategoryCircles
+          categories={categoriesList}
           activeCategory={activeCategory}
           onSelectCategory={(catId) => {
             setActiveCategory(catId);
             setActiveMood('all');
           }}
-          snackCounts={snackCounts}
+          counts={snackCounts}
         />
 
-        {/* 3. Chef's Signature Spotlights (Visible in All view or when spotlight items exist) */}
-        {activeCategory === 'all' && !searchQuery.trim() && activeFilterTag === 'all' && activeMood === 'all' && (
+        {/* 3. Daily Kitchen Fresh Spotlight Carousel */}
+        {activeCategory === 'all' && !searchQuery && activeMood === 'all' && (
           <ExploreSpotlightCarousel
             spotlightSnacks={spotlightSnacks}
             onIncrement={handleIncrement}
@@ -227,7 +244,7 @@ const ExploreSnacks = () => {
           onClearSearch={() => handleSearchChange('')}
         />
 
-        {/* 6. Active Category Info Header (When a specific category is selected) */}
+        {/* 6. Active Category Info Header */}
         {activeCategory !== 'all' && activeCategoryObj && (
           <div className="flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -316,9 +333,9 @@ const ExploreSnacks = () => {
       </div>
 
       {/* 10. Quick View Product Modal */}
-      {quickViewSnack && (
+      {activeQuickViewSnack && (
         <SnackQuickViewModal
-          snack={quickViewSnack}
+          snack={activeQuickViewSnack}
           onClose={() => setQuickViewSnack(null)}
           onIncrement={handleIncrement}
           onDecrement={handleDecrement}

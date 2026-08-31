@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   OrdersHero,
   OrdersStatsBar,
@@ -8,15 +9,22 @@ import {
   OrderInvoiceModal,
   OrderReviewModal,
   OrderCancelModal,
-  initialOrders,
 } from '../../components/Order';
 import { MobileBottomNav } from '../../components/Home';
 import { PackageX, Sparkles, MessageSquare, ArrowRight, RefreshCw, PhoneCall } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import {
+  selectOrders,
+  cancelOrder,
+  addReview,
+} from '../../Redux/features/orders/ordersSlice';
+import { addToCart } from '../../Redux/features/cart/cartSlice';
 
 const Orders = () => {
-  const [orders, setOrders] = useState(initialOrders);
+  const dispatch = useDispatch();
+  const orders = useSelector(selectOrders);
+
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [timeRange, setTimeRange] = useState('all-time');
@@ -25,7 +33,7 @@ const Orders = () => {
   const [trackingOrder, setTrackingOrder] = useState(null);
   const [invoiceOrder, setInvoiceOrder] = useState(null);
   const [reviewOrder, setReviewOrder] = useState(null);
-  const [cancelOrder, setCancelOrder] = useState(null);
+  const [cancelModalOrder, setCancelModalOrder] = useState(null);
 
   // Tab count stats
   const tabCounts = useMemo(() => {
@@ -54,12 +62,14 @@ const Orders = () => {
       result = result.filter((o) => o.status === 'cancelled');
     }
 
-    // 2. Search Query Filter (Order ID, Item Title, or Courier Tracking)
+    // 2. Search Query Filter (Order ID, Customer Name, Item Title, or Tracking Number)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         (o) =>
           o.id.toLowerCase().includes(q) ||
+          (o.shippingAddress?.name && o.shippingAddress.name.toLowerCase().includes(q)) ||
+          (o.shippingAddress?.city && o.shippingAddress.city.toLowerCase().includes(q)) ||
           (o.courier?.trackingNumber &&
             o.courier.trackingNumber.toLowerCase().includes(q)) ||
           o.items.some((item) => item.title.toLowerCase().includes(q))
@@ -71,33 +81,19 @@ const Orders = () => {
 
   // Handlers
   const handleReviewSubmit = (orderId, rating, reviewText) => {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId ? { ...o, rating, userReview: reviewText } : o
-      )
-    );
+    dispatch(addReview({ orderId, rating, reviewText }));
   };
 
   const handleCancelConfirm = (orderId, reason) => {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? {
-              ...o,
-              status: 'cancelled',
-              statusLabel: 'Cancelled & Refunded',
-              statusStep: -1,
-              cancelReason: reason,
-              refundStatus: `₹${o.pricing.totalAmount} Full Refund Credited to original source`,
-            }
-          : o
-      )
-    );
+    dispatch(cancelOrder({ orderId, reason }));
   };
 
   const handleReorder = (order) => {
+    order.items.forEach((item) => {
+      dispatch(addToCart(item));
+    });
     toast.success(
-      `All ${order.items.length} items from #${order.id} added to your cart!`
+      `All ${order.items.length} items from #${order.id} re-added to your cart!`
     );
   };
 
@@ -105,7 +101,7 @@ const Orders = () => {
     <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
         
-        {/* 1. Hero Banner with Live Search (Exact same height & width as Home/About) */}
+        {/* 1. Hero Banner with Live Search */}
         <OrdersHero
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -139,7 +135,7 @@ const Orders = () => {
               </h3>
               <p className="text-xs sm:text-sm text-stone-500 max-w-sm mx-auto">
                 {searchQuery
-                  ? `We couldn't find any order matching "${searchQuery}". Try searching with another ID or snack name.`
+                  ? `We couldn't find any order matching "${searchQuery}". Try searching with another ID, your name, or snack name.`
                   : `You don't have any ${activeTab !== 'all' ? activeTab : ''} orders yet.`}
               </p>
             </div>
@@ -173,7 +169,7 @@ const Orders = () => {
                 onOpenTracking={(ord) => setTrackingOrder(ord)}
                 onOpenInvoice={(ord) => setInvoiceOrder(ord)}
                 onOpenReview={(ord) => setReviewOrder(ord)}
-                onOpenCancel={(ord) => setCancelOrder(ord)}
+                onOpenCancel={(ord) => setCancelModalOrder(ord)}
                 onReorder={handleReorder}
               />
             ))}
@@ -241,16 +237,13 @@ const Orders = () => {
         />
       )}
 
-      {cancelOrder && (
+      {cancelModalOrder && (
         <OrderCancelModal
-          order={cancelOrder}
-          onClose={() => setCancelOrder(null)}
+          order={cancelModalOrder}
+          onClose={() => setCancelModalOrder(null)}
           onConfirmCancel={handleCancelConfirm}
         />
       )}
-
-      {/* 6. Mobile Bottom Navigation Bar */}
-      <MobileBottomNav cartCount={0} />
     </div>
   );
 };
