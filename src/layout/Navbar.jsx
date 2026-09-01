@@ -81,7 +81,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', path: '/', icon: Sparkles },
     { name: 'Explore Snacks', path: '/explore', icon: Compass },
-    { name: 'My Orders', path: '/orders', icon: Clock },
+    // { name: 'My Orders', path: '/orders', icon: Clock },
     { name: 'Our Story', path: '/about', icon: Info },
     { name: 'Contact & Support', path: '/contact', icon: Phone },
   ];

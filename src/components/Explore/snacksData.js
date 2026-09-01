@@ -80,6 +80,59 @@ export const formatApiCategory = (cat) => {
   };
 };
 
+export const formatApiProduct = (prod) => {
+  if (!prod) return null;
+  const prodId = prod._id || prod.id;
+  const primaryImg =
+    prod.images && prod.images.length > 0
+      ? prod.images[0].url
+      : prod.image || ratlamiSevImg;
+  const catObj =
+    typeof prod.category === 'object' && prod.category !== null
+      ? prod.category
+      : {};
+  const catName = catObj.name || prod.categoryName || 'Snacks';
+  const catSlug =
+    catObj.slug ||
+    (typeof prod.category === 'string' && !prod.category.match(/^[0-9a-fA-F]{24}$/)
+      ? prod.category
+      : catName.toLowerCase().replace(/\s+/g, '-'));
+  const catId = catObj._id || prod.category || catSlug;
+
+  return {
+    id: prodId,
+    _id: prodId,
+    title: prod.name || prod.title || 'Artisanal Snack',
+    name: prod.name || prod.title || 'Artisanal Snack',
+    category: catSlug,
+    categoryId: catId,
+    categoryName: catName,
+    categorySlug: catSlug,
+    tagline: prod.shortDescription || 'Prepared in 100% cold-pressed groundnut oil',
+    description: prod.description || prod.shortDescription || 'Fresh handcrafted delicacy',
+    price: Number(prod.sellingPrice || prod.price) || 150,
+    originalPrice: Number(prod.mrp) || Math.round((Number(prod.sellingPrice || prod.price) || 150) * 1.25),
+    mrp: Number(prod.mrp) || Number(prod.sellingPrice || prod.price) || 150,
+    sellingPrice: Number(prod.sellingPrice || prod.price) || 150,
+    weight: prod.weight || (prod.unit ? `1 ${prod.unit}` : '500g'),
+    oilType: prod.oilType || '100% Cold-Pressed Groundnut Oil',
+    spiciness: prod.spiciness || 'Medium Spice',
+    spiceLevel: prod.spiceLevel || 2,
+    shelfLife: prod.shelfLife || '90 Days',
+    rating: Number(prod.rating) || 4.8,
+    reviewsCount: Number(prod.reviewsCount) || 120,
+    isBestseller: Boolean(prod.isBestSeller),
+    isSpotlight: Boolean(prod.isFeatured),
+    isTrending: Boolean(prod.isTrending),
+    isNew: Boolean(prod.isNewArrival),
+    isAvailable: prod.isAvailable !== false,
+    image: primaryImg,
+    images: prod.images || [{ url: primaryImg }],
+    ingredients: prod.ingredients || 'Artisanal Spices, Gram Flour, Groundnut Oil',
+    nutritionHighlights: prod.nutritionHighlights || ['Zero Trans Fat', 'Rich in Protein'],
+  };
+};
+
 export const categoriesList = [
   {
     id: 'all',

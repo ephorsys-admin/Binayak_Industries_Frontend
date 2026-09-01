@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HeroSection,
@@ -14,6 +14,9 @@ import {
 } from '../../components/Home';
 import { ChaiPairingBanner } from '../../components/Explore';
 import { fetchCategories } from '../../Redux/features/category/categoryThunk';
+import { selectCategories } from '../../Redux/features/category/categorySlice';
+import { fetchProducts } from '../../Redux/features/product/productThunk';
+import { selectProducts } from '../../Redux/features/product/productSlice';
 import {
   selectCartItems,
   selectCartTotalCount,
@@ -22,6 +25,7 @@ import {
   incrementQuantity,
   decrementQuantity,
 } from '../../Redux/features/cart/cartSlice';
+import { formatApiProduct, formatApiCategory, categoriesList } from '../../components/Explore/snacksData';
 
 import ratlamiSevImg from '../../assets/ratlami_sev.jpg';
 import khattaMeethaImg from '../../assets/khatta_meetha.jpg';
@@ -33,7 +37,7 @@ import mathriImg from '../../assets/mathri_namkeen.jpg';
 
 const initialProducts = [
   {
-    id: 1,
+    id: 'sev-bhujia-1',
     title: 'Artisanal Ratlami Sev (Extra Clove)',
     category: 'sev-bhujia',
     categoryName: 'Sev & Bhujia',
@@ -46,7 +50,7 @@ const initialProducts = [
     oilType: '100% Groundnut Oil',
   },
   {
-    id: 2,
+    id: 'chivda-mix-1',
     title: 'Royal Khatta Meetha Chivda Mix',
     category: 'chivda-mix',
     categoryName: 'Chivda & Mix',
@@ -59,7 +63,7 @@ const initialProducts = [
     oilType: '100% Groundnut Oil',
   },
   {
-    id: 3,
+    id: 'sev-bhujia-2',
     title: 'Authentic Bikaneri Hing Bhujia',
     category: 'sev-bhujia',
     categoryName: 'Sev & Bhujia',
@@ -72,7 +76,7 @@ const initialProducts = [
     oilType: '100% Groundnut Oil',
   },
   {
-    id: 4,
+    id: 'desi-sweets-1',
     title: 'Pure Gir Cow Ghee Besan Ladoo Box',
     category: 'desi-sweets',
     categoryName: 'Desi Sweets',
@@ -85,7 +89,7 @@ const initialProducts = [
     oilType: '100% Desi Cow Ghee',
   },
   {
-    id: 5,
+    id: 'roasted-cashews-1',
     title: 'Tandoori Spiced Roasted Cashews',
     category: 'roasted-cashews',
     categoryName: 'Roasted Nuts',
@@ -98,7 +102,7 @@ const initialProducts = [
     oilType: 'Dry Roasted',
   },
   {
-    id: 6,
+    id: 'murukku-crisps-1',
     title: 'Crispy Butter Murukku Chakli',
     category: 'murukku-crisps',
     categoryName: 'Murukku Crisps',
@@ -111,10 +115,10 @@ const initialProducts = [
     oilType: 'Cold-Pressed Groundnut Oil',
   },
   {
-    id: 7,
+    id: 'mathri-namkeen-1',
     title: 'Traditional Ajwain Flaky Mathri',
-    category: 'sev-bhujia',
-    categoryName: 'Mathri & Crisps',
+    category: 'mathri-namkeen',
+    categoryName: 'Mathri & Khasta',
     weight: '400g',
     packSize: '400g Tin',
     price: 180,
@@ -124,9 +128,9 @@ const initialProducts = [
     oilType: '100% Groundnut Oil',
   },
   {
-    id: 8,
+    id: 'festive-hampers-1',
     title: 'Royal Celebration Velvet Hamper Box',
-    category: 'desi-sweets',
+    category: 'festive-hampers',
     categoryName: 'Festive Hampers',
     weight: '1kg Gift Tin',
     packSize: '1kg Gift Tin',
@@ -144,11 +148,63 @@ const Home = () => {
   const totalCartCount = useSelector(selectCartTotalCount);
   const totalCartPrice = useSelector(selectCartSubtotal);
 
+  const reduxCategories = useSelector(selectCategories);
+  const reduxProducts = useSelector(selectProducts);
+
   const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchCategories({ limit: 100 }));
+    dispatch(fetchProducts({ limit: 100 }));
   }, [dispatch]);
+
+  // Combine Real Database Products with Initial Products
+  const allProductsList = useMemo(() => {
+    if (reduxProducts && reduxProducts.length > 0) {
+      const formatted = reduxProducts.map(formatApiProduct).filter(Boolean);
+      const existingTitles = new Set(
+        formatted.map((f) => (f.title || f.name || '').toLowerCase().trim())
+      );
+      const extra = initialProducts.filter(
+        (p) => !existingTitles.has((p.title || p.name || '').toLowerCase().trim())
+      );
+      return [...formatted, ...extra];
+    }
+    return initialProducts;
+  }, [reduxProducts]);
+
+  // Strict category filter
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === 'all') return allProductsList;
+    const act = activeCategory.toLowerCase().trim();
+
+    return allProductsList.filter((p) => {
+      const sCat = (p.category || '').toLowerCase().trim();
+      const sName = (p.categoryName || '').toLowerCase().trim();
+      const sSlug = (p.categorySlug || '').toLowerCase().trim();
+      const sId = p.categoryId ? String(p.categoryId).toLowerCase().trim() : '';
+      const rawId = p._id ? String(p._id).toLowerCase().trim() : '';
+
+      // 1. Exact matches
+      if (sCat && sCat === act) return true;
+      if (sSlug && sSlug === act) return true;
+      if (sId && sId === act) return true;
+      if (rawId && rawId === act) return true;
+      if (sName && sName === act) return true;
+
+      // 2. Normalized slug match
+      const normCat = sCat.replace(/[^a-z0-9]/g, '');
+      const normSlug = sSlug.replace(/[^a-z0-9]/g, '');
+      const normName = sName.replace(/[^a-z0-9]/g, '');
+      const normAct = act.replace(/[^a-z0-9]/g, '');
+
+      if (normAct && (normCat === normAct || normSlug === normAct || normName === normAct)) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [allProductsList, activeCategory]);
 
   const handleIncrement = (id) => {
     dispatch(incrementQuantity(id));
@@ -159,92 +215,83 @@ const Home = () => {
   };
 
   const handleAdd = (id) => {
-    const product = initialProducts.find((p) => p.id === id);
+    const product = allProductsList.find((p) => (p.id === id || p._id === id));
     if (product) {
       dispatch(
         addToCart({
-          ...product,
+          id: product.id || product._id,
+          title: product.title || product.name,
+          category: product.categoryName || product.category,
+          weight: product.weight || product.packSize || 'Standard Pack',
+          packSize: product.packSize || product.weight || 'Standard Pack',
+          price: product.price || product.sellingPrice,
+          originalPrice: product.originalPrice || product.mrp,
           quantity: 1,
+          image: product.image,
+          oilType: product.oilType,
         })
       );
     }
   };
 
   // Sync products with current quantities in Redux cart
-  const productsWithQuantities = initialProducts.map((prod) => {
-    const inCart = cartItems.find((c) => c.id === prod.id);
+  const productsWithQuantities = filteredProducts.map((prod) => {
+    const inCart = cartItems.find((c) => c.id === prod.id || c.id === prod._id);
     return {
       ...prod,
       quantity: inCart ? inCart.quantity : 0,
     };
   });
 
-  // Filter products by category
-  const filteredProducts =
-    activeCategory === 'all'
-      ? productsWithQuantities
-      : productsWithQuantities.filter((p) => {
-          const act = (activeCategory || '').toLowerCase();
-          const pCat = (p.category || '').toLowerCase();
-          const pName = (p.categoryName || '').toLowerCase();
-          return pCat === act || pCat.includes(act) || act.includes(pCat) || pName.includes(act);
-        });
-
   return (
-    <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
+    <div className="min-h-screen bg-stone-50/50 pb-20">
+      {/* Standardized Full-Width Layout Container Matching All Pages */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
-
-        {/* 1. Multi-Slide Interactive Hero Section */}
+        
+        {/* 1. Hero Section */}
         <HeroSection />
 
-        {/* 2. Live Kitchen Frying Pulse & Dispatch Countdown */}
-       
-
-        {/* 3. Brand Trust 4-Pill Bar */}
+        {/* 2. Brand Trust Strip */}
         <BrandTrustSection />
 
-        {/* 4. Explore Artisanal Categories Circular Scrollable Carousel */}
+        {/* 3. Artisanal Categories */}
         <ArtisanalCategories
           activeCategory={activeCategory}
           onSelectCategory={setActiveCategory}
         />
 
-        {/* 5. Popular Products Grid with Filter Tabs */}
+        {/* 4. Popular & Handcrafted Products */}
         <PopularProducts
-          products={filteredProducts}
+          products={productsWithQuantities}
           onIncrement={handleIncrement}
           onDecrement={handleDecrement}
           onAdd={handleAdd}
         />
 
-        {/* 6. Special Festive Deal & Coupon Banner */}
+        {/* 5. Chai-Time Pairing Experience */}
+        <ChaiPairingBanner />
+
+        {/* 6. Special Festive Offer Banner */}
         <SpecialOfferBanner />
 
-        {/* 7. Chai & 4 PM Evening Tea-Time Pairing Experience */}
-        <ChaiPairingBanner
-          onSelectChaiSpecials={() => {
-            setActiveCategory('chivda-mix');
-          }}
-        />
-
-        {/* 8. Customer Stories & Testimonials */}
+        {/* 7. Verified Customer Reviews */}
         <CustomerReviews />
 
-        {/* 9. Frequently Asked Questions (Accordion) */}
+        {/* 8. Frequently Asked Questions */}
         <FaqSection />
 
-        {/* 10. Newsletter & First Order Discount */}
+        {/* 9. Newsletter Subscription */}
         <NewsletterSection />
 
       </div>
 
-      {/* 11. Floating Sticky Cart Bar */}
+      {/* 10. Sticky Floating Cart Summary Bar */}
       <FloatingCartBar
         totalCount={totalCartCount}
         totalPrice={totalCartPrice}
       />
 
-      {/* 12. Mobile Bottom Navigation Bar */}
+      {/* 11. Mobile Bottom Navigation Bar */}
       <MobileBottomNav cartCount={totalCartCount} />
     </div>
   );

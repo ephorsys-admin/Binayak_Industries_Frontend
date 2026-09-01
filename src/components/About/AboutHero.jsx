@@ -1,20 +1,25 @@
+import React from 'react';
 import BgHero from '../ui/BgHero';
 import aboutImg from '../../assets/about.png';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ShieldCheck, Award } from 'lucide-react';
 
 const AboutHero = () => {
   return (
     <BgHero
-      badgeText="BINAYAK ARTISANAL HERITAGE • SINCE 1994"
+      badgeText="BINAYAK HERITAGE • SINCE 1994"
       badgeIcon={Sparkles}
-      title="Bringing the Taste of Tradition to Every Table"
+      title="Authentic Taste of Tradition"
       highlightText="Taste of Tradition"
-      subtitle="Crafting authentic Indian snacks, Ratlami Sev, and pure ghee sweets with 100% cold-pressed groundnut oil."
+      subtitle="Crafted fresh daily with 100% cold-pressed groundnut oil & pure desi ingredients."
       image={aboutImg}
       imageLayout="background"
-      theme="dark"
-      ctaText="Explore Our Delicacies"
+      theme="crimson"
+      ctaText="Explore Delicacies"
       ctaLink="/explore"
+      trustPoints={[
+        { icon: ShieldCheck, text: '100% Groundnut Oil' },
+        { icon: Award, text: '30+ Years Heritage' },
+      ]}
     />
   );
 };

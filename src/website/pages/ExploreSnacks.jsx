@@ -15,15 +15,20 @@ import {
   initialSnacksCatalog,
   tasteMoodCategories,
   formatApiCategory,
-  getCategoryIconAndStyle,
+  formatApiProduct,
 } from '../../components/Explore';
 import { FloatingCartBar, MobileBottomNav } from '../../components/Home';
-import { SearchX, Sparkles, RefreshCw, Layers } from 'lucide-react';
+import { SearchX, RefreshCw, Layers } from 'lucide-react';
 import { fetchCategories } from '../../Redux/features/category/categoryThunk';
 import {
   selectCategories,
   selectCategoryLoading,
 } from '../../Redux/features/category/categorySlice';
+import { fetchProducts } from '../../Redux/features/product/productThunk';
+import {
+  selectProducts,
+  selectProductLoading,
+} from '../../Redux/features/product/productSlice';
 import {
   selectCartItems,
   selectCartTotalCount,
@@ -41,6 +46,8 @@ const ExploreSnacks = () => {
 
   const reduxCategories = useSelector(selectCategories);
   const categoryLoading = useSelector(selectCategoryLoading);
+  const reduxProducts = useSelector(selectProducts);
+  const productLoading = useSelector(selectProductLoading);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
@@ -52,9 +59,10 @@ const ExploreSnacks = () => {
   const [sortBy, setSortBy] = useState('popular');
   const [quickViewSnack, setQuickViewSnack] = useState(null);
 
-  // Fetch real categories from API on mount
+  // 1. Fetch real categories and products from live API on mount
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchCategories({ limit: 100 }));
+    dispatch(fetchProducts({ limit: 100 }));
   }, [dispatch]);
 
   // Sync search param when changed externally
@@ -65,7 +73,7 @@ const ExploreSnacks = () => {
     }
   }, [searchParams]);
 
-  // Prepare full categories list with "All Categories" as the first pill
+  // 2. Prepare full categories list with "All Categories" as the first circle
   const displayCategoriesList = useMemo(() => {
     const allItem = {
       id: 'all',
@@ -101,16 +109,31 @@ const ExploreSnacks = () => {
     }
   };
 
-  // Synchronize snacks catalog with Redux cart quantities
+  // 3. Combine Real Database Products + Initial Catalog
+  const rawCatalog = useMemo(() => {
+    if (reduxProducts && reduxProducts.length > 0) {
+      const formatted = reduxProducts.map(formatApiProduct).filter(Boolean);
+      const existingTitles = new Set(
+        formatted.map((f) => (f.title || f.name || '').toLowerCase().trim())
+      );
+      const extra = initialSnacksCatalog.filter(
+        (s) => !existingTitles.has((s.title || s.name || '').toLowerCase().trim())
+      );
+      return [...formatted, ...extra];
+    }
+    return initialSnacksCatalog;
+  }, [reduxProducts]);
+
+  // 4. Synchronize snacks catalog with Redux cart quantities
   const snacks = useMemo(() => {
-    return initialSnacksCatalog.map((snack) => {
-      const inCart = cartItems.find((c) => c.id === snack.id);
+    return rawCatalog.map((snack) => {
+      const inCart = cartItems.find((c) => c.id === snack.id || c.id === snack._id);
       return {
         ...snack,
         quantity: inCart ? inCart.quantity : 0,
       };
     });
-  }, [cartItems]);
+  }, [rawCatalog, cartItems]);
 
   // Quantity Handlers using Redux
   const handleIncrement = (id) => {
@@ -122,17 +145,17 @@ const ExploreSnacks = () => {
   };
 
   const handleAdd = (id) => {
-    const snack = initialSnacksCatalog.find((s) => s.id === id);
+    const snack = rawCatalog.find((s) => s.id === id || s._id === id);
     if (snack) {
       dispatch(
         addToCart({
-          id: snack.id,
-          title: snack.title,
+          id: snack.id || snack._id,
+          title: snack.title || snack.name,
           category: snack.categoryName || snack.category,
           weight: snack.weight || 'Standard Pack',
           packSize: snack.weight || 'Standard Pack',
-          price: snack.price,
-          originalPrice: snack.originalPrice,
+          price: snack.price || snack.sellingPrice,
+          originalPrice: snack.originalPrice || snack.mrp,
           quantity: 1,
           image: snack.image,
           oilType: snack.oilType,
@@ -141,14 +164,18 @@ const ExploreSnacks = () => {
     }
   };
 
-  // Compute item counts per category for the circle badges
+  // 5. Compute item counts per category for the circle badges
   const snackCounts = useMemo(() => {
     const counts = {};
     snacks.forEach((s) => {
-      const cat = s.category || '';
-      counts[cat] = (counts[cat] || 0) + 1;
+      if (s.category) counts[s.category] = (counts[s.category] || 0) + 1;
       if (s.categoryId) counts[s.categoryId] = (counts[s.categoryId] || 0) + 1;
       if (s.categorySlug) counts[s.categorySlug] = (counts[s.categorySlug] || 0) + 1;
+      if (s.categoryName) {
+        counts[s.categoryName] = (counts[s.categoryName] || 0) + 1;
+        const normalized = s.categoryName.toLowerCase().replace(/\s+/g, '-');
+        counts[normalized] = (counts[normalized] || 0) + 1;
+      }
     });
     return counts;
   }, [snacks]);
@@ -158,26 +185,38 @@ const ExploreSnacks = () => {
     return snacks.filter((s) => s.isSpotlight);
   }, [snacks]);
 
-  // Filter and Sort Logic
+  // 6. Filter and Sort Logic (with strict, exact category matching)
   const filteredAndSortedSnacks = useMemo(() => {
     let result = [...snacks];
 
     // 1. Category Filter
     if (activeCategory !== 'all') {
-      const act = (activeCategory || '').toLowerCase();
+      const act = (activeCategory || '').toLowerCase().trim();
       result = result.filter((s) => {
-        const sCat = (s.category || '').toLowerCase();
-        const sName = (s.categoryName || '').toLowerCase();
-        const sSlug = (s.categorySlug || '').toLowerCase();
-        const sId = (s.categoryId || '').toLowerCase();
-        return (
-          sCat === act ||
-          sSlug === act ||
-          sId === act ||
-          sCat.includes(act) ||
-          act.includes(sCat) ||
-          sName.includes(act)
-        );
+        const sCat = (s.category || '').toLowerCase().trim();
+        const sName = (s.categoryName || '').toLowerCase().trim();
+        const sSlug = (s.categorySlug || '').toLowerCase().trim();
+        const sId = s.categoryId ? String(s.categoryId).toLowerCase().trim() : '';
+        const rawId = s._id ? String(s._id).toLowerCase().trim() : '';
+
+        // 1. Exact matches
+        if (sCat && sCat === act) return true;
+        if (sSlug && sSlug === act) return true;
+        if (sId && sId === act) return true;
+        if (rawId && rawId === act) return true;
+        if (sName && sName === act) return true;
+
+        // 2. Normalized slug match (e.g. "sev & bhujia" vs "sev-bhujia")
+        const normCat = sCat.replace(/[^a-z0-9]/g, '');
+        const normSlug = sSlug.replace(/[^a-z0-9]/g, '');
+        const normName = sName.replace(/[^a-z0-9]/g, '');
+        const normAct = act.replace(/[^a-z0-9]/g, '');
+
+        if (normAct && (normCat === normAct || normSlug === normAct || normName === normAct)) {
+          return true;
+        }
+
+        return false;
       });
     }
 
@@ -186,11 +225,11 @@ const ExploreSnacks = () => {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         (s) =>
-          s.title.toLowerCase().includes(q) ||
-          s.categoryName.toLowerCase().includes(q) ||
-          s.description.toLowerCase().includes(q) ||
+          (s.title || s.name || '').toLowerCase().includes(q) ||
+          (s.categoryName || '').toLowerCase().includes(q) ||
+          (s.description || '').toLowerCase().includes(q) ||
           (s.ingredients && s.ingredients.toLowerCase().includes(q)) ||
-          s.oilType.toLowerCase().includes(q)
+          (s.oilType && s.oilType.toLowerCase().includes(q))
       );
     }
 
@@ -201,12 +240,12 @@ const ExploreSnacks = () => {
       } else if (activeFilterTag === 'spicy') {
         result = result.filter((s) => s.isSpicy || s.spiceLevel >= 2);
       } else if (activeFilterTag === 'groundnut') {
-        result = result.filter((s) => s.oilType.includes('Groundnut'));
+        result = result.filter((s) => s.oilType && s.oilType.includes('Groundnut'));
       } else if (activeFilterTag === 'sweet') {
         result = result.filter((s) => s.category === 'desi-sweets' || s.category?.includes('sweet'));
       } else if (activeFilterTag === 'baked') {
         result = result.filter(
-          (s) => s.category === 'baked-light' || s.oilType.toLowerCase().includes('roasted')
+          (s) => s.category === 'baked-light' || (s.oilType && s.oilType.toLowerCase().includes('roasted'))
         );
       } else if (activeFilterTag === 'gift') {
         result = result.filter((s) => s.category === 'festive-hampers' || s.category?.includes('hamper'));
@@ -243,7 +282,7 @@ const ExploreSnacks = () => {
   // Sync quick view snack quantity with cart
   const activeQuickViewSnack = useMemo(() => {
     if (!quickViewSnack) return null;
-    const inCart = cartItems.find((c) => c.id === quickViewSnack.id);
+    const inCart = cartItems.find((c) => c.id === quickViewSnack.id || c.id === quickViewSnack._id);
     return {
       ...quickViewSnack,
       quantity: inCart ? inCart.quantity : 0,
@@ -254,11 +293,8 @@ const ExploreSnacks = () => {
     <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
         
-        {/* 1. Explore Hero Banner with Integrated Search Input */}
-        <ExploreHeroBanner
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
+        {/* 1. Explore Hero Banner */}
+        <ExploreHeroBanner />
 
         {/* 2. Artisanal Categories Scrollable Row with Real API Data */}
         <ArtisanalCategoryCircles
@@ -383,7 +419,7 @@ const ExploreSnacks = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {filteredAndSortedSnacks.map((snack) => (
               <SnackCard
-                key={snack.id}
+                key={snack.id || snack._id}
                 snack={snack}
                 onIncrement={handleIncrement}
                 onDecrement={handleDecrement}

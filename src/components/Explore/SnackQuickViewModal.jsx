@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   X, 
   Star, 
@@ -6,9 +6,7 @@ import {
   Minus, 
   ShieldCheck, 
   Flame, 
-  Sparkles, 
   Clock, 
-  CheckCircle2, 
   ShoppingBag 
 } from 'lucide-react';
 
@@ -19,6 +17,8 @@ const SnackQuickViewModal = ({
   onDecrement,
   onAdd,
 }) => {
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -29,6 +29,13 @@ const SnackQuickViewModal = ({
   }, [onClose]);
 
   if (!snack) return null;
+
+  const imagesList =
+    snack.images && snack.images.length > 0
+      ? snack.images.map((img) => (typeof img === 'string' ? img : img.url))
+      : [snack.image];
+
+  const currentImage = imagesList[activeImageIndex] || snack.image;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-stone-950/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -48,17 +55,39 @@ const SnackQuickViewModal = ({
         </button>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 sm:p-7">
-          {/* Product Image */}
-          <div className="relative aspect-square rounded-2xl overflow-hidden bg-stone-100 border border-stone-200/60">
-            <img
-              src={snack.image}
-              alt={snack.title}
-              className="w-full h-full object-cover"
-            />
-            {snack.isBestseller && (
-              <span className="absolute top-3 left-3 bg-[#04617b] text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider shadow-sm">
-                BESTSELLER
-              </span>
+          {/* Product Image + Gallery Thumbnails */}
+          <div className="space-y-3">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-stone-100 border border-stone-200/60 shadow-2xs">
+              <img
+                src={currentImage}
+                alt={snack.title}
+                className="w-full h-full object-cover"
+              />
+              {snack.isBestseller && (
+                <span className="absolute top-3 left-3 bg-[#04617b] text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider shadow-sm">
+                  BESTSELLER
+                </span>
+              )}
+            </div>
+
+            {/* Thumbnails row if multiple images exist */}
+            {imagesList.length > 1 && (
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                {imagesList.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveImageIndex(idx)}
+                    className={`w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
+                      activeImageIndex === idx
+                        ? 'border-[#981b2e] ring-2 ring-rose-200 scale-105'
+                        : 'border-stone-200 opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
             )}
           </div>
 
@@ -68,7 +97,7 @@ const SnackQuickViewModal = ({
               {/* Category & Rating */}
               <div className="flex items-center justify-between gap-2 mb-1">
                 <span className="text-[11px] font-extrabold text-[#981b2e] uppercase tracking-wider">
-                  {snack.categoryName}
+                  {snack.categoryName || snack.category}
                 </span>
                 <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 text-stone-900 text-xs font-bold">
                   <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
@@ -93,11 +122,11 @@ const SnackQuickViewModal = ({
               <div className="grid grid-cols-2 gap-2 mt-3 text-[11px]">
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-50 text-emerald-800 font-semibold border border-emerald-100">
                   <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                  <span>{snack.oilType}</span>
+                  <span className="truncate">{snack.oilType}</span>
                 </div>
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 text-amber-800 font-semibold border border-amber-100">
                   <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>Shelf Life: {snack.shelfLife}</span>
+                  <span className="truncate">Shelf Life: {snack.shelfLife}</span>
                 </div>
               </div>
 
@@ -145,7 +174,7 @@ const SnackQuickViewModal = ({
                 <span className="text-xs text-stone-400 font-medium block">Price</span>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-xl sm:text-2xl font-black text-stone-900 font-brand">
-                    ₹{snack.price}
+                    ₹{snack.price || snack.sellingPrice}
                   </span>
                   {snack.originalPrice && (
                     <span className="text-xs text-stone-400 line-through">
@@ -159,7 +188,7 @@ const SnackQuickViewModal = ({
                 <div className="inline-flex items-center gap-3 px-3.5 py-2 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-sm shadow-xs border border-amber-300">
                   <button
                     type="button"
-                    onClick={() => onDecrement(snack.id)}
+                    onClick={() => onDecrement(snack.id || snack._id)}
                     className="w-5 h-5 flex items-center justify-center hover:opacity-75 cursor-pointer"
                     aria-label="Decrease quantity"
                   >
@@ -170,7 +199,7 @@ const SnackQuickViewModal = ({
                   </span>
                   <button
                     type="button"
-                    onClick={() => onIncrement(snack.id)}
+                    onClick={() => onIncrement(snack.id || snack._id)}
                     className="w-5 h-5 flex items-center justify-center hover:opacity-75 cursor-pointer"
                     aria-label="Increase quantity"
                   >
@@ -180,7 +209,7 @@ const SnackQuickViewModal = ({
               ) : (
                 <button
                   type="button"
-                  onClick={() => onAdd(snack.id)}
+                  onClick={() => onAdd(snack.id || snack._id)}
                   className="px-6 py-2.5 rounded-full bg-[#083358] hover:bg-[#0c4a6e] text-white text-xs sm:text-sm font-extrabold transition-all active:scale-95 shadow-md cursor-pointer flex items-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4" />

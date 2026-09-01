@@ -89,7 +89,7 @@ const fallbackCategories = [
     _id: 'mathri-namkeen',
     name: 'Mathri & Khasta',
     slug: 'mathri-namkeen',
-    description: 'Traditional Ajwain Flaky Mathri & Khasta Puris for travel & festivals.',
+    description: 'Crispy Masala Mathri, Methi Puri & Ajwain Nimki for festive times.',
     productsCount: 5,
     status: true,
     sortOrder: 6,
@@ -136,11 +136,6 @@ const AdminCategories = () => {
     );
   });
 
-  const handleEditClick = (cat) => {
-    const catIdentifier = cat._id || cat.id || cat.slug;
-    navigate(`/admin/categories/edit/${catIdentifier}`);
-  };
-
   const handleOpenDeleteModal = (cat) => {
     setDeleteTargetCategory(cat);
   };
@@ -162,9 +157,9 @@ const AdminCategories = () => {
   };
 
   return (
-    <div className="space-y-5 sm:space-y-6">
+    <div className="space-y-5 sm:space-y-6 pb-10">
       
-      {/* Header */}
+      {/* 1. Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-stone-200">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-[#981b2e] text-xs font-black uppercase tracking-wider mb-1 border border-rose-200/60">
@@ -199,7 +194,7 @@ const AdminCategories = () => {
         </div>
       </div>
 
-      {/* Search & Stats Bar */}
+      {/* 2. Search & Stats Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
@@ -222,16 +217,97 @@ const AdminCategories = () => {
         </div>
       </div>
 
-      {/* Categories Table Card */}
-      <div className="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200/80 shadow-2xs overflow-hidden">
-        {isLoading && (
-          <div className="flex items-center justify-center py-10 gap-2 text-xs font-bold text-stone-500">
-            <Loader2 className="w-5 h-5 animate-spin text-[#981b2e]" />
-            <span>Fetching categories...</span>
-          </div>
-        )}
+      {isLoading && (
+        <div className="flex items-center justify-center py-8 gap-2 text-xs font-bold text-stone-500 bg-white rounded-3xl border border-stone-200">
+          <Loader2 className="w-5 h-5 animate-spin text-[#981b2e]" />
+          <span>Fetching categories...</span>
+        </div>
+      )}
 
-        <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+      {/* ========================================================
+          3. MOBILE VIEW (Cards for mobile screens < md)
+          ======================================================== */}
+      <div className="md:hidden space-y-3">
+        {filteredCategories.map((cat) => {
+          const catId = cat._id || cat.id || cat.slug;
+          const isActive = typeof cat.status === 'boolean' ? cat.status : cat.status === 'Active';
+          const imgSource = cat.image?.url || cat.image || ratlamiSevImg;
+
+          return (
+            <div
+              key={catId}
+              className="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-2xs space-y-3"
+            >
+              {/* Top Row: Image + Name + Description */}
+              <div className="flex items-start gap-3">
+                <img
+                  src={imgSource}
+                  alt={cat.name}
+                  className="w-16 h-16 rounded-2xl object-cover border border-stone-200 shrink-0 bg-stone-100"
+                  onError={(e) => {
+                    e.currentTarget.src = ratlamiSevImg;
+                  }}
+                />
+
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-stone-900 text-sm font-brand line-clamp-1">{cat.name}</h4>
+                  <p className="text-[11px] text-stone-500 line-clamp-2 mt-0.5">
+                    {cat.description || 'Artisanal snacks category'}
+                  </p>
+
+                  <div className="flex items-center gap-2 mt-2 text-[10px] text-stone-500">
+                    <span className="font-mono bg-stone-100 px-2 py-0.5 rounded-md font-semibold text-stone-700">
+                      /{cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-')}
+                    </span>
+                    <span>•</span>
+                    <span className="font-bold text-stone-700">{cat.productsCount || 0} Products</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Row: Status Toggle + Action Buttons */}
+              <div className="flex items-center justify-between pt-2 border-t border-stone-100 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleToggleStatus(cat)}
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-stone-100 text-stone-600'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-600' : 'bg-stone-400'}`} />
+                  <span>{isActive ? 'Active' : 'Inactive'}</span>
+                </button>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/admin/categories/edit/${catId}`}
+                    className="px-3.5 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenDeleteModal(cat)}
+                    className="p-1.5 rounded-xl text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    title="Delete Category"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ========================================================
+          4. DESKTOP VIEW (Table for md and larger screens)
+          ======================================================== */}
+      <div className="hidden md:block bg-white rounded-3xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs overflow-hidden">
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-xs min-w-[620px]">
             <thead>
               <tr className="border-b border-stone-200 text-stone-400 font-bold uppercase text-[10px]">
@@ -245,18 +321,19 @@ const AdminCategories = () => {
             </thead>
             <tbody className="divide-y divide-stone-100">
               {filteredCategories.map((cat) => {
+                const catId = cat._id || cat.id || cat.slug;
                 const isActive = typeof cat.status === 'boolean' ? cat.status : cat.status === 'Active';
                 const imgSource = cat.image?.url || cat.image || ratlamiSevImg;
 
                 return (
-                  <tr key={cat._id || cat.id} className="hover:bg-stone-50/70 transition-colors">
+                  <tr key={catId} className="hover:bg-stone-50/70 transition-colors">
                     {/* Category with Photo */}
                     <td className="py-3.5">
                       <div className="flex items-center gap-3">
                         <img
                           src={imgSource}
                           alt={cat.name}
-                          className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl object-cover border border-stone-200 shrink-0"
+                          className="w-12 h-12 rounded-2xl object-cover border border-stone-200 shrink-0 bg-stone-100"
                           onError={(e) => {
                             e.currentTarget.src = ratlamiSevImg;
                           }}
@@ -301,27 +378,23 @@ const AdminCategories = () => {
                       </button>
                     </td>
 
-                    {/* Actions: Edit opens dedicated page, Delete opens confirmation modal */}
+                    {/* Actions */}
                     <td className="py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => handleEditClick(cat)}
-                          className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-[#0a2540] hover:text-white text-[#0a2540] font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors border border-stone-200 shadow-2xs"
-                          title="Edit Category in Separate Page"
+                        <Link
+                          to={`/admin/categories/edit/${catId}`}
+                          className="p-1.5 rounded-lg text-stone-600 hover:text-stone-950 hover:bg-stone-100 cursor-pointer inline-flex items-center justify-center"
+                          title="Edit Category"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
-                          <span>Edit</span>
-                        </button>
-
+                          <Edit2 className="w-4 h-4" />
+                        </Link>
                         <button
                           type="button"
                           onClick={() => handleOpenDeleteModal(cat)}
-                          className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors border border-rose-200/60 shadow-2xs"
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
                           title="Delete Category"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>Delete</span>
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
@@ -335,41 +408,37 @@ const AdminCategories = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteTargetCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white rounded-3xl max-w-sm w-full border border-stone-200 shadow-2xl p-6 space-y-4 text-center">
-            
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-rose-200 mx-auto flex items-center justify-center text-[#981b2e] shadow-sm">
-              <AlertTriangle className="w-7 h-7" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-6 h-6" />
             </div>
 
-            <div className="space-y-1">
-              <h3 className="text-base font-black text-stone-900 font-brand">
+            <div className="text-center space-y-1">
+              <h3 className="text-base font-black font-brand text-stone-900">
                 Delete Category?
               </h3>
-              <p className="text-xs text-stone-600">
-                Are you sure you want to delete <strong className="text-stone-900">"{deleteTargetCategory.name}"</strong>? This will remove this category from the store menu.
+              <p className="text-xs text-stone-500">
+                Are you sure you want to delete <strong className="text-stone-800">"{deleteTargetCategory.name}"</strong>? Products inside will lose this category classification.
               </p>
             </div>
 
-            <div className="pt-2 flex items-center justify-center gap-2.5">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-stone-100">
               <button
                 type="button"
                 onClick={() => setDeleteTargetCategory(null)}
-                className="flex-1 py-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs cursor-pointer transition-colors"
+                className="px-4 py-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs cursor-pointer"
               >
                 Cancel
               </button>
-
               <button
                 type="button"
                 onClick={handleConfirmDelete}
-                className="flex-1 py-2.5 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-all"
+                className="px-5 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Yes, Delete</span>
+                Delete Category
               </button>
             </div>
-
           </div>
         </div>
       )}
