@@ -32,7 +32,7 @@ import {
   removeCoupon,
   clearCart,
 } from '../../Redux/features/cart/cartSlice';
-import { createOrder } from '../../Redux/features/orders/ordersSlice';
+
 
 const Cart = () => {
   const dispatch = useDispatch();

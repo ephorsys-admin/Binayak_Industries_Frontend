@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Send, CheckCircle2, AlertCircle, Sparkles, Loader2, MessageSquare } from 'lucide-react';
+import { submitContact } from '../../Redux/features/contact/contactThunk';
+import { selectContactActionLoading } from '../../Redux/features/contact/contactSlice';
 
 const inquiryTypes = [
   { id: 'order', label: 'Order Status & Tracking' },
@@ -11,6 +14,9 @@ const inquiryTypes = [
 ];
 
 const ContactForm = () => {
+  const dispatch = useDispatch();
+  const isSubmitting = useSelector(selectContactActionLoading);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,7 +26,6 @@ const ContactForm = () => {
     message: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -30,19 +35,28 @@ const ContactForm = () => {
     if (errorMessage) setErrorMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setErrorMessage('Please fill in all required fields (Name, Email, and Message).');
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      setErrorMessage('Please fill in all required fields (Name, Phone Number, and Message).');
       return;
     }
 
-    setIsSubmitting(true);
-    // Simulate swift network dispatch
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const typeLabel = inquiryTypes.find((i) => i.id === formData.inquiryType)?.label || 'General Inquiry';
+    const reasonPayload = `[${typeLabel}] ${formData.message.trim()}${formData.city ? ` • City: ${formData.city.trim()}` : ''}`;
+
+    const res = await dispatch(
+      submitContact({
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+        reason: reasonPayload,
+      })
+    );
+
+    if (res.success) {
       setIsSubmitted(true);
-    }, 900);
+    }
   };
 
   const handleReset = () => {
@@ -80,7 +94,7 @@ const ContactForm = () => {
           <button
             type="button"
             onClick={handleReset}
-            className="px-6 py-2.5 rounded-full bg-[#083358] hover:bg-[#0c4a6e] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            className="px-6 py-2.5 rounded-full bg-[#981b2e] hover:bg-[#801424] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
           >
             Send Another Message
           </button>
@@ -102,29 +116,93 @@ const ContactForm = () => {
           </div>
 
           {errorMessage && (
-            <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-[#981b2e] text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#981b2e]" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          {/* Inquiry Type Chips */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-stone-700 block">
-              Inquiry Subject <span className="text-rose-500">*</span>
+          {/* Name & Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-stone-700 mb-1.5">
+                Your Full Name *
+              </label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="e.g. Rahul Sharma"
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-stone-700 mb-1.5">
+                Contact Phone Number *
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="e.g. +91 98765 43210"
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300"
+              />
+            </div>
+          </div>
+
+          {/* Email & City */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-stone-700 mb-1.5">
+                Email Address (Optional)
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="e.g. rahul@example.com"
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-stone-700 mb-1.5">
+                City / Location
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="e.g. Jaipur, Rajasthan"
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300"
+              />
+            </div>
+          </div>
+
+          {/* Inquiry Type Radio / Chips */}
+          <div>
+            <label className="block text-xs font-bold text-stone-700 mb-2">
+              Inquiry Type / Purpose
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {inquiryTypes.map((type) => {
                 const isSelected = formData.inquiryType === type.id;
                 return (
                   <button
-                    key={type.id}
                     type="button"
+                    key={type.id}
                     onClick={() => setFormData((prev) => ({ ...prev, inquiryType: type.id }))}
-                    className={`p-2.5 rounded-xl text-xs font-bold text-left border transition-all cursor-pointer truncate ${
+                    className={`px-3 py-2 rounded-2xl text-[11px] font-bold border text-left transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#981b2e] bg-rose-50/70 text-[#981b2e] ring-2 ring-[#981b2e]/10'
-                        : 'border-stone-200 bg-stone-50/50 text-stone-700 hover:border-stone-300'
+                        ? 'bg-[#981b2e] text-white border-[#981b2e] shadow-xs'
+                        : 'bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200'
                     }`}
                   >
                     {type.label}
@@ -134,118 +212,40 @@ const ContactForm = () => {
             </div>
           </div>
 
-          {/* Form Fields Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            {/* Full Name */}
-            <div className="space-y-1">
-              <label htmlFor="contact-name" className="text-xs font-bold text-stone-700 block">
-                Your Full Name <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="contact-name"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="e.g. Rajesh Sharma"
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#981b2e]/20 focus:border-[#981b2e] bg-stone-50/30"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="space-y-1">
-              <label htmlFor="contact-email" className="text-xs font-bold text-stone-700 block">
-                Email Address <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="contact-email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="rajesh@example.com"
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#981b2e]/20 focus:border-[#981b2e] bg-stone-50/30"
-              />
-            </div>
-
-            {/* Phone */}
-            <div className="space-y-1">
-              <label htmlFor="contact-phone" className="text-xs font-bold text-stone-700 block">
-                Mobile Number (Optional)
-              </label>
-              <input
-                id="contact-phone"
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="+91 98765 43210"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#981b2e]/20 focus:border-[#981b2e] bg-stone-50/30"
-              />
-            </div>
-
-            {/* City / State */}
-            <div className="space-y-1">
-              <label htmlFor="contact-city" className="text-xs font-bold text-stone-700 block">
-                City / Location (Optional)
-              </label>
-              <input
-                id="contact-city"
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="e.g. Pune, Mumbai, Delhi"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#981b2e]/20 focus:border-[#981b2e] bg-stone-50/30"
-              />
-            </div>
-
-          </div>
-
           {/* Message Textarea */}
-          <div className="space-y-1">
-            <label htmlFor="contact-message" className="text-xs font-bold text-stone-700 block">
-              Your Message or Requirements <span className="text-rose-500">*</span>
+          <div>
+            <label className="block text-xs font-bold text-stone-700 mb-1.5">
+              Your Message or Requirements *
             </label>
             <textarea
-              id="contact-message"
               name="message"
+              required
               rows={4}
               value={formData.message}
               onChange={handleChange}
-              placeholder="Tell us about your order, quantity requirement, or question in detail..."
-              required
-              className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#981b2e]/20 focus:border-[#981b2e] bg-stone-50/30 resize-none"
+              placeholder="Tell us what you are looking for (e.g. 50 hampers for corporate Diwali gifting, custom sweets box order, delivery queries, etc.)"
+              className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 resize-none"
             />
           </div>
 
           {/* Submit Button */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[11px] text-stone-400 font-medium text-center sm:text-left">
-              🔒 Your information is confidential and will never be shared with third parties.
-            </p>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#981b2e] hover:bg-[#801424] text-white text-xs sm:text-sm font-black transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Dispatching...</span>
-                </>
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  <span>Submit Inquiry</span>
-                </>
-              )}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Sending Message...</span>
+              </>
+            ) : (
+              <>
+                <span>Submit Inquiry</span>
+                <Send className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </form>
       )}
     </div>
