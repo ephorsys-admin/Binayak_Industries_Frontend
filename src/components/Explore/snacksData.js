@@ -22,6 +22,64 @@ import cashewsImg from '../../assets/roasted_cashews.jpg';
 import desiSweetsImg from '../../assets/desi_sweets.jpg';
 import mathriImg from '../../assets/mathri_namkeen.jpg';
 
+export const getCategoryIconAndStyle = (nameOrSlug = '') => {
+  const s = (nameOrSlug || '').toLowerCase();
+  if (s.includes('all')) {
+    return { icon: Layers, bg: 'bg-stone-100', border: 'border-stone-200', iconColor: 'text-stone-800', fallbackImg: ratlamiSevImg };
+  }
+  if (s.includes('sev') || s.includes('bhujia')) {
+    return { icon: UtensilsCrossed, bg: 'bg-rose-50', border: 'border-rose-100', iconColor: 'text-[#981b2e]', fallbackImg: ratlamiSevImg };
+  }
+  if (s.includes('chivda') || s.includes('mix') || s.includes('poha')) {
+    return { icon: Sparkles, bg: 'bg-amber-50', border: 'border-amber-100', iconColor: 'text-amber-700', fallbackImg: khattaMeethaImg };
+  }
+  if (s.includes('murukku') || s.includes('chakli') || s.includes('crisp')) {
+    return { icon: Cookie, bg: 'bg-orange-50', border: 'border-orange-100', iconColor: 'text-orange-700', fallbackImg: murukkuImg };
+  }
+  if (s.includes('cashew') || s.includes('nut') || s.includes('badam') || s.includes('almond') || s.includes('dry fruit') || s.includes('pista')) {
+    return { icon: Nut, bg: 'bg-emerald-50', border: 'border-emerald-100', iconColor: 'text-emerald-700', fallbackImg: cashewsImg };
+  }
+  if (s.includes('sweet') || s.includes('mithai') || s.includes('ladoo') || s.includes('jamun') || s.includes('peda')) {
+    return { icon: Candy, bg: 'bg-amber-50', border: 'border-amber-100', iconColor: 'text-amber-800', fallbackImg: desiSweetsImg };
+  }
+  if (s.includes('mathri') || s.includes('khasta') || s.includes('farsan') || s.includes('gathiya') || s.includes('namkeen')) {
+    return { icon: Flame, bg: 'bg-red-50', border: 'border-red-100', iconColor: 'text-red-700', fallbackImg: mathriImg };
+  }
+  if (s.includes('bake') || s.includes('diet') || s.includes('light') || s.includes('makhana')) {
+    return { icon: Feather, bg: 'bg-purple-50', border: 'border-purple-100', iconColor: 'text-purple-700', fallbackImg: khattaMeethaImg };
+  }
+  if (s.includes('hamper') || s.includes('gift') || s.includes('box')) {
+    return { icon: Gift, bg: 'bg-rose-50', border: 'border-rose-100', iconColor: 'text-[#981b2e]', fallbackImg: heroBannerImg };
+  }
+  return { icon: UtensilsCrossed, bg: 'bg-rose-50', border: 'border-rose-100', iconColor: 'text-[#981b2e]', fallbackImg: ratlamiSevImg };
+};
+
+export const formatApiCategory = (cat) => {
+  if (!cat) return null;
+  const identifier = cat.slug || cat._id || cat.id || '';
+  const style = getCategoryIconAndStyle(cat.slug || cat.name || '');
+  const imageUrl = cat.image?.url || (typeof cat.image === 'string' && cat.image ? cat.image : '') || style.fallbackImg;
+
+  return {
+    id: identifier,
+    _id: cat._id,
+    slug: cat.slug || identifier,
+    name: cat.name || 'Category',
+    shortName: cat.name ? cat.name.split(' ')[0] : 'Category',
+    subtitle: cat.description || 'Freshly Handcrafted Delicacies',
+    description: cat.description || '',
+    image: imageUrl,
+    rawImage: cat.image,
+    icon: style.icon,
+    bg: style.bg,
+    border: style.border,
+    iconColor: style.iconColor,
+    fallbackImg: style.fallbackImg,
+    status: cat.status !== undefined ? cat.status : true,
+    sortOrder: cat.sortOrder || 0,
+  };
+};
+
 export const categoriesList = [
   {
     id: 'all',
