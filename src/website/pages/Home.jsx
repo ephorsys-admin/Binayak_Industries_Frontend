@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HeroSection,
@@ -13,6 +13,7 @@ import {
   MobileBottomNav,
 } from '../../components/Home';
 import { ChaiPairingBanner } from '../../components/Explore';
+import { fetchCategories } from '../../Redux/features/category/categoryThunk';
 import {
   selectCartItems,
   selectCartTotalCount,
@@ -145,6 +146,10 @@ const Home = () => {
 
   const [activeCategory, setActiveCategory] = useState('all');
 
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
   const handleIncrement = (id) => {
     dispatch(incrementQuantity(id));
   };
@@ -178,7 +183,12 @@ const Home = () => {
   const filteredProducts =
     activeCategory === 'all'
       ? productsWithQuantities
-      : productsWithQuantities.filter((p) => p.category === activeCategory);
+      : productsWithQuantities.filter((p) => {
+          const act = (activeCategory || '').toLowerCase();
+          const pCat = (p.category || '').toLowerCase();
+          const pName = (p.categoryName || '').toLowerCase();
+          return pCat === act || pCat.includes(act) || act.includes(pCat) || pName.includes(act);
+        });
 
   return (
     <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">

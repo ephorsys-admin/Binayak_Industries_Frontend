@@ -14,9 +14,16 @@ import {
   categoriesList,
   initialSnacksCatalog,
   tasteMoodCategories,
+  formatApiCategory,
+  getCategoryIconAndStyle,
 } from '../../components/Explore';
 import { FloatingCartBar, MobileBottomNav } from '../../components/Home';
-import { SearchX, Sparkles, RefreshCw } from 'lucide-react';
+import { SearchX, Sparkles, RefreshCw, Layers } from 'lucide-react';
+import { fetchCategories } from '../../Redux/features/category/categoryThunk';
+import {
+  selectCategories,
+  selectCategoryLoading,
+} from '../../Redux/features/category/categorySlice';
 import {
   selectCartItems,
   selectCartTotalCount,
@@ -32,6 +39,9 @@ const ExploreSnacks = () => {
   const totalCartCount = useSelector(selectCartTotalCount);
   const totalCartPrice = useSelector(selectCartSubtotal);
 
+  const reduxCategories = useSelector(selectCategories);
+  const categoryLoading = useSelector(selectCategoryLoading);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
 
@@ -42,6 +52,11 @@ const ExploreSnacks = () => {
   const [sortBy, setSortBy] = useState('popular');
   const [quickViewSnack, setQuickViewSnack] = useState(null);
 
+  // Fetch real categories from API on mount
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
   // Sync search param when changed externally
   useEffect(() => {
     const urlQuery = searchParams.get('search');
@@ -49,6 +64,32 @@ const ExploreSnacks = () => {
       setSearchQuery(urlQuery);
     }
   }, [searchParams]);
+
+  // Prepare full categories list with "All Categories" as the first pill
+  const displayCategoriesList = useMemo(() => {
+    const allItem = {
+      id: 'all',
+      slug: 'all',
+      name: 'All Categories',
+      shortName: 'All',
+      tagline: 'Entire Artisanal Collection',
+      icon: Layers,
+      bg: 'bg-stone-100',
+      activeBg: 'bg-stone-900 text-white',
+      iconColor: 'text-stone-800',
+      border: 'border-stone-200',
+      accentColor: '#1c1917',
+      badge: 'All items',
+      description: 'Explore the full spectrum of authentic, artisanal snacks freshly prepared daily.',
+    };
+
+    if (reduxCategories && reduxCategories.length > 0) {
+      const formatted = reduxCategories.map((c) => formatApiCategory(c)).filter(Boolean);
+      return [allItem, ...formatted];
+    }
+
+    return categoriesList;
+  }, [reduxCategories]);
 
   // Handle Search Input Change
   const handleSearchChange = (val) => {
@@ -104,7 +145,10 @@ const ExploreSnacks = () => {
   const snackCounts = useMemo(() => {
     const counts = {};
     snacks.forEach((s) => {
-      counts[s.category] = (counts[s.category] || 0) + 1;
+      const cat = s.category || '';
+      counts[cat] = (counts[cat] || 0) + 1;
+      if (s.categoryId) counts[s.categoryId] = (counts[s.categoryId] || 0) + 1;
+      if (s.categorySlug) counts[s.categorySlug] = (counts[s.categorySlug] || 0) + 1;
     });
     return counts;
   }, [snacks]);
@@ -120,7 +164,21 @@ const ExploreSnacks = () => {
 
     // 1. Category Filter
     if (activeCategory !== 'all') {
-      result = result.filter((s) => s.category === activeCategory);
+      const act = (activeCategory || '').toLowerCase();
+      result = result.filter((s) => {
+        const sCat = (s.category || '').toLowerCase();
+        const sName = (s.categoryName || '').toLowerCase();
+        const sSlug = (s.categorySlug || '').toLowerCase();
+        const sId = (s.categoryId || '').toLowerCase();
+        return (
+          sCat === act ||
+          sSlug === act ||
+          sId === act ||
+          sCat.includes(act) ||
+          act.includes(sCat) ||
+          sName.includes(act)
+        );
+      });
     }
 
     // 2. Search Query Filter
@@ -145,13 +203,13 @@ const ExploreSnacks = () => {
       } else if (activeFilterTag === 'groundnut') {
         result = result.filter((s) => s.oilType.includes('Groundnut'));
       } else if (activeFilterTag === 'sweet') {
-        result = result.filter((s) => s.category === 'desi-sweets');
+        result = result.filter((s) => s.category === 'desi-sweets' || s.category?.includes('sweet'));
       } else if (activeFilterTag === 'baked') {
         result = result.filter(
           (s) => s.category === 'baked-light' || s.oilType.toLowerCase().includes('roasted')
         );
       } else if (activeFilterTag === 'gift') {
-        result = result.filter((s) => s.category === 'festive-hampers');
+        result = result.filter((s) => s.category === 'festive-hampers' || s.category?.includes('hamper'));
       }
     }
 
@@ -177,8 +235,10 @@ const ExploreSnacks = () => {
 
   // Selected Category Info Object
   const activeCategoryObj = useMemo(() => {
-    return categoriesList.find((c) => c.id === activeCategory);
-  }, [activeCategory]);
+    return displayCategoriesList.find(
+      (c) => (c.id || c.slug || c._id) === activeCategory
+    );
+  }, [displayCategoriesList, activeCategory]);
 
   // Sync quick view snack quantity with cart
   const activeQuickViewSnack = useMemo(() => {
@@ -200,15 +260,16 @@ const ExploreSnacks = () => {
           onSearchChange={handleSearchChange}
         />
 
-        {/* 2. Artisanal Categories Scrollable Row */}
+        {/* 2. Artisanal Categories Scrollable Row with Real API Data */}
         <ArtisanalCategoryCircles
-          categories={categoriesList}
+          categories={displayCategoriesList}
           activeCategory={activeCategory}
           onSelectCategory={(catId) => {
             setActiveCategory(catId);
             setActiveMood('all');
           }}
-          counts={snackCounts}
+          snackCounts={snackCounts}
+          isLoading={categoryLoading}
         />
 
         {/* 3. Daily Kitchen Fresh Spotlight Carousel */}
@@ -248,8 +309,22 @@ const ExploreSnacks = () => {
         {activeCategory !== 'all' && activeCategoryObj && (
           <div className="flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${activeCategoryObj.bg} ${activeCategoryObj.border} border flex items-center justify-center shrink-0`}>
-                <activeCategoryObj.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${activeCategoryObj.iconColor}`} />
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${activeCategoryObj.bg || 'bg-rose-50'} ${activeCategoryObj.border || 'border-rose-100'} border flex items-center justify-center shrink-0 overflow-hidden shadow-2xs`}>
+                {activeCategoryObj.image?.url || (typeof activeCategoryObj.image === 'string' && activeCategoryObj.image) ? (
+                  <img
+                    src={activeCategoryObj.image?.url || activeCategoryObj.image}
+                    alt={activeCategoryObj.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = activeCategoryObj.fallbackImg || '';
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                ) : activeCategoryObj.icon ? (
+                  <activeCategoryObj.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${activeCategoryObj.iconColor || 'text-[#981b2e]'}`} />
+                ) : (
+                  <Layers className="w-5 h-5 text-[#981b2e]" />
+                )}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
@@ -257,11 +332,11 @@ const ExploreSnacks = () => {
                     {activeCategoryObj.name}
                   </h3>
                   <span className="text-[10px] sm:text-[11px] font-bold text-stone-500 bg-stone-100 px-1.5 sm:px-2 py-0.5 rounded-full border border-stone-200 shrink-0">
-                    {filteredAndSortedSnacks.length}
+                    {filteredAndSortedSnacks.length} items
                   </span>
                 </div>
                 <p className="text-[11px] sm:text-xs text-stone-500 font-medium line-clamp-1">
-                  {activeCategoryObj.description}
+                  {activeCategoryObj.description || activeCategoryObj.subtitle}
                 </p>
               </div>
             </div>
