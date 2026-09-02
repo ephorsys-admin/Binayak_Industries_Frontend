@@ -17,12 +17,15 @@ import {
   ShoppingBag,
   CheckCircle2,
   AlertCircle,
+  Loader2,
+  LocateFixed,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { placeOrderApi } from '../../Redux/services/orderService';
 
 const addressTypes = [
   { id: 'Home', label: 'Home', icon: Home },
-  { id: 'Work', label: 'Work / Office', icon: Briefcase },
+  { id: 'Work / Office', label: 'Work / Office', icon: Briefcase },
   { id: 'Other', label: 'Other', icon: Building },
 ];
 
@@ -77,6 +80,7 @@ const CheckoutModal = ({
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
 
   if (!isOpen) return null;
 
@@ -104,6 +108,79 @@ const CheckoutModal = ({
     });
     setErrors({});
     toast.success('Auto-filled with demo delivery details!');
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setIsDetectingLocation(true);
+    const loadingToast = toast.loading('Detecting GPS location...');
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`
+          );
+          const data = await res.json();
+          const addr = data.address || {};
+
+          const street = [
+            addr.building || addr.house_number,
+            addr.road || addr.street,
+            addr.suburb || addr.neighbourhood || addr.residential,
+          ]
+            .filter(Boolean)
+            .join(', ');
+
+          const detectedCity =
+            addr.city || addr.town || addr.village || addr.county || addr.state_district || 'Jaipur';
+          const detectedState = addr.state || 'Rajasthan';
+          const detectedPincode = (addr.postcode || '').replace(/\D/g, '').slice(0, 6) || '302017';
+          const detectedLandmark = addr.amenity || addr.landmark || addr.suburb || '';
+
+          setFormData((prev) => ({
+            ...prev,
+            addressLine: street || data.display_name?.split(',').slice(0, 2).join(',') || prev.addressLine,
+            city: detectedCity,
+            state: detectedState,
+            pincode: detectedPincode || prev.pincode,
+            landmark: detectedLandmark || prev.landmark,
+          }));
+
+          setErrors((prev) => ({
+            ...prev,
+            addressLine: '',
+            city: '',
+            state: '',
+            pincode: '',
+          }));
+
+          toast.dismiss(loadingToast);
+          toast.success('📍 Current location auto-detected and filled!');
+        } catch (err) {
+          console.error('Reverse geocoding error:', err);
+          toast.dismiss(loadingToast);
+          toast.error('Failed to fetch address details from GPS.');
+        } finally {
+          setIsDetectingLocation(false);
+        }
+      },
+      (error) => {
+        setIsDetectingLocation(false);
+        toast.dismiss(loadingToast);
+        if (error.code === error.PERMISSION_DENIED) {
+          toast.error('Location access denied. Please allow location permissions in browser.');
+        } else {
+          toast.error('Unable to retrieve location. Please fill manually.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+    );
   };
 
   const validate = () => {
@@ -134,7 +211,7 @@ const CheckoutModal = ({
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
       toast.error('Please fill all required delivery details properly.');
@@ -143,108 +220,101 @@ const CheckoutModal = ({
 
     setIsSubmitting(true);
 
-    const randomId = Math.floor(10000 + Math.random() * 90000);
-    const orderId = `BIN-${randomId}`;
+    const paymentMethodNames = {
+      COD: 'Cash on Delivery',
+      UPI: 'Instant UPI / Google Pay / PhonePe',
+      Card: 'Credit / Debit Card & NetBanking',
+    };
 
-    const today = new Date();
-    const placedDateStr = today.toLocaleDateString('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-    }) + ` • ${today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
-
-    const deliveryDate = new Date();
-    deliveryDate.setDate(today.getDate() + 2);
-    const estDeliveryStr = deliveryDate.toLocaleDateString('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-    });
-
-    const newOrder = {
-      id: orderId,
-      placedDate: placedDateStr,
-      estimatedDelivery: estDeliveryStr,
-      status: 'preparing',
-      statusLabel: 'Preparing in Kitchen',
-      statusStep: 1,
-      courier: {
-        partner: 'BlueDart Express',
-        trackingNumber: `BD-${randomId}1902IN`,
-        currentLocation: 'Jaipur Sorting Hub, Rajasthan',
-        lastUpdate: 'Order Placed - Fresh morning batch being prepared',
-      },
-      items: cartItems.map((item) => ({
-        id: item.id,
-        title: item.title,
-        category: item.category || 'Namkeen',
-        packSize: item.packSize || item.weight || '500g Pack',
-        quantity: item.quantity,
-        price: item.price,
-        image: item.image,
-        oilType: item.oilType || '100% Groundnut Oil',
-      })),
-      pricing: {
-        subtotal,
-        deliveryFee,
-        discount: discountAmount,
-        couponCode: appliedCoupon || '',
-        totalAmount,
-      },
-      payment: {
-        method:
-          formData.paymentMethod === 'COD'
-            ? 'Cash on Delivery (Pay upon Receipt)'
-            : formData.paymentMethod === 'UPI'
-            ? 'UPI / Google Pay (Confirmed)'
-            : 'Online Card / NetBanking',
-        transactionId: `TXN-${Date.now().toString().slice(-8)}`,
-        status: formData.paymentMethod === 'COD' ? 'Pay on Delivery' : 'Paid Online',
-      },
-      shippingAddress: {
+    const payload = {
+      customer: {
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
-        addressLine: formData.addressLine.trim(),
+        address: formData.addressLine.trim(),
         city: formData.city.trim(),
-        state: formData.state.trim(),
+        state: formData.state.trim() || 'Rajasthan',
         pincode: formData.pincode.trim(),
         landmark: formData.landmark.trim(),
-        addressType: formData.addressType,
+        addressType: formData.addressType || 'Home',
         deliveryNotes: formData.deliveryNotes.trim(),
       },
-      timeline: [
-        {
-          title: 'Order Placed & Verified',
-          time: placedDateStr,
-          desc: `Order received for ${formData.name}. Kitchen preparation started.`,
-          done: true,
-        },
-        {
-          title: 'Fresh Batch Frying & FreshLock Sealed',
-          time: 'In Progress',
-          desc: 'Master halwai frying in 100% cold-pressed groundnut oil.',
-          done: true,
-        },
-        {
-          title: 'Handover to BlueDart Express',
-          time: `Expected Tomorrow, 09:00 AM`,
-          desc: 'Air Express courier dispatch from Jaipur Central Hub.',
-          done: false,
-        },
-        {
-          title: 'Out for Final Delivery',
-          time: `Expected ${estDeliveryStr}`,
-          desc: `Courier will deliver to ${formData.addressLine}, ${formData.city}.`,
-          done: false,
-        },
-      ],
+      items: cartItems.map((item) => ({
+        productId: item.id || item._id,
+        name: item.title || item.name,
+        quantity: item.quantity || 1,
+        price: item.price,
+        packSize: item.packSize || item.weight || 'Piece',
+        image: item.image,
+      })),
+      paymentMethod: paymentMethodNames[formData.paymentMethod] || 'Cash on Delivery',
+      couponCode: appliedCoupon || '',
+      guestToken: localStorage.getItem('guestToken') || '',
     };
 
-    setTimeout(() => {
+    try {
+      const response = await placeOrderApi(payload);
+      const createdOrder = response.data;
+      const orderId = createdOrder.orderId || `BIN-${Date.now().toString().slice(-4)}`;
+
+      const today = new Date();
+      const placedDateStr =
+        today.toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        }) + ` • ${today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+
+      const deliveryDate = new Date();
+      deliveryDate.setDate(today.getDate() + 2);
+      const estDeliveryStr = deliveryDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      });
+
+      const confirmedOrderObject = {
+        id: orderId.replace(/^#/, ''),
+        orderId: orderId,
+        placedDate: placedDateStr,
+        estimatedDelivery: estDeliveryStr,
+        status: createdOrder.status || 'Kitchen Preparing',
+        statusLabel: createdOrder.status || 'Kitchen Preparing',
+        items: (createdOrder.items || cartItems).map((it) => ({
+          id: it.product || it.id,
+          title: it.name || it.title,
+          packSize: it.unit || it.packSize || '500g Pack',
+          quantity: it.quantity,
+          price: it.sellingPrice || it.price,
+          image: it.image,
+        })),
+        pricing: {
+          subtotal: createdOrder.pricing?.itemsTotal || subtotal,
+          deliveryFee: createdOrder.pricing?.shippingFee || deliveryFee,
+          discount: createdOrder.pricing?.discountAmount || discountAmount,
+          couponCode: createdOrder.pricing?.couponCode || appliedCoupon || '',
+          totalAmount: createdOrder.pricing?.grandTotal || totalAmount,
+        },
+        shippingAddress: {
+          name: createdOrder.customer?.name || formData.name.trim(),
+          email: createdOrder.customer?.email || formData.email.trim(),
+          phone: createdOrder.customer?.phone || formData.phone.trim(),
+          addressLine: createdOrder.customer?.address || formData.addressLine.trim(),
+          city: createdOrder.customer?.city || formData.city.trim(),
+          state: createdOrder.customer?.state || formData.state.trim(),
+          pincode: createdOrder.customer?.pincode || formData.pincode.trim(),
+          landmark: createdOrder.customer?.landmark || formData.landmark.trim(),
+          addressType: createdOrder.customer?.addressType || formData.addressType,
+        },
+      };
+
+      toast.success(response.message || 'Order placed successfully! A confirmation email has been sent.');
       setIsSubmitting(false);
-      onConfirmOrder(newOrder);
-    }, 600);
+      onConfirmOrder(confirmedOrderObject);
+    } catch (err) {
+      setIsSubmitting(false);
+      toast.error(err.message || 'Failed to submit order. Please try again.');
+    }
   };
 
   return (
@@ -382,9 +452,25 @@ const CheckoutModal = ({
 
           {/* Section 2: Delivery Location & Address */}
           <div className="space-y-3">
-            <div className="flex items-center gap-1.5 text-stone-900 font-bold text-xs uppercase tracking-wider pb-1 border-b border-stone-100">
-              <MapPin className="w-3.5 h-3.5 text-[#981b2e]" />
-              <span>2. Delivery Location & Shipping Address</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-stone-100">
+              <div className="flex items-center gap-1.5 text-stone-900 font-bold text-xs uppercase tracking-wider">
+                <MapPin className="w-3.5 h-3.5 text-[#981b2e]" />
+                <span>2. Delivery Location & Shipping Address</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleDetectLocation}
+                disabled={isDetectingLocation}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-all cursor-pointer active:scale-95 disabled:opacity-60 shadow-xs"
+                title="Auto-detect current location using GPS"
+              >
+                {isDetectingLocation ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-700" />
+                ) : (
+                  <LocateFixed className="w-3.5 h-3.5 text-emerald-600" />
+                )}
+                <span>{isDetectingLocation ? 'Detecting Location...' : '📍 Use Current Location'}</span>
+              </button>
             </div>
 
             {/* Address Type Selector */}

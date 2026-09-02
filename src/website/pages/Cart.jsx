@@ -17,7 +17,12 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { MobileBottomNav } from '../../components/Home';
-import { CheckoutModal, OrderSuccessModal } from '../../components/Cart';
+import {
+  CheckoutModal,
+  OrderSuccessModal,
+  OrderSuccessAnimation,
+  OrderBillModal,
+} from '../../components/Cart';
 import {
   selectCartItems,
   selectCartSubtotal,
@@ -46,6 +51,8 @@ const Cart = () => {
   const [couponCode, setCouponCode] = useState('');
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState(null);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [showBillModal, setShowBillModal] = useState(false);
 
   const handleIncrement = (id) => {
     dispatch(incrementQuantity(id));
@@ -76,10 +83,15 @@ const Cart = () => {
   };
 
   const handleOrderConfirmed = (newOrder) => {
-    dispatch(createOrder(newOrder));
     dispatch(clearCart());
     setIsCheckoutOpen(false);
     setConfirmedOrder(newOrder);
+    setShowSuccessAnimation(true);
+  };
+
+  const handleOpenBillFromAnimation = () => {
+    setShowSuccessAnimation(false);
+    setShowBillModal(true);
   };
 
   const gstAmount = Math.round(subtotal * 0.05);
@@ -360,11 +372,20 @@ const Cart = () => {
         onConfirmOrder={handleOrderConfirmed}
       />
 
-      {/* Celebratory Order Confirmation Modal */}
-      <OrderSuccessModal
-        isOpen={!!confirmedOrder}
+      {/* GPay Style Full-Screen Order Success Animation */}
+      {showSuccessAnimation && (
+        <OrderSuccessAnimation
+          order={confirmedOrder}
+          onClose={() => setShowSuccessAnimation(false)}
+          onViewBill={handleOpenBillFromAnimation}
+        />
+      )}
+
+      {/* Official Tax Invoice & Order Bill Modal with Download/Print Option */}
+      <OrderBillModal
+        isOpen={showBillModal}
         order={confirmedOrder}
-        onClose={() => setConfirmedOrder(null)}
+        onClose={() => setShowBillModal(false)}
       />
 
       {/* Mobile Bottom Nav */}
