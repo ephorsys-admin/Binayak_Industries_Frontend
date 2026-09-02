@@ -69,3 +69,62 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 16px 32px -8px rgba(12, 35, 60, 0.08);
 }
+
+/* =====================================================
+   GPay Style Animation Keyframes
+   ===================================================== */
+@keyframes gpayPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gpayTick {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-gpayPop {
+  animation: gpayPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-gpayTick {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: gpayTick 0.5s ease-out 0.35s forwards;
+}
+
+/* Print Invoice Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-order-bill, #printable-order-bill * {
+    visibility: visible;
+  }
+  #printable-order-bill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background: white;
+    color: black;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

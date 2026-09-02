@@ -1,176 +1,93 @@
-import React, { useState, useMemo } from 'react';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import toast from 'react-hot-toast';
+import { Loader2 } from 'lucide-react';
 import {
   OrderHeader,
   OrderFilterBar,
   OrderTable,
   OrderDetailsModal,
 } from '../components/orders';
-
-const initialOrdersData = [
-  {
-    id: 'BIN-8924',
-    createdAt: '2026-09-01T10:30:00Z',
-    shippingAddress: {
-      name: 'Aarav Sharma',
-      phone: '+91 98290 12345',
-      city: 'Jaipur',
-      address: 'Flat 402, Royal Residency, C-Scheme',
-      pincode: '302001',
-    },
-    items: [
-      { id: 1, title: 'Artisanal Ratlami Sev (Extra Clove)', weight: '500g', quantity: 2, price: 240 },
-      { id: 4, title: 'Pure Gir Cow Ghee Besan Ladoo Box', weight: '500g', quantity: 1, price: 320 },
-    ],
-    pricing: {
-      subtotal: 800,
-      discount: 100,
-      shipping: 0,
-      totalAmount: 700,
-      paymentMethod: 'UPI / Online',
-    },
-    status: 'preparing',
-    statusLabel: 'Kitchen Preparing',
-  },
-  {
-    id: 'BIN-8923',
-    createdAt: '2026-09-01T09:15:00Z',
-    shippingAddress: {
-      name: 'Priya Mehra',
-      phone: '+91 98110 54321',
-      city: 'New Delhi',
-      address: 'B-12, Greater Kailash 1',
-      pincode: '110048',
-    },
-    items: [
-      { id: 2, title: 'Royal Khatta Meetha Chivda Mix', weight: '400g', quantity: 3, price: 190 },
-      { id: 5, title: 'Tandoori Spiced Roasted Cashews', weight: '250g', quantity: 1, price: 340 },
-    ],
-    pricing: {
-      subtotal: 910,
-      discount: 0,
-      shipping: 50,
-      totalAmount: 960,
-      paymentMethod: 'Credit Card',
-    },
-    status: 'in-transit',
-    statusLabel: 'In Transit',
-  },
-  {
-    id: 'BIN-8922',
-    createdAt: '2026-08-31T18:40:00Z',
-    shippingAddress: {
-      name: 'Vikram Singhania',
-      phone: '+91 99200 98765',
-      city: 'Mumbai',
-      address: '701, Sea Face Tower, Worli',
-      pincode: '400018',
-    },
-    items: [
-      { id: 8, title: 'Royal Celebration Velvet Hamper Box', weight: '1kg Gift Tin', quantity: 2, price: 699 },
-    ],
-    pricing: {
-      subtotal: 1398,
-      discount: 150,
-      shipping: 0,
-      totalAmount: 1248,
-      paymentMethod: 'UPI / Online',
-    },
-    status: 'delivered',
-    statusLabel: 'Delivered',
-  },
-  {
-    id: 'BIN-8921',
-    createdAt: '2026-08-31T15:20:00Z',
-    shippingAddress: {
-      name: 'Ananya Deshmukh',
-      phone: '+91 97654 32109',
-      city: 'Pune',
-      address: 'Plot 45, Koregaon Park',
-      pincode: '411001',
-    },
-    items: [
-      { id: 1, title: 'Artisanal Ratlami Sev (Extra Clove)', weight: '500g', quantity: 1, price: 240 },
-      { id: 7, title: 'Traditional Ajwain Flaky Mathri', weight: '400g', quantity: 2, price: 180 },
-    ],
-    pricing: {
-      subtotal: 600,
-      discount: 50,
-      shipping: 0,
-      totalAmount: 550,
-      paymentMethod: 'Cash on Delivery',
-    },
-    status: 'delivered',
-    statusLabel: 'Delivered',
-  },
-  {
-    id: 'BIN-8920',
-    createdAt: '2026-08-31T12:10:00Z',
-    shippingAddress: {
-      name: 'Rohan Gupta',
-      phone: '+91 98980 11223',
-      city: 'Ahmedabad',
-      address: 'A-304, Satellite Heights, SG Highway',
-      pincode: '380015',
-    },
-    items: [
-      { id: 3, title: 'Authentic Bikaneri Hing Bhujia', weight: '400g', quantity: 4, price: 180 },
-    ],
-    pricing: {
-      subtotal: 720,
-      discount: 0,
-      shipping: 40,
-      totalAmount: 760,
-      paymentMethod: 'UPI / Online',
-    },
-    status: 'delivered',
-    statusLabel: 'Delivered',
-  },
-];
+import {
+  fetchAllOrdersAdminApi,
+  updateOrderStatusAdminApi,
+} from '../../Redux/services/orderService';
 
 const AdminOrders = () => {
-  const [orders, setOrders] = useState(initialOrdersData);
+  const [orders, setOrders] = useState([]);
+  const [counts, setCounts] = useState({
+    all: 0,
+    kitchenPreparing: 0,
+    inTransit: 0,
+    delivered: 0,
+    cancelled: 0,
+  });
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
   const [activeStatus, setActiveStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Filtered Orders
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const matchesStatus = activeStatus === 'all' || order.status === activeStatus;
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        order.id.toLowerCase().includes(q) ||
-        (order.shippingAddress?.name || '').toLowerCase().includes(q) ||
-        (order.shippingAddress?.city || '').toLowerCase().includes(q);
+  // Fetch orders from backend API (10 orders per page)
+  const loadOrders = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const params = {
+        page: currentPage,
+        limit: 10,
+        status: activeStatus === 'all' ? undefined : activeStatus,
+        search: searchQuery.trim() || undefined,
+      };
 
-      return matchesStatus && matchesSearch;
-    });
-  }, [orders, activeStatus, searchQuery]);
+      const response = await fetchAllOrdersAdminApi(params);
+      if (response.success && response.data) {
+        setOrders(response.data.orders || []);
+        if (response.data.counts) {
+          setCounts(response.data.counts);
+        }
+        if (response.data.pagination) {
+          setPagination(response.data.pagination);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching admin orders:', error);
+      toast.error(error.message || 'Failed to load orders');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, activeStatus, searchQuery]);
 
-  const handleUpdateStatus = (orderId, newStatus) => {
-    const labels = {
-      preparing: 'Kitchen Preparing',
-      'in-transit': 'In Transit',
-      delivered: 'Delivered',
-      cancelled: 'Cancelled',
-    };
+  // Debounced load on search or status change
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      loadOrders();
+    }, 300);
 
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? { ...o, status: newStatus, statusLabel: labels[newStatus] || newStatus }
-          : o
-      )
-    );
+    return () => clearTimeout(handler);
+  }, [loadOrders]);
 
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder((prev) => ({
-        ...prev,
-        status: newStatus,
-        statusLabel: labels[newStatus] || newStatus,
-      }));
+  // Handle status update
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      const response = await updateOrderStatusAdminApi(orderId, newStatus);
+      toast.success(response.message || `Order status updated to ${newStatus}`);
+
+      // Refresh list and update modal state if open
+      loadOrders();
+
+      if (selectedOrder && (selectedOrder._id === orderId || selectedOrder.id === orderId)) {
+        setSelectedOrder((prev) => ({
+          ...prev,
+          status: newStatus,
+        }));
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to update order status');
     }
   };
 
@@ -181,19 +98,35 @@ const AdminOrders = () => {
 
       {/* 2. Filter & Search Bar */}
       <OrderFilterBar
-        orders={orders}
+        counts={counts}
         activeStatus={activeStatus}
-        onSelectStatus={setActiveStatus}
+        onSelectStatus={(status) => {
+          setActiveStatus(status);
+          setCurrentPage(1);
+        }}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(q) => {
+          setSearchQuery(q);
+          setCurrentPage(1);
+        }}
       />
 
-      {/* 3. Orders Table */}
-      <OrderTable
-        orders={filteredOrders}
-        onViewOrder={setSelectedOrder}
-        onUpdateStatus={handleUpdateStatus}
-      />
+      {/* 3. Orders Table or Loading Spinner */}
+      {isLoading ? (
+        <div className="bg-white rounded-3xl p-16 border border-stone-200/80 shadow-2xs text-center space-y-3">
+          <Loader2 className="w-8 h-8 text-[#981b2e] animate-spin mx-auto" />
+          <p className="text-xs font-bold text-stone-500">Loading customer orders...</p>
+        </div>
+      ) : (
+        <OrderTable
+          orders={orders}
+          pagination={pagination}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onViewOrder={setSelectedOrder}
+          onUpdateStatus={handleUpdateStatus}
+        />
+      )}
 
       {/* 4. Order Details Modal */}
       <OrderDetailsModal
