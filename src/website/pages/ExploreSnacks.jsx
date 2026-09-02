@@ -51,8 +51,9 @@ const ExploreSnacks = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
+  const initialCategory = searchParams.get('category') || 'all';
 
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [activeFilterTag, setActiveFilterTag] = useState('all');
   const [activeMood, setActiveMood] = useState('all');
@@ -65,13 +66,35 @@ const ExploreSnacks = () => {
     dispatch(fetchProducts({ limit: 100 }));
   }, [dispatch]);
 
-  // Sync search param when changed externally
+  // Sync URL searchParams (both category and search) when navigating from Search Modal or other pages
   useEffect(() => {
-    const urlQuery = searchParams.get('search');
-    if (urlQuery !== null && urlQuery !== searchQuery) {
-      setSearchQuery(urlQuery);
+    const urlCategory = searchParams.get('category');
+    if (urlCategory) {
+      setActiveCategory(urlCategory);
+    } else if (!searchParams.has('category')) {
+      setActiveCategory('all');
+    }
+
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null) {
+      setSearchQuery(urlSearch);
+    } else {
+      setSearchQuery('');
     }
   }, [searchParams]);
+
+  // Handle Category selection
+  const handleSelectCategory = (catId) => {
+    setActiveCategory(catId);
+    const newParams = {};
+    if (catId && catId !== 'all') {
+      newParams.category = catId;
+    }
+    if (searchQuery.trim()) {
+      newParams.search = searchQuery.trim();
+    }
+    setSearchParams(newParams);
+  };
 
   // 2. Prepare full categories list with "All Categories" as the first circle
   const displayCategoriesList = useMemo(() => {
@@ -102,11 +125,14 @@ const ExploreSnacks = () => {
   // Handle Search Input Change
   const handleSearchChange = (val) => {
     setSearchQuery(val);
+    const newParams = {};
     if (val.trim()) {
-      setSearchParams({ search: val.trim() });
-    } else {
-      setSearchParams({});
+      newParams.search = val.trim();
     }
+    if (activeCategory && activeCategory !== 'all') {
+      newParams.category = activeCategory;
+    }
+    setSearchParams(newParams);
   };
 
   // 3. Combine Real Database Products + Initial Catalog
@@ -274,8 +300,25 @@ const ExploreSnacks = () => {
 
   // Selected Category Info Object
   const activeCategoryObj = useMemo(() => {
-    return displayCategoriesList.find(
-      (c) => (c.id || c.slug || c._id) === activeCategory
+    if (activeCategory === 'all') return null;
+    const norm = (activeCategory || '').toLowerCase().trim();
+    const cleanNorm = norm.replace(/[^a-z0-9]/g, '');
+
+    return (
+      displayCategoriesList.find((c) => {
+        const cSlug = String(c.slug || '').toLowerCase().trim();
+        const cId = String(c.id || c._id || '').toLowerCase().trim();
+        const cName = String(c.name || '').toLowerCase().trim();
+        const cleanSlug = cSlug.replace(/[^a-z0-9]/g, '');
+        const cleanName = cName.replace(/[^a-z0-9]/g, '');
+
+        return (
+          cSlug === norm ||
+          cId === norm ||
+          cName === norm ||
+          (cleanNorm && (cleanNorm === cleanSlug || cleanNorm === cleanName))
+        );
+      }) || null
     );
   }, [displayCategoriesList, activeCategory]);
 

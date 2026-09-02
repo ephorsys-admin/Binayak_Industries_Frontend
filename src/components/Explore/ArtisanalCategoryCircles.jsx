@@ -83,8 +83,23 @@ const ArtisanalCategoryCircles = ({
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {categories.map((item) => {
-            const catId = item.id || item.slug || item._id;
-            const isSelected = activeCategory === catId;
+            const catId = item.slug || item.id || item._id;
+            const normActive = (activeCategory || '').toLowerCase().trim();
+            const normCatId = String(catId || '').toLowerCase().trim();
+            const normSlug = String(item.slug || '').toLowerCase().trim();
+            const normName = String(item.name || '').toLowerCase().trim();
+            const cleanActive = normActive.replace(/[^a-z0-9]/g, '');
+            const cleanCatId = normCatId.replace(/[^a-z0-9]/g, '');
+            const cleanSlug = normSlug.replace(/[^a-z0-9]/g, '');
+            const cleanName = normName.replace(/[^a-z0-9]/g, '');
+
+            const isSelected =
+              activeCategory === catId ||
+              normActive === normCatId ||
+              normActive === normSlug ||
+              normActive === normName ||
+              (cleanActive && (cleanActive === cleanCatId || cleanActive === cleanSlug || cleanActive === cleanName));
+
             const style = getCategoryIconAndStyle(item.slug || item.name || '');
             const Icon = item.icon || style.icon || Layers;
             const bgClass = item.bg || style.bg || 'bg-stone-100';
@@ -94,14 +109,11 @@ const ArtisanalCategoryCircles = ({
             const count =
               catId === 'all'
                 ? Object.values(snackCounts).reduce((a, b) => a + b, 0)
-                : (snackCounts[catId] || snackCounts[item.slug] || 0);
+                : (snackCounts[catId] || snackCounts[item.slug] || snackCounts[item.name] || 0);
 
-            const hasRealImage =
-              catId !== 'all' &&
-              !failedImages[catId] &&
-              (item.image?.url || (typeof item.image === 'string' && item.image));
-            const imageSrc =
-              typeof item.image === 'string' ? item.image : item.image?.url;
+            const rawImg = item.image?.url || (typeof item.image === 'string' ? item.image : null);
+            const imageSrc = rawImg || style.fallbackImg;
+            const hasRealImage = catId !== 'all' && !failedImages[catId] && Boolean(imageSrc);
 
             return (
               <button

@@ -261,42 +261,7 @@ const Cart = () => {
             {/* Right: Order Summary & Checkout (4 cols) */}
             <div className="lg:col-span-4 space-y-4">
               
-              {/* Coupon Code Card */}
-              <div className="bg-white rounded-3xl p-5 border border-stone-200/80 shadow-2xs space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-900">
-                  <Tag className="w-4 h-4 text-[#981b2e]" />
-                  <span>Apply Festive Promo Code</span>
-                </div>
-
-                <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    placeholder="Enter code (e.g. FESTIVE15)"
-                    className="flex-1 px-3.5 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 font-mono uppercase"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold rounded-xl transition-all cursor-pointer"
-                  >
-                    Apply
-                  </button>
-                </form>
-
-                {appliedCoupon && (
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-                    <span className="font-bold font-mono">✓ {appliedCoupon} (-₹{discountAmount})</span>
-                    <button
-                      type="button"
-                      onClick={handleRemoveCoupon}
-                      className="text-stone-400 hover:text-stone-600 font-bold cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
-              </div>
+             
 
               {/* Price Breakdown Card */}
               <div className="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-4">

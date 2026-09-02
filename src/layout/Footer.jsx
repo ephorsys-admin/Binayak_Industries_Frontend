@@ -80,40 +80,7 @@ const Footer = () => {
                         </div>
 
 
-                        <div className="relative z-10 w-full max-w-125">
-
-                            <div className="rounded-[22px] border border-[#426277]/60 bg-[#0A2940]/70 p-2 shadow-[0_15px_50px_rgba(0,0,0,0.2)] backdrop-blur-md">
-
-                                <div className="flex flex-col gap-2 sm:flex-row">
-
-                                    <input
-                                        type="email"
-                                        placeholder="Enter your email address"
-                                        className="h-12 min-w-0 flex-1 rounded-2xl bg-[#061D31] px-5 text-sm text-white outline-none ring-1 ring-transparent transition placeholder:text-[#708898] focus:ring-[#D9A441]/50"
-                                    />
-
-                                    <button
-                                        type="button"
-                                        className="group flex h-12 items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-[#C9942F] to-[#F1C45B] px-6 text-xs font-bold uppercase tracking-[1px] text-[#061A2C] shadow-[0_8px_25px_rgba(217,164,65,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(217,164,65,0.3)]"
-                                    >
-                                        Subscribe
-
-                                        <ArrowUpRight
-                                            size={15}
-                                            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                        />
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <p className="mt-2 px-2 text-[10px] text-[#6E8798]">
-                                We respect your inbox. No spam, ever.
-                            </p>
-
-                        </div>
+            
 
                     </div>
                 </div>
