@@ -10,6 +10,7 @@ const Modal = ({
     size = "md",
     showCloseButton = true,
 }) => {
+    //test
 
     // Modal Sizes
     const modalSizes = {
