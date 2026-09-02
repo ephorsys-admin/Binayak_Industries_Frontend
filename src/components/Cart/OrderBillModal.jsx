@@ -58,14 +58,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
             <span className="font-bold text-xs sm:text-sm">Official Order Receipt & Bill</span>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print / Download Bill</span>
-            </button>
+       
             <button
               type="button"
               onClick={onClose}
@@ -217,13 +210,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
 
         {/* Bottom Actions (Non-Printable) */}
         <div className="no-print p-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2.5 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold text-xs transition-all cursor-pointer"
-          >
-            Close Receipt
-          </button>
+
           <button
             type="button"
             onClick={handlePrint}

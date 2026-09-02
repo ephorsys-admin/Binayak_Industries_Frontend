@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectCurrentLocation,
+  setLocation,
+  setGpsLocation,
+} from '../../Redux/features/location/locationSlice';
 import {
   X,
   ShieldCheck,
@@ -64,16 +70,19 @@ const CheckoutModal = ({
   totalAmount = 0,
   onConfirmOrder,
 }) => {
+  const dispatch = useDispatch();
+  const currentLocation = useSelector(selectCurrentLocation);
+
   const [formData, setFormData] = useState({
-    name: 'Binayak Patel',
-    phone: '9876543210',
-    email: 'binayak@gmail.com',
-    addressLine: 'Flat 402, Royal Residency, Sector 5',
-    city: 'Jaipur',
-    state: 'Rajasthan',
-    pincode: '302017',
-    landmark: 'Near Central Park',
-    addressType: 'Home',
+    name: '',
+    phone: '',
+    email: '',
+    addressLine: currentLocation?.addressLine || '',
+    city: currentLocation?.city || '',
+    state: currentLocation?.state || '',
+    pincode: currentLocation?.pincode || '751001',
+    landmark: currentLocation?.landmark || 'Near City Centre',
+    addressType: currentLocation?.addressType || 'Home',
     deliveryNotes: 'Please ring bell and leave with security if unavailable',
     paymentMethod: 'COD',
   });
@@ -81,6 +90,20 @@ const CheckoutModal = ({
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && currentLocation) {
+      setFormData((prev) => ({
+        ...prev,
+        city: currentLocation.city || prev.city,
+        state: currentLocation.state || prev.state,
+        pincode: currentLocation.pincode || prev.pincode,
+        addressLine: currentLocation.addressLine || prev.addressLine,
+        landmark: currentLocation.landmark || prev.landmark,
+        addressType: currentLocation.addressType || prev.addressType,
+      }));
+    }
+  }, [isOpen, currentLocation]);
 
   if (!isOpen) return null;
 
@@ -90,24 +113,48 @@ const CheckoutModal = ({
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
+
+    if (['city', 'state', 'pincode', 'addressLine', 'landmark', 'addressType'].includes(name)) {
+      dispatch(
+        setLocation({
+          [name]: value,
+          ...(name === 'city' || name === 'state'
+            ? { label: `${name === 'city' ? value : formData.city}, ${name === 'state' ? value : formData.state}` }
+            : {}),
+        })
+      );
+    }
   };
 
   const handleFillDemo = () => {
-    setFormData({
+    const demoData = {
       name: 'Binayak Patel',
       phone: '9876543210',
       email: 'binayak@gmail.com',
       addressLine: 'Flat 402, Royal Residency, Sector 5',
-      city: 'Jaipur',
-      state: 'Rajasthan',
-      pincode: '302017',
-      landmark: 'Near City Central Mall',
+      city: 'Bhubaneswar',
+      state: 'Odisha',
+      pincode: '751001',
+      landmark: 'Near City Centre',
       addressType: 'Home',
       deliveryNotes: 'Fresh morning delivery preferred.',
       paymentMethod: 'COD',
-    });
+    };
+    setFormData(demoData);
+    dispatch(
+      setLocation({
+        label: `${demoData.city}, ${demoData.state}`,
+        city: demoData.city,
+        state: demoData.state,
+        pincode: demoData.pincode,
+        addressLine: demoData.addressLine,
+        landmark: demoData.landmark,
+        addressType: demoData.addressType,
+        isGpsLive: false,
+      })
+    );
     setErrors({});
-    toast.success('Auto-filled with demo delivery details!');
+    toast.success('Auto-filled with verified delivery details!');
   };
 
   const handleDetectLocation = () => {
@@ -138,19 +185,33 @@ const CheckoutModal = ({
             .join(', ');
 
           const detectedCity =
-            addr.city || addr.town || addr.village || addr.county || addr.state_district || 'Jaipur';
-          const detectedState = addr.state || 'Rajasthan';
-          const detectedPincode = (addr.postcode || '').replace(/\D/g, '').slice(0, 6) || '302017';
+            addr.city || addr.town || addr.village || addr.county || addr.state_district || 'Bhubaneswar';
+          const detectedState = addr.state || 'Odisha';
+          const detectedPincode = (addr.postcode || '').replace(/\D/g, '').slice(0, 6) || '751001';
           const detectedLandmark = addr.amenity || addr.landmark || addr.suburb || '';
+
+          const resolvedAddressLine = street || data.display_name?.split(',').slice(0, 2).join(',') || formData.addressLine;
 
           setFormData((prev) => ({
             ...prev,
-            addressLine: street || data.display_name?.split(',').slice(0, 2).join(',') || prev.addressLine,
+            addressLine: resolvedAddressLine,
             city: detectedCity,
             state: detectedState,
             pincode: detectedPincode || prev.pincode,
             landmark: detectedLandmark || prev.landmark,
           }));
+
+          dispatch(
+            setGpsLocation({
+              label: `${detectedCity}, ${detectedState}`,
+              city: detectedCity,
+              state: detectedState,
+              pincode: detectedPincode,
+              addressLine: resolvedAddressLine,
+              landmark: detectedLandmark,
+              address: `${resolvedAddressLine}, ${detectedCity} - ${detectedPincode}`,
+            })
+          );
 
           setErrors((prev) => ({
             ...prev,
@@ -161,7 +222,7 @@ const CheckoutModal = ({
           }));
 
           toast.dismiss(loadingToast);
-          toast.success('📍 Current location auto-detected and filled!');
+          toast.success(`📍 Current GPS location detected: ${detectedCity} (${detectedPincode})`);
         } catch (err) {
           console.error('Reverse geocoding error:', err);
           toast.dismiss(loadingToast);
@@ -344,15 +405,7 @@ const CheckoutModal = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-400/20 hover:bg-amber-400/30 text-[#ffd25d] text-[11px] font-bold border border-amber-400/40 transition-colors cursor-pointer"
-              title="Auto fill sample data"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Fill Demo Details</span>
-            </button>
+           
 
             <button
               type="button"
@@ -595,7 +648,7 @@ const CheckoutModal = ({
           <div className="space-y-3">
             <div className="flex items-center gap-1.5 text-stone-900 font-bold text-xs uppercase tracking-wider pb-1 border-b border-stone-100">
               <CreditCard className="w-3.5 h-3.5 text-[#981b2e]" />
-              <span>3. Select Payment Option</span>
+              <span>3. Select Payment Option You will pay on</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
