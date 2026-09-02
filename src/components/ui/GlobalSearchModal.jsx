@@ -191,7 +191,7 @@ export default function GlobalSearchModal({ isOpen, onClose }) {
               }}
               className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+            
             </button>
           )}
 
