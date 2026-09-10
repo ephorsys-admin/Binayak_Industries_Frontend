@@ -33,7 +33,7 @@ const ArtisanalCategoryCircles = ({
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#981b2e]/10 text-[#981b2e] text-[11px] font-extrabold uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#006090]/10 text-[#006090] text-[11px] font-extrabold uppercase tracking-wider mb-1">
             <span>Freshly Handcrafted</span>
           </div>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 tracking-tight font-brand">
@@ -122,13 +122,13 @@ const ArtisanalCategoryCircles = ({
                 onClick={() => onSelectCategory(catId)}
                 className={`snap-start shrink-0 min-w-[108px] sm:min-w-[124px] lg:min-w-[136px] bg-white rounded-3xl p-3 sm:p-4 border transition-all duration-300 flex flex-col items-center justify-between text-center group cursor-pointer relative ${
                   isSelected
-                    ? 'border-[#981b2e] ring-2 ring-[#981b2e]/15 shadow-md -translate-y-0.5'
+                    ? 'border-[#006090] ring-2 ring-[#981b2e]/15 shadow-md -translate-y-0.5'
                     : 'border-stone-200/80 hover:border-stone-300 hover:shadow-sm hover:-translate-y-0.5'
                 }`}
               >
                 {/* Selected Badge Indicator */}
                 {isSelected && (
-                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#981b2e] text-white flex items-center justify-center shadow-xs">
+                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#004060] text-white flex items-center justify-center shadow-xs">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
                 )}
@@ -154,7 +154,7 @@ const ArtisanalCategoryCircles = ({
                 {/* Title & Count */}
                 <div className="w-full">
                   <span className={`block text-xs sm:text-sm font-bold leading-tight transition-colors truncate ${
-                    isSelected ? 'text-[#981b2e]' : 'text-stone-800 group-hover:text-[#981b2e]'
+                    isSelected ? 'text-[#004060]' : 'text-stone-800 group-hover:text-[#004060]'
                   }`}>
                     {item.name}
                   </span>

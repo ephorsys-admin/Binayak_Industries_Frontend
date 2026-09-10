@@ -39,18 +39,18 @@ const AboutCategories = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-[#981b2e] text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#004060]/10 border border-[#004060]/20 text-[#004060] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Artisanal Specialties</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
-            Crafted for <span className="text-[#981b2e]">Every Craving</span>
+            Crafted for <span className="text-[#004060]">Every Craving</span>
           </h2>
         </div>
 
         <Link
           to="/explore"
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#981b2e] hover:text-[#801424] transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#D79F26] hover:text-[#F5C542] transition-colors self-start sm:self-auto"
         >
           <span>View All 25+ Snacks</span>
           <ArrowRight className="w-4 h-4" />
@@ -77,9 +77,7 @@ const AboutCategories = () => {
 
             {/* Top Bar */}
             <div className="relative z-10 flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-[#ffd25d] bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10">
-                {cat.number}
-              </span>
+             
               <span className="text-[11px] font-bold text-stone-200 bg-white/10 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/15">
                 {cat.tag}
               </span>

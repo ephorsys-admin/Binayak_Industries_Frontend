@@ -104,7 +104,7 @@ const ArtisanalCategories = ({ activeCategory, onSelectCategory, categories: pro
           </h2>
           <Link
             to="/explore"
-            className="text-xs font-bold text-[#981b2e] flex items-center gap-0.5"
+            className="text-xs font-bold text-[#D79F26] flex items-center gap-0.5"
           >
             <span>See all</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -187,7 +187,7 @@ const ArtisanalCategories = ({ activeCategory, onSelectCategory, categories: pro
 
           <Link
             to="/explore"
-            className="text-xs sm:text-sm font-bold text-[#981b2e] hover:text-[#801424] flex items-center gap-1 group cursor-pointer"
+            className="text-xs sm:text-sm font-bold text-[#D79F26] hover:text-[#F5C542] flex items-center gap-1 group cursor-pointer"
           >
             <span>See All Categories</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

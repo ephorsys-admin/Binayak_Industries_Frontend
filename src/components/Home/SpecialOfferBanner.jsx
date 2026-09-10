@@ -16,7 +16,7 @@ const SpecialOfferBanner = () => {
   };
 
   return (
-    <section className="hidden sm:block relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#981b2e] via-[#801424] to-[#0a2540] text-white p-6 sm:p-9 shadow-xl border border-stone-800 my-2">
+    <section className="hidden sm:block relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#004060]/80 via-[#006090]/80 to-[#D79F26]/50 text-white p-6 sm:p-9 shadow-xl border border-[#D79F26] my-2">
       {/* Background Subtle Image */}
       <img
         src={heroBannerImg}

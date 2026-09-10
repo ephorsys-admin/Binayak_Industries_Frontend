@@ -45,14 +45,14 @@ const AboutStory = () => {
         <div className="lg:col-span-7 space-y-4 sm:space-y-5">
           {/* Header */}
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-[#981b2e] text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#004060]/10 border border-[#004060]/20 text-[#004060] text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Our Heritage & Craft</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight leading-tight">
               The Taste of Tradition{" "}
-              <span className="text-[#981b2e]">Made for Today</span>
+              <span className="text-[#006090]">Made for Today</span>
             </h2>
           </div>
 
@@ -74,7 +74,7 @@ const AboutStory = () => {
                   key={idx}
                   className="p-3 rounded-2xl bg-stone-50 border border-stone-200/60 space-y-1 hover:border-stone-300 transition-colors"
                 >
-                  <div className="flex items-center gap-1.5 text-[#981b2e]">
+                  <div className="flex items-center gap-1.5 text-[#D79F26]">
                     <Icon className="w-4 h-4 shrink-0" />
                     <span className="text-base sm:text-lg font-black font-brand text-stone-900">
                       {m.value}
@@ -92,7 +92,7 @@ const AboutStory = () => {
           <div className="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
             <Link
               to="/explore"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white font-bold text-xs sm:text-sm shadow-sm transition-all group"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#006090] hover:bg-[#004060] active:scale-95 text-white font-bold text-xs sm:text-sm shadow-sm transition-all group"
             >
               <span>Explore All Delicacies</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

@@ -281,7 +281,7 @@ const Home = () => {
         <FaqSection />
 
         {/* 9. Newsletter Subscription */}
-        <NewsletterSection />
+       
 
       </div>
 

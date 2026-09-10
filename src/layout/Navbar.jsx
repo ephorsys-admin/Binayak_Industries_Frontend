@@ -120,7 +120,7 @@ const Navbar = () => {
                   className="flex items-center gap-1.5 sm:gap-2 text-left p-1 sm:p-1.5 rounded-2xl hover:bg-stone-100 transition-colors focus:outline-none max-w-full cursor-pointer"
                   aria-expanded={isLocationOpen}
                 >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/10 border border-amber-300/30 flex items-center justify-center shrink-0 text-[#b45309]">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#0080B0]/10 border border-[#004060]/30 flex items-center justify-center shrink-0 text-[#D79F26]">
                     <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                   </div>
                   
@@ -173,11 +173,11 @@ const Navbar = () => {
                             }}
                             className={`w-full text-left p-2.5 rounded-2xl text-xs transition-all flex items-start gap-2.5 cursor-pointer ${
                               isSelected 
-                                ? 'bg-amber-50/80 border border-amber-200 text-stone-900 font-semibold shadow-2xs' 
+                                ? 'bg-[#004060]/5 border border-amber-200 text-stone-900 font-semibold shadow-2xs' 
                                 : 'hover:bg-stone-50 border border-transparent text-stone-700'
                             }`}
                           >
-                            <MapPin className={`w-4 h-4 mt-0.5 shrink-0 ${isSelected ? 'text-[#981b2e]' : 'text-stone-400'}`} />
+                            <MapPin className={`w-4 h-4 mt-0.5 shrink-0 ${isSelected ? 'text-[#004060]' : 'text-stone-400'}`} />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between font-bold text-stone-900">
                                 <span>{addr.label} ({addr.city})</span>
@@ -292,13 +292,13 @@ const Navbar = () => {
               {/* Shopping Cart Button */}
               <Link
                 to="/cart"
-                className="relative px-3.5 sm:px-4 py-2 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white flex items-center gap-2 transition-all group shrink-0 shadow-sm cursor-pointer"
+                className="relative px-3.5 sm:px-4 py-2 rounded-full bg-[#006090] hover:bg-[#004060] active:scale-95 text-white flex items-center gap-2 transition-all group shrink-0 shadow-sm cursor-pointer"
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-108 transition-transform" />
                 <span className="hidden sm:inline text-xs font-black">Cart</span>
                 {cartCount > 0 && (
-                  <span className="min-w-4.5 h-4.5 sm:min-w-5 sm:h-5 px-1 bg-[#ffd25d] text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center border border-amber-300 shadow-xs">
+                  <span className="min-w-4.5 h-4.5 sm:min-w-5 sm:h-5 px-1 bg-[#F5C542] text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center border border-amber-300 shadow-xs">
                     {cartCount}
                   </span>
                 )}

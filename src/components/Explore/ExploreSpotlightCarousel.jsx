@@ -15,7 +15,7 @@ const ExploreSpotlightCarousel = ({
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+          <div className="w-8 h-8 rounded-xl bg-[#D79F26]/10 border border-amber-500/20 flex items-center justify-center text-[#D79F26]">
             <Award className="w-4 h-4" />
           </div>
           <div>
@@ -50,7 +50,7 @@ const ExploreSpotlightCarousel = ({
                 />
                 
                 {/* Gold Signature Badge */}
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-[#981b2e] text-amber-200 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider shadow-sm border border-amber-300/30">
+                <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-[#006090] text-amber-200 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider shadow-sm border border-amber-300/30">
                   <Sparkles className="w-3 h-3 text-amber-300" />
                   <span>SIGNATURE PICK</span>
                 </div>
@@ -76,7 +76,7 @@ const ExploreSpotlightCarousel = ({
               {/* Title & Info */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] font-extrabold text-[#981b2e] uppercase tracking-wider">
+                  <span className="text-[10px] font-extrabold text-[#004060] uppercase tracking-wider">
                     {snack.categoryName}
                   </span>
                   <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -84,7 +84,7 @@ const ExploreSpotlightCarousel = ({
                   </span>
                 </div>
 
-                <h3 className="text-sm sm:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-[#981b2e] transition-colors">
+                <h3 className="text-sm sm:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-[#004060] transition-colors">
                   {snack.title}
                 </h3>
 
@@ -113,7 +113,7 @@ const ExploreSpotlightCarousel = ({
               </div>
 
               {snack.quantity > 0 ? (
-                <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-xs shadow-xs border border-amber-300">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-[#F5C542] text-stone-900 font-bold text-xs shadow-xs border border-amber-300">
                   <button
                     type="button"
                     onClick={() => onDecrement(snack.id)}

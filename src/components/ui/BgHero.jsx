@@ -18,10 +18,10 @@ const BgHero = ({
   children,
 }) => {
   const themeClasses = {
-    crimson: 'bg-gradient-to-r from-[#981b2e] via-[#851526] to-[#4a0d17] border-rose-900/80',
-    navy: 'bg-gradient-to-r from-[#0a2540] via-[#081f35] to-[#041220] border-slate-800/80',
-    dark: 'bg-gradient-to-r from-[#1c1917] via-[#141211] to-[#0c0a09] border-stone-800',
-    teal: 'bg-gradient-to-r from-[#064e62] via-[#043340] to-[#021c24] border-cyan-900/60',
+    crimson: 'bg-gradient-to-r from-[#004060] via-[#004060] to-[#D79F26] border-[#004060]',
+    navy: 'bg-gradient-to-r from-[#004060] via-[#004060] to-[#D79F26] border-slate-800/80',
+    dark: 'bg-gradient-to-r from-[#004060] via-[#004060] to-[#D79F26] border-stone-800',
+    teal: 'bg-gradient-to-r from-[#004060] via-[#004060] to-[#D79F26] border-cyan-900/60',
   };
 
   const isBackgroundLayout = imageLayout === 'background';

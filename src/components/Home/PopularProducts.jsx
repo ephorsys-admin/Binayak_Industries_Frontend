@@ -69,7 +69,7 @@ const PopularProducts = ({
                 onClick={() => setActiveFilter(tab.id)}
                 className={`inline-flex items-center gap-1 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-[#981b2e] text-white shadow-xs font-black'
+                    ? 'bg-[#006090] text-white shadow-xs font-black'
                     : 'bg-white hover:bg-stone-100 text-stone-600 border border-stone-200/80 shadow-2xs'
                 }`}
               >

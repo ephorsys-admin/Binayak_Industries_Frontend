@@ -108,8 +108,8 @@ const Cart = () => {
         {/* Cart Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-900 text-xs font-bold uppercase tracking-wider">
-              <ShoppingBag className="w-3.5 h-3.5 text-[#981b2e]" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#003060]/10 text-[#003060] text-xs font-bold uppercase tracking-wider">
+              <ShoppingBag className="w-3.5 h-3.5 text-[#003060]" />
               <span>Your Shopping Cart</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
@@ -119,7 +119,7 @@ const Cart = () => {
 
           <Link
             to="/explore"
-            className="text-xs sm:text-sm font-bold text-[#981b2e] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+            className="text-xs sm:text-sm font-bold text-[#D79F26] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
           >
             <span>+ Add More Snacks</span>
           </Link>
@@ -157,14 +157,14 @@ const Cart = () => {
               <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
                   <div className="flex items-center gap-2 text-stone-900">
-                    <Truck className="w-4 h-4 text-emerald-600" />
+                    <Truck className="w-4 h-4 text-[#003060]" />
                     <span>
                       {subtotal >= freeDeliveryThreshold
                         ? '🎉 You unlocked FREE Pan-India Express Delivery!'
                         : `Add ₹${freeDeliveryThreshold - subtotal} more for FREE Express Delivery!`}
                     </span>
                   </div>
-                  <span className="text-emerald-700 font-extrabold">{freeDeliveryProgress}%</span>
+                  <span className="text-[#003060] font-extrabold">{freeDeliveryProgress}%</span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-stone-100 overflow-hidden">
                   <div
@@ -282,13 +282,13 @@ const Cart = () => {
 
                   <div className="flex justify-between">
                     <span>Express Delivery:</span>
-                    <span className={deliveryFee === 0 ? 'text-emerald-600 font-bold' : 'font-bold text-stone-900'}>
+                    <span className={deliveryFee === 0 ? 'text-[#004060] font-bold' : 'font-bold text-stone-900'}>
                       {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
                     </span>
                   </div>
 
                   {appliedCoupon && (
-                    <div className="flex justify-between text-emerald-600 font-bold">
+                    <div className="flex justify-between text-[#D79F26] font-bold">
                       <span>Discount ({appliedCoupon}):</span>
                       <span>-₹{discountAmount}</span>
                     </div>
@@ -296,7 +296,7 @@ const Cart = () => {
 
                   <div className="pt-3 border-t border-stone-200 flex justify-between items-baseline">
                     <span className="text-sm font-black text-stone-900">Grand Total:</span>
-                    <span className="text-xl font-black font-brand text-[#981b2e]">
+                    <span className="text-xl font-black font-brand text-[#D79F26]">
                       ₹{totalAmount}
                     </span>
                   </div>
@@ -306,7 +306,7 @@ const Cart = () => {
                 <button
                   type="button"
                   onClick={() => setIsCheckoutOpen(true)}
-                  className="w-full py-3.5 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white text-xs sm:text-sm font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
+                  className="w-full py-3.5 rounded-full bg-[#003060] hover:bg-[#004060] active:scale-95 text-white text-xs sm:text-sm font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>Proceed to Secure Checkout</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

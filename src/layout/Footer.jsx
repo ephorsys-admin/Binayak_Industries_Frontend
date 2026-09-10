@@ -11,9 +11,8 @@ import {
 import {
   FaFacebookF,
   FaInstagram,
-  FaTwitter,
 } from "react-icons/fa";
-
+import { FaXTwitter } from "react-icons/fa6";
 const Footer = () => {
     const quickLinks = [
         { name: "Home", path: "/" },
@@ -147,12 +146,13 @@ const Footer = () => {
                                         <FaInstagram size={14} />
                                     </a>
 
+                                    
                                     <a
                                         href="#"
                                         aria-label="Twitter"
                                         className="group flex h-10 w-10 items-center justify-center rounded-xl border border-[#31536A] bg-[#09253A] text-[#C5D2DB] transition-all duration-300 hover:-translate-y-1 hover:border-[#D9A441] hover:bg-[#D9A441] hover:text-[#061A2C]"
                                     >
-                                        <FaTwitter size={13} />
+                                        <FaXTwitter size={13} />
                                     </a>
 
                                 </div>

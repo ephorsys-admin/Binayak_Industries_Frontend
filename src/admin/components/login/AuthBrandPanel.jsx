@@ -1,91 +1,224 @@
-import React from 'react';
-import { Sparkles, Shield, Layers, Activity } from 'lucide-react';
-import logoImg from '../../../assets/logo.png';
+import React from "react";
+import { Sparkles, Shield, Layers, Activity } from "lucide-react";
+import logoImg from "../../../assets/logo.png";
 
 const AuthBrandPanel = () => {
   return (
-    <div className="hidden lg:flex lg:w-[48%] relative flex-col justify-between p-10 xl:p-14 bg-gradient-to-br from-[#083358] via-[#062642] to-[#041a2e] text-white border-r border-sky-800/30 overflow-hidden z-10 shadow-2xl">
-      {/* Subtle Decorative Geometric Background */}
-      <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-sky-500/10 blur-3xl pointer-events-none" />
-      <div className="absolute top-20 right-10 w-40 h-40 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
+    <div className="hidden lg:flex lg:w-[46%] relative min-h-screen overflow-hidden bg-gradient-to-br from-[#083358] via-[#062642] to-[#041a2e] text-white">
 
-      {/* Top Branding with Blue & Gold Logo */}
-      <div className="relative z-10 flex items-center gap-3.5">
-        <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-amber-400/40 via-sky-300/20 to-transparent p-0.5 shadow-xl shadow-sky-950/50">
-          <div className="w-full h-full rounded-[14px] bg-gradient-to-br from-[#083358] to-[#041a2e] flex items-center justify-center p-1 border border-white/20">
-            <img src={logoImg} alt="Binayak Logo" className="w-full h-full object-contain drop-shadow-md" />
+      {/* ================= BACKGROUND ================= */}
+
+      <div className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full bg-sky-400/10 blur-[130px]" />
+
+      <div className="absolute -bottom-40 -right-40 w-[480px] h-[480px] rounded-full bg-amber-400/10 blur-[130px]" />
+
+      <div className="absolute top-[25%] -right-32 w-72 h-72 rounded-full border border-white/[0.05]" />
+
+      <div className="absolute top-[25%] -right-20 w-56 h-56 rounded-full border border-[#ffd25d]/[0.07]" />
+
+      <div className="absolute top-28 right-24 w-1.5 h-1.5 rounded-full bg-[#ffd25d]/70" />
+
+      <div className="absolute top-40 right-40 w-1 h-1 rounded-full bg-sky-300/60" />
+
+      <div className="absolute bottom-28 left-20 w-1 h-1 rounded-full bg-[#ffd25d]/60" />
+
+      <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-[#ffd25d]/30 to-transparent" />
+
+
+      {/* ================= CONTENT ================= */}
+
+      <div className="relative z-10 flex flex-col w-full px-10 xl:px-14 py-10">
+
+        {/* ================= BRAND ================= */}
+
+        <div className="flex items-center gap-4">
+
+          <div className="relative w-14 h-14 rounded-2xl p-[1px] bg-gradient-to-br from-[#ffd25d] via-sky-300/40 to-transparent shadow-xl shadow-black/30">
+
+            <div className="w-full h-full rounded-[15px] bg-[#062642] flex items-center justify-center p-2 border border-white/10">
+
+              <img
+                src={logoImg}
+                alt="Binayak Industries"
+                className="w-full h-full object-contain drop-shadow-lg"
+              />
+
+            </div>
+
           </div>
+
+
+          <div>
+            <h2 className="text-[15px] xl:text-base font-black tracking-[0.18em] font-serif-heading">
+              BINAYAK INDUSTRIES
+            </h2>
+
+            <p className="text-[9px] font-bold tracking-[0.3em] text-[#ffd25d] uppercase mt-1">
+              Admin Portal
+            </p>
+          </div>
+
         </div>
-        <div>
-          <span className="block text-base font-black tracking-wider text-white font-serif-heading">
-            BINAYAK INDUSTRIES
+
+
+        {/* ================= HERO ================= */}
+
+        <div className="flex-1 flex items-center">
+
+          <div className="w-full max-w-xl">
+
+            {/* Small Label */}
+
+            <div className="flex items-center gap-3 mb-7">
+
+              <div className="w-6 h-px bg-[#ffd25d]" />
+
+              <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.25em] uppercase text-sky-200/65">
+
+                <Sparkles className="w-3 h-3 text-[#ffd25d]" />
+
+                Trusted Since 1998
+
+              </div>
+
+            </div>
+
+
+            {/* MAIN HEADING */}
+
+            <h1 className="text-4xl xl:text-[54px] font-black font-serif-heading leading-[1.05] tracking-tight">
+
+              Where quality 
+
+              <br />
+
+              <span className="text-[#ffd25d]">
+                meets purpose.
+              </span>
+
+            </h1>
+
+
+            {/* SUB HEADING */}
+
+            <p className="mt-6 text-sm xl:text-[15px] leading-relaxed text-sky-100/70 font-medium max-w-md">
+              Crafted with purpose. Driven by quality. Built for tomorrow.
+            </p>
+
+
+            {/* ================= SMALL FEATURE BOXES ================= */}
+
+            <div className="flex gap-3 mt-9">
+
+              {/* SECURITY */}
+
+              <div className="group w-[105px] h-[105px] xl:w-[115px] xl:h-[115px] p-3.5 rounded-xl bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.09] hover:border-sky-300/30">
+
+                <div className="w-8 h-8 rounded-lg bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-300">
+
+                  <Shield className="w-4 h-4" />
+
+                </div>
+
+                <p className="mt-4 text-[10px] font-bold text-white/85">
+                  Secure
+                </p>
+
+                <p className="mt-0.5 text-[8px] text-sky-200/45">
+                  Protected
+                </p>
+
+              </div>
+
+
+              {/* PRODUCTS */}
+
+              <div className="group w-[105px] h-[105px] xl:w-[115px] xl:h-[115px] p-3.5 rounded-xl bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.09] hover:border-[#ffd25d]/30">
+
+                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+
+                  <Layers className="w-4 h-4" />
+
+                </div>
+
+                <p className="mt-4 text-[10px] font-bold text-white/85">
+                  Products
+                </p>
+
+                <p className="mt-0.5 text-[8px] text-sky-200/45">
+                  Organized
+                </p>
+
+              </div>
+
+
+              {/* OPERATIONS */}
+
+              <div className="group w-[105px] h-[105px] xl:w-[115px] xl:h-[115px] p-3.5 rounded-xl bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.09] hover:border-teal-300/30">
+
+                <div className="w-8 h-8 rounded-lg bg-teal-500/15 border border-teal-400/30 flex items-center justify-center text-teal-300">
+
+                  <Activity className="w-4 h-4" />
+
+                </div>
+
+                <p className="mt-4 text-[10px] font-bold text-white/85">
+                  Operations
+                </p>
+
+                <p className="mt-0.5 text-[8px] text-sky-200/45">
+                  Simplified
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {/* Elegant Divider */}
+
+            <div className="flex items-center gap-3 mt-8">
+
+              <div className="w-16 h-px bg-gradient-to-r from-[#ffd25d] to-transparent" />
+
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ffd25d] shadow-lg shadow-[#ffd25d]/50" />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* ================= FOOTER ================= */}
+
+        <div className="flex items-center justify-between pt-6">
+
+          <div className="flex items-center gap-2.5">
+
+            <span className="relative flex w-2 h-2">
+
+              <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
+
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+
+            </span>
+
+            <span className="text-[10px] font-semibold tracking-wider text-white/60 uppercase">
+              System Operational
+            </span>
+
+          </div>
+
+
+          <span className="text-[9px] tracking-widest text-sky-200/30 uppercase">
+            Enterprise • v2.6
           </span>
-          <span className="block text-[11px] font-bold tracking-widest text-[#ffd25d] uppercase">
-            Admin & Operations Portal
-          </span>
+
         </div>
+
       </div>
 
-      {/* Center Hero Card / Security Highlights */}
-      <div className="relative z-10 space-y-6 my-auto max-w-lg">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-200 text-xs font-bold tracking-wide shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-[#ffd25d]" />
-          <span>Artisanal Heritage Since 1998</span>
-        </div>
-
-        <div className="space-y-3">
-          <h1 className="text-3xl xl:text-4xl font-black text-white font-serif-heading leading-tight tracking-tight">
-            Manage Orders, Taxonomy & Kitchen Operations with Ease.
-          </h1>
-          <p className="text-sky-100/80 text-sm leading-relaxed font-medium">
-            Welcome to the central command hub of Binayak Industries. Access real-time product catalogs, live inventories, delivery tracking, and administrative controls securely.
-          </p>
-        </div>
-
-        {/* Three Feature Highlights */}
-        <div className="grid grid-cols-1 gap-3 pt-2">
-          <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-sm hover:bg-white/[0.1] transition-colors">
-            <div className="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300 shrink-0">
-              <Shield className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white">Enterprise RBAC & Session Security</h4>
-              <p className="text-[11px] text-sky-200/70">Strict authorization and multi-factor safety</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-sm hover:bg-white/[0.1] transition-colors">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
-              <Layers className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white">Dynamic Taxonomy & Product Control</h4>
-              <p className="text-[11px] text-sky-200/70">Instant categories, image uploads & stock adjustments</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-sm hover:bg-white/[0.1] transition-colors">
-            <div className="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 shrink-0">
-              <Activity className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white">Real-Time Kitchen & Dispatch Pulse</h4>
-              <p className="text-[11px] text-sky-200/70">Unified pipeline for orders, bills and inquiries</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Status Bar */}
-      <div className="relative z-10 flex items-center justify-between pt-6 border-t border-white/15 text-xs text-sky-200/70">
-        <div className="flex items-center gap-2 font-medium">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-md shadow-emerald-400" />
-          <span className="text-white font-semibold">Gateway Operational</span>
-          <span className="text-sky-300/40">•</span>
-          <span>256-Bit SSL Encrypted</span>
-        </div>
-        <span className="text-[11px] text-sky-300/60 font-semibold">v2.6 Enterprise</span>
-      </div>
     </div>
   );
 };

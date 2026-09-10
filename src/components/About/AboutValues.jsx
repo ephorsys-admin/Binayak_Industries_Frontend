@@ -50,12 +50,12 @@ const AboutValues = () => {
       
       {/* Section Header */}
       <div className="text-center max-w-2xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[#b45309] text-xs font-bold uppercase tracking-wider">
-          <Award className="w-3.5 h-3.5 text-[#b45309]" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D79F26]/10 border border-[#D79F26]/20 text-[#D79F26] text-xs font-bold uppercase tracking-wider">
+          <Award className="w-3.5 h-3.5 text-[#D79F26]" />
           <span>Our Guiding Principles</span>
         </div>
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
-          The Pillars Behind <span className="text-[#981b2e]">Binayak Purity</span>
+          The Pillars Behind <span className="text-[#004060]">Binayak Purity</span>
         </h2>
         <p className="text-xs sm:text-sm text-stone-600">
           Everything we cook is guided by a steadfast promise of uncompromised quality, authentic flavours, and customer delight.
@@ -76,9 +76,7 @@ const AboutValues = () => {
                   <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${val.iconBg}`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  <span className="text-xs font-bold text-stone-400 font-mono">
-                    {val.number}
-                  </span>
+                  
                 </div>
 
                 <div className="space-y-1.5">
@@ -95,7 +93,7 @@ const AboutValues = () => {
               </div>
 
               <div className="pt-4 mt-4 border-t border-stone-100 flex items-center gap-1.5 text-[11px] font-semibold text-stone-700">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#004060] shrink-0" />
                 <span>Binayak Guaranteed</span>
               </div>
             </div>

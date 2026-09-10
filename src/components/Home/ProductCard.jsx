@@ -58,7 +58,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
 
             {/* Red Bestseller / Promoted Tag */}
             {product.isBestseller ? (
-              <span className="bg-[#981b2e] text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-xs">
+              <span className="bg-[#006090] text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-xs">
                 Bestseller
               </span>
             ) : (
@@ -87,7 +87,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
         {/* Bottom Delivery Info Badges */}
         <div className="flex items-center gap-2 mb-3">
           <div className="flex-1 py-1.5 px-2 rounded-xl bg-stone-50 border border-stone-200/80 flex items-center justify-center gap-1 text-[10px] sm:text-[11px] font-bold text-stone-700">
-            <Clock className="w-3 h-3 text-[#981b2e]" />
+            <Clock className="w-3 h-3 text-[#006090]" />
             <span>20-30 min</span>
           </div>
 
@@ -140,7 +140,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
           <button
             type="button"
             onClick={() => onAdd(product.id || product._id)}
-            className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white text-xs font-black transition-all shadow-sm flex items-center gap-1 shrink-0 cursor-pointer"
+            className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#006090] hover:bg-[#003060] active:scale-95 text-white text-xs font-black transition-all shadow-sm flex items-center gap-1 shrink-0 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Add</span>
