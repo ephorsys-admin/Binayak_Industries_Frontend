@@ -1,35 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
-import ratlamiSevImg from '../../../assets/ratlami_sev.jpg';
-import khattaMeethaImg from '../../../assets/khatta_meetha.jpg';
 
 const initialState = {
-  items: [
-    {
-      id: 1,
-      title: 'Artisanal Ratlami Sev (Extra Clove)',
-      category: 'Sev & Bhujia',
-      weight: '500g',
-      packSize: '500g Pack',
-      price: 240,
-      quantity: 2,
-      image: ratlamiSevImg,
-      oilType: '100% Groundnut Oil',
-    },
-    {
-      id: 2,
-      title: 'Royal Khatta Meetha Chivda Mix',
-      category: 'Chivda & Mix',
-      weight: '400g',
-      packSize: '400g Pack',
-      price: 190,
-      quantity: 1,
-      image: khattaMeethaImg,
-      oilType: '100% Groundnut Oil',
-    },
-  ],
-  appliedCoupon: 'FESTIVE15',
-  discountAmount: 150,
+  items: [],
+  appliedCoupon: null,
+  discountAmount: 0,
 };
 
 export const cartSlice = createSlice({

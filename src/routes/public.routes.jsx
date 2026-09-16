@@ -7,6 +7,7 @@ import ProductDetails from "../website/pages/ProductDetails";
 import About from "../website/pages/About";
 import Contact from "../website/pages/Contact";
 import Cart from "../website/pages/Cart";
+import Checkout from "../website/pages/Checkout";
 import TermAndCondition from "../components/footer/TermAndCondition";
 
 const PublicRoutes = (
@@ -19,6 +20,7 @@ const PublicRoutes = (
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="cart" element={<Cart />} />
+        <Route path="checkout" element={<Checkout />} />
         <Route path="terms" element={<TermAndCondition />} />
 
         <Route path="*" element={<NotFound />} />
