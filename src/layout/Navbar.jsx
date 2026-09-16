@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import binayakLogo from '../assets/logo.png';
-import { 
-  MapPin, 
-  ChevronDown, 
-  Search, 
-  ShoppingBag, 
-  Menu, 
-  X, 
-  Check, 
+import {
+  MapPin,
+  ChevronDown,
+  Search,
+  ShoppingBag,
+  Menu,
+  X,
+  Check,
   Sparkles,
   Phone,
   Info,
@@ -53,7 +53,9 @@ const Navbar = () => {
         setIsLocationOpen(false);
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
@@ -62,7 +64,9 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
+
     window.addEventListener('scroll', handleScroll);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -74,7 +78,9 @@ const Navbar = () => {
         setIsSearchModalOpen((prev) => !prev);
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
+
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
@@ -96,19 +102,19 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
-            
+
             {/* LEFT: Logo & Delivery Location */}
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 shrink">
-              
+
               {/* Binayak Logo */}
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="shrink-0 flex items-center transition-transform hover:scale-103 active:scale-95 cursor-pointer"
               >
-                <img 
-                  src={binayakLogo} 
-                  alt="Binayak Logo" 
-                  className="h-9 sm:h-12 w-auto object-contain drop-shadow-xs" 
+                <img
+                  src={binayakLogo}
+                  alt="Binayak Logo"
+                  className="h-9 sm:h-12 w-auto object-contain drop-shadow-xs"
                 />
               </Link>
 
@@ -123,16 +129,24 @@ const Navbar = () => {
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#0080B0]/10 border border-[#004060]/30 flex items-center justify-center shrink-0 text-[#D79F26]">
                     <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                   </div>
-                  
+
                   <div className="text-left leading-tight min-w-0">
                     <span className="hidden sm:block text-[9px] sm:text-[10px] font-bold text-stone-400 uppercase tracking-wider whitespace-nowrap">
                       Express Dispatch
                     </span>
+
                     <div className="flex items-center gap-1">
                       <span className="text-xs sm:text-sm font-bold text-stone-900 truncate max-w-[85px] xs:max-w-[120px] sm:max-w-[160px]">
-                        {currentLocation.city ? `${currentLocation.city}` : currentLocation.label}
+                        {currentLocation.city
+                          ? `${currentLocation.city}`
+                          : currentLocation.label}
                       </span>
-                      <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-stone-500 shrink-0 transition-transform duration-200 ${isLocationOpen ? 'rotate-180' : ''}`} />
+
+                      <ChevronDown
+                        className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-stone-500 shrink-0 transition-transform duration-200 ${
+                          isLocationOpen ? 'rotate-180' : ''
+                        }`}
+                      />
                     </div>
                   </div>
                 </button>
@@ -144,6 +158,7 @@ const Navbar = () => {
                       <span className="text-xs font-black uppercase tracking-wider text-stone-600">
                         Select Delivery Address
                       </span>
+
                       <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
                         Active
                       </span>
@@ -151,7 +166,9 @@ const Navbar = () => {
 
                     <div className="mt-2.5 space-y-1.5 max-h-56 overflow-y-auto">
                       {savedAddresses.map((addr) => {
-                        const isSelected = addr.pincode === currentLocation.pincode;
+                        const isSelected =
+                          addr.pincode === currentLocation.pincode;
+
                         return (
                           <button
                             key={addr.id}
@@ -163,29 +180,50 @@ const Navbar = () => {
                                   city: addr.city,
                                   state: addr.state,
                                   pincode: addr.pincode,
-                                  addressLine: addr.addressLine || addr.address,
+                                  addressLine:
+                                    addr.addressLine || addr.address,
                                   landmark: addr.landmark || '',
-                                  addressType: addr.addressType || 'Home',
+                                  addressType:
+                                    addr.addressType || 'Home',
                                   isGpsLive: false,
                                 })
                               );
+
                               setIsLocationOpen(false);
                             }}
                             className={`w-full text-left p-2.5 rounded-2xl text-xs transition-all flex items-start gap-2.5 cursor-pointer ${
-                              isSelected 
-                                ? 'bg-[#004060]/5 border border-amber-200 text-stone-900 font-semibold shadow-2xs' 
+                              isSelected
+                                ? 'bg-[#004060]/5 border border-amber-200 text-stone-900 font-semibold shadow-2xs'
                                 : 'hover:bg-stone-50 border border-transparent text-stone-700'
                             }`}
                           >
-                            <MapPin className={`w-4 h-4 mt-0.5 shrink-0 ${isSelected ? 'text-[#004060]' : 'text-stone-400'}`} />
+                            <MapPin
+                              className={`w-4 h-4 mt-0.5 shrink-0 ${
+                                isSelected
+                                  ? 'text-[#004060]'
+                                  : 'text-stone-400'
+                              }`}
+                            />
+
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between font-bold text-stone-900">
-                                <span>{addr.label} ({addr.city})</span>
-                                <span className="text-[11px] font-semibold text-stone-500 font-mono">{addr.pincode}</span>
+                                <span>
+                                  {addr.label} ({addr.city})
+                                </span>
+
+                                <span className="text-[11px] font-semibold text-stone-500 font-mono">
+                                  {addr.pincode}
+                                </span>
                               </div>
-                              <p className="text-[11px] text-stone-500 truncate mt-0.5">{addr.addressLine || addr.address}</p>
+
+                              <p className="text-[11px] text-stone-500 truncate mt-0.5">
+                                {addr.addressLine || addr.address}
+                              </p>
                             </div>
-                            {isSelected && <Check className="w-4 h-4 text-emerald-600 shrink-0 self-center" />}
+
+                            {isSelected && (
+                              <Check className="w-4 h-4 text-emerald-600 shrink-0 self-center" />
+                            )}
                           </button>
                         );
                       })}
@@ -199,7 +237,10 @@ const Navbar = () => {
                           maxLength={6}
                           className="flex-1 text-xs px-3 py-2 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300"
                           onKeyDown={(e) => {
-                            if (e.key === 'Enter' && e.target.value.length === 6) {
+                            if (
+                              e.key === 'Enter' &&
+                              e.target.value.length === 6
+                            ) {
                               dispatch(
                                 setLocation({
                                   label: `Pincode: ${e.target.value}`,
@@ -210,15 +251,19 @@ const Navbar = () => {
                                   isGpsLive: false,
                                 })
                               );
+
                               setIsLocationOpen(false);
                             }
                           }}
                         />
+
                         <button
                           type="button"
                           className="px-3.5 py-2 bg-[#0a2540] text-white text-xs font-bold rounded-xl hover:bg-[#061727] shrink-0 cursor-pointer"
                           onClick={(e) => {
-                            const input = e.currentTarget.previousElementSibling;
+                            const input =
+                              e.currentTarget.previousElementSibling;
+
                             if (input && input.value.length === 6) {
                               dispatch(
                                 setLocation({
@@ -230,6 +275,7 @@ const Navbar = () => {
                                   isGpsLive: false,
                                 })
                               );
+
                               setIsLocationOpen(false);
                             }
                           }}
@@ -251,30 +297,79 @@ const Navbar = () => {
                 className="w-full flex items-center gap-2.5 pl-4 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm bg-stone-100/80 hover:bg-stone-100 text-stone-400 hover:text-stone-600 rounded-full border border-stone-200/80 hover:border-stone-300 transition-all shadow-2xs cursor-pointer group text-left"
               >
                 <Search className="w-4 h-4 text-stone-400 group-hover:text-[#981b2e] transition-colors shrink-0" />
-                <span className="truncate">Search snacks, sev, categories, sweets...</span>
+
+                <span className="truncate">
+                  Search snacks, sev, categories, sweets...
+                </span>
               </button>
             </div>
 
             {/* RIGHT: Navigation Links & Cart Button */}
             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-              
+
               {/* Desktop Navigation Links */}
               <nav className="hidden lg:flex items-center gap-1">
-                {navLinks.map((item) => (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      `px-3.5 py-2 rounded-full text-xs xl:text-sm font-bold transition-all ${
-                        isActive
-                          ? 'text-[#0a2540] bg-stone-100 shadow-2xs font-extrabold'
-                          : 'text-stone-600 hover:text-stone-950 hover:bg-stone-50'
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                ))}
+                {navLinks.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div
+                      key={item.path}
+                      className="relative group"
+                    >
+                      {/*
+                        The icon is positioned above this specific
+                        navigation item.
+
+                        group-hover makes the icon appear only when
+                        this particular navigation item is hovered.
+
+                        pointer-events-none prevents the icon from
+                        blocking clicks on the navigation link.
+                      */}
+                      <div
+                        className="
+                          pointer-events-none
+                          absolute -top-6 left-1/2 -translate-x-1/2
+                          w-7 h-7
+                          flex items-center justify-center
+                          opacity-3 translate-y-2
+                          group-hover:opacity-200
+                          group-hover:translate-y-0
+                          transition-all duration-500 ease-in-out
+                          z-20
+                        "
+                      >
+                        {/* Faded blue location-shaped background */}
+                        <MapPin
+                          className="absolute w-7 h-7 text-[#006090]"
+                          fill="#006090"
+                          stroke="#006090"
+                          strokeWidth={1.5}
+                        />
+
+                        {/* Blue icon inside the location shape */}
+                        <Icon
+                          className="relative z-10 w-3 h-3 text-[#cbdbe4]"
+                          strokeWidth={2.5}
+                        />
+                      </div>
+
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) =>
+                          `px-3.5 py-2 rounded-full text-xs xl:text-sm font-bold transition-all ${
+                            isActive
+                              ? 'text-stone-950 bg-stone-50 shadow-2xs font-extrabold'
+                              : 'text-[#004060] hover:text-[#F5C542] hover:bg-stone-50'
+                          }`
+                        }
+                      >
+                        {item.name}
+                      </NavLink>
+                    </div>
+                  );
+                })}
               </nav>
 
               {/* Circular Search Trigger Button (Mobile/Tablet) */}
@@ -296,7 +391,11 @@ const Navbar = () => {
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-108 transition-transform" />
-                <span className="hidden sm:inline text-xs font-black">Cart</span>
+
+                <span className="hidden sm:inline text-xs font-black">
+                  Cart
+                </span>
+
                 {cartCount > 0 && (
                   <span className="min-w-4.5 h-4.5 sm:min-w-5 sm:h-5 px-1 bg-[#F5C542] text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center border border-amber-300 shadow-xs">
                     {cartCount}
@@ -307,7 +406,9 @@ const Navbar = () => {
               {/* Mobile Hamburger Button */}
               <button
                 type="button"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={() =>
+                  setIsMobileMenuOpen(!isMobileMenuOpen)
+                }
                 className="lg:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 active:scale-95 transition-colors focus:outline-none cursor-pointer"
                 aria-label="Toggle Navigation"
               >
@@ -317,7 +418,6 @@ const Navbar = () => {
                   <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
                 )}
               </button>
-
             </div>
           </div>
         </div>
@@ -327,15 +427,26 @@ const Navbar = () => {
           <div className="lg:hidden border-t border-stone-200/80 bg-white/98 backdrop-blur-lg px-4 py-4 space-y-3 animate-in fade-in duration-150">
             <div className="flex items-center justify-between pb-2 border-b border-stone-100">
               <div className="flex items-center gap-2">
-                <img src={binayakLogo} alt="Binayak" className="h-7 w-auto object-contain" />
-                <span className="font-extrabold text-sm text-[#0a2540] font-brand">Binayak Industries</span>
+                <img
+                  src={binayakLogo}
+                  alt="Binayak"
+                  className="h-7 w-auto object-contain"
+                />
+
+                <span className="font-extrabold text-sm text-[#0a2540] font-brand">
+                  Binayak Industries
+                </span>
               </div>
-              <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Menu</span>
+
+              <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                Menu
+              </span>
             </div>
 
             <div className="grid grid-cols-1 gap-1">
               {navLinks.map((item) => {
                 const Icon = item.icon;
+
                 return (
                   <NavLink
                     key={item.path}
@@ -350,10 +461,16 @@ const Navbar = () => {
                     }
                   >
                     <div className="flex items-center gap-2.5">
-                      {Icon && <Icon className="w-4 h-4 text-stone-400" />}
+                      {Icon && (
+                        <Icon className="w-4 h-4 text-stone-400" />
+                      )}
+
                       <span>{item.name}</span>
                     </div>
-                    <span className="text-xs text-stone-400">→</span>
+
+                    <span className="text-xs text-stone-400">
+                      →
+                    </span>
                   </NavLink>
                 );
               })}
