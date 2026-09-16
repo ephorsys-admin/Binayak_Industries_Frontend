@@ -13,16 +13,10 @@ import {
   Clock,
   Lock,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { MobileBottomNav } from '../../components/Home';
-import {
-  CheckoutModal,
-  OrderSuccessModal,
-  OrderSuccessAnimation,
-  OrderBillModal,
-} from '../../components/Cart';
 import {
   selectCartItems,
   selectCartSubtotal,
@@ -38,8 +32,8 @@ import {
   clearCart,
 } from '../../Redux/features/cart/cartSlice';
 
-
 const Cart = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const subtotal = useSelector(selectCartSubtotal);
@@ -49,10 +43,6 @@ const Cart = () => {
   const totalAmount = useSelector(selectCartTotalAmount);
 
   const [couponCode, setCouponCode] = useState('');
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [confirmedOrder, setConfirmedOrder] = useState(null);
-  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-  const [showBillModal, setShowBillModal] = useState(false);
 
   const handleIncrement = (id) => {
     dispatch(incrementQuantity(id));
@@ -252,7 +242,7 @@ const Cart = () => {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Truck className="w-4 h-4 text-sky-400" />
-                  <span>Pan-India Courier Dispatch</span>
+                  <span>Courier Dispatch</span>
                 </div>
               </div>
 
@@ -302,19 +292,16 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Checkout CTA -> Opens Checkout Details Modal */}
+                {/* Checkout CTA -> Navigates to /checkout */}
                 <button
                   type="button"
-                  onClick={() => setIsCheckoutOpen(true)}
+                  onClick={() => navigate('/checkout')}
                   className="w-full py-3.5 rounded-full bg-[#003060] hover:bg-[#004060] active:scale-95 text-white text-xs sm:text-sm font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
                 >
-                  <span>Proceed to Secure Checkout</span>
+                  <span>Proceed to Order</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-
-                <p className="text-[10px] text-center text-stone-400 font-medium">
-                  🔒 256-Bit SSL Encrypted • 100% Safe Payments via UPI, Cards & NetBanking
-                </p>
+              
               </div>
 
             </div>
@@ -323,35 +310,6 @@ const Cart = () => {
         )}
 
       </div>
-
-      {/* Delivery Details Checkout Popup Modal */}
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        cartItems={cartItems}
-        subtotal={subtotal}
-        deliveryFee={deliveryFee}
-        discountAmount={discountAmount}
-        appliedCoupon={appliedCoupon}
-        totalAmount={totalAmount}
-        onConfirmOrder={handleOrderConfirmed}
-      />
-
-      {/* GPay Style Full-Screen Order Success Animation */}
-      {showSuccessAnimation && (
-        <OrderSuccessAnimation
-          order={confirmedOrder}
-          onClose={() => setShowSuccessAnimation(false)}
-          onViewBill={handleOpenBillFromAnimation}
-        />
-      )}
-
-      {/* Official Tax Invoice & Order Bill Modal with Download/Print Option */}
-      <OrderBillModal
-        isOpen={showBillModal}
-        order={confirmedOrder}
-        onClose={() => setShowBillModal(false)}
-      />
 
       {/* Mobile Bottom Nav */}
       <MobileBottomNav cartCount={cartItems.length} />

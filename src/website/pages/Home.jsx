@@ -47,6 +47,8 @@ const initialProducts = [
     rating: 4.9,
     isBestseller: true,
     image: ratlamiSevImg,
+    secondaryImage: mathriImg,
+    images: [ratlamiSevImg, mathriImg],
     oilType: '100% Groundnut Oil',
   },
   {
@@ -60,6 +62,8 @@ const initialProducts = [
     rating: 4.8,
     isBestseller: false,
     image: khattaMeethaImg,
+    secondaryImage: murukkuImg,
+    images: [khattaMeethaImg, murukkuImg],
     oilType: '100% Groundnut Oil',
   },
   {
@@ -73,6 +77,8 @@ const initialProducts = [
     rating: 4.9,
     isBestseller: true,
     image: ratlamiSevImg,
+    secondaryImage: khattaMeethaImg,
+    images: [ratlamiSevImg, khattaMeethaImg],
     oilType: '100% Groundnut Oil',
   },
   {
@@ -86,6 +92,8 @@ const initialProducts = [
     rating: 4.9,
     isBestseller: false,
     image: desiSweetsImg,
+    secondaryImage: roastedCashewsImg,
+    images: [desiSweetsImg, roastedCashewsImg],
     oilType: '100% Desi Cow Ghee',
   },
   {
@@ -99,6 +107,8 @@ const initialProducts = [
     rating: 4.9,
     isBestseller: true,
     image: roastedCashewsImg,
+    secondaryImage: heroBannerImg,
+    images: [roastedCashewsImg, heroBannerImg],
     oilType: 'Dry Roasted',
   },
   {
@@ -112,6 +122,8 @@ const initialProducts = [
     rating: 4.7,
     isBestseller: false,
     image: murukkuImg,
+    secondaryImage: mathriImg,
+    images: [murukkuImg, mathriImg],
     oilType: 'Cold-Pressed Groundnut Oil',
   },
   {
@@ -125,6 +137,8 @@ const initialProducts = [
     rating: 4.8,
     isBestseller: false,
     image: mathriImg,
+    secondaryImage: ratlamiSevImg,
+    images: [mathriImg, ratlamiSevImg],
     oilType: '100% Groundnut Oil',
   },
   {
@@ -138,6 +152,8 @@ const initialProducts = [
     rating: 5.0,
     isBestseller: true,
     image: heroBannerImg,
+    secondaryImage: desiSweetsImg,
+    images: [heroBannerImg, desiSweetsImg],
     oilType: 'Pure Desi Ghee',
   },
 ];

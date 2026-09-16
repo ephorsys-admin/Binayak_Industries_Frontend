@@ -83,10 +83,18 @@ export const formatApiCategory = (cat) => {
 export const formatApiProduct = (prod) => {
   if (!prod) return null;
   const prodId = prod._id || prod.id;
-  const primaryImg =
-    prod.images && prod.images.length > 0
-      ? prod.images[0].url
-      : prod.image || ratlamiSevImg;
+  
+  // Extract all images safely
+  let rawImagesList = [];
+  if (Array.isArray(prod.images) && prod.images.length > 0) {
+    rawImagesList = prod.images.map((img) => (typeof img === 'string' ? img : img?.url)).filter(Boolean);
+  } else if (prod.image) {
+    rawImagesList = [prod.image];
+  }
+
+  const primaryImg = rawImagesList[0] || prod.image || ratlamiSevImg;
+  const secondaryImg = rawImagesList[1] || prod.secondaryImage || prod.hoverImage || null;
+
   const catObj =
     typeof prod.category === 'object' && prod.category !== null
       ? prod.category
@@ -119,15 +127,16 @@ export const formatApiProduct = (prod) => {
     spiciness: prod.spiciness || 'Medium Spice',
     spiceLevel: prod.spiceLevel || 2,
     shelfLife: prod.shelfLife || '90 Days',
-    rating: Number(prod.rating) || 4.8,
-    reviewsCount: Number(prod.reviewsCount) || 120,
-    isBestseller: Boolean(prod.isBestSeller),
+    rating: Number(prod.rating || prod.averageRating) || 4.8,
+    reviewsCount: Number(prod.reviewsCount || prod.totalReviews) || 120,
+    isBestseller: Boolean(prod.isBestSeller || prod.isBestseller),
     isSpotlight: Boolean(prod.isFeatured),
     isTrending: Boolean(prod.isTrending),
     isNew: Boolean(prod.isNewArrival),
     isAvailable: prod.isAvailable !== false,
     image: primaryImg,
-    images: prod.images || [{ url: primaryImg }],
+    secondaryImage: secondaryImg,
+    images: rawImagesList.length > 0 ? rawImagesList : [primaryImg],
     ingredients: prod.ingredients || 'Artisanal Spices, Gram Flour, Groundnut Oil',
     nutritionHighlights: prod.nutritionHighlights || ['Zero Trans Fat', 'Rich in Protein'],
   };
