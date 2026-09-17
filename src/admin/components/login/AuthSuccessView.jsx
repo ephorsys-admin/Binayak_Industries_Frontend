@@ -9,7 +9,7 @@ const AuthSuccessView = ({ onBackToLogin }) => {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif-heading">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 ">
           Password Reset Successfully!
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-sm mx-auto">

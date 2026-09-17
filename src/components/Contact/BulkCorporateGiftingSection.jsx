@@ -17,7 +17,7 @@ const BulkCorporateGiftingSection = () => {
       <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        
+
         {/* Left Info (7 cols) */}
         <div className="lg:col-span-7 space-y-4 sm:space-y-5">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/25 text-[#ffd25d] text-xs font-bold uppercase tracking-wider">
@@ -26,7 +26,7 @@ const BulkCorporateGiftingSection = () => {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black  tracking-tight leading-tight">
               Looking for Bulk Orders or <span className="text-[#ffd25d]">Custom Hampers?</span>
             </h2>
             <p className="text-stone-300 text-xs sm:text-sm leading-relaxed max-w-xl">

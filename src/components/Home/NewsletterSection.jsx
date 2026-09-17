@@ -23,7 +23,7 @@ const NewsletterSection = () => {
           <span>Binayak Foodie Club</span>
         </div>
 
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-stone-900 font-serif-heading tracking-tight">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-stone-900  tracking-tight">
           Get Flat 10% OFF on Your First Order
         </h2>
 

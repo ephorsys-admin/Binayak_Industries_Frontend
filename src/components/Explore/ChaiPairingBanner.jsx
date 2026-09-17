@@ -20,7 +20,7 @@ const ChaiPairingBanner = ({ onSelectChaiSpecials }) => {
             <span>4 PM Chai Companion</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl lg:text-3xl font-black font-serif-heading tracking-tight leading-snug">
+          <h3 className="text-xl sm:text-2xl lg:text-3xl font-black  tracking-tight leading-snug">
             Crave the Royal Evening Crunch with{' '}
             <span className="text-[#F5C542]">
               Masala Chai

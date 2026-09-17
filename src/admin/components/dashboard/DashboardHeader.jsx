@@ -10,7 +10,7 @@ const DashboardHeader = () => {
           <ChefHat className="w-3.5 h-3.5" />
           <span>Binayak Industries • Master Administrative Console</span>
         </div>
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900  tracking-tight">
           Operational Dashboard
         </h1>
         <p className="text-xs text-stone-500">

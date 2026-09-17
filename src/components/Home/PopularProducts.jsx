@@ -42,7 +42,7 @@ const PopularProducts = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
         <div>
           {/* Mobile Title: "All Snacks & Delicacies", Desktop Title: "Top Snacks & Delicacies Near You" */}
-          <h2 className="text-lg sm:text-2xl lg:text-3xl font-black text-stone-900 font-brand sm:font-serif-heading tracking-tight">
+          <h2 className="text-lg sm:text-2xl lg:text-3xl font-black text-stone-900 font-brand sm: tracking-tight">
             <span className="sm:hidden">All Delicacies</span>
             <span className="hidden sm:inline">Top Snacks & Delicacies Near You</span>
           </h2>
@@ -67,11 +67,10 @@ const PopularProducts = ({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveFilter(tab.id)}
-                className={`inline-flex items-center gap-1 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                  isActive
+                className={`inline-flex items-center gap-1 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${isActive
                     ? 'bg-[#006090] text-white shadow-xs font-black'
                     : 'bg-white hover:bg-stone-100 text-stone-600 border border-stone-200/80 shadow-2xs'
-                }`}
+                  }`}
               >
                 {Icon && <Icon className={`w-3 h-3 ${isActive ? 'fill-current' : 'text-stone-500'}`} />}
                 <span>{tab.label}</span>

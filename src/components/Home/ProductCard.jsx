@@ -21,7 +21,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
   const rawImages = Array.isArray(product.images)
     ? product.images.map((img) => (typeof img === 'string' ? img : img?.url)).filter(Boolean)
     : [];
-  
+
   const primaryImage = rawImages[0] || product.image || '';
   const secondaryImage = rawImages[1] || product.secondaryImage || product.hoverImage || null;
 
@@ -38,10 +38,10 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
 
   return (
     <div className="group relative flex flex-col justify-between bg-white rounded-3xl border-[1.5px] border-[#deb66a]/60 hover:border-[#c59841] shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(197,152,65,0.2)] transition-all duration-500 hover:-translate-y-1.5 overflow-hidden p-3 sm:p-4">
-      
+
       {/* Top Media & Content Wrapper */}
       <div className="flex flex-col">
-        
+
         {/* Top Product Image Container */}
         <div className="relative aspect-[16/11] rounded-2xl overflow-hidden bg-slate-950 mb-2.5">
           <Link to={detailUrl} className="block w-full h-full relative">
@@ -49,11 +49,10 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             <img
               src={primaryImage}
               alt={product.title || product.name}
-              className={`w-full h-full object-cover transition-all duration-700 ease-out ${
-                secondaryImage
+              className={`w-full h-full object-cover transition-all duration-700 ease-out ${secondaryImage
                   ? 'group-hover:opacity-0 group-hover:scale-105'
                   : 'group-hover:scale-108'
-              }`}
+                }`}
               loading="lazy"
             />
 
@@ -79,9 +78,8 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             aria-label="Add to Wishlist"
           >
             <Heart
-              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${
-                isLiked ? 'text-rose-600 fill-rose-600' : 'text-stone-600'
-              }`}
+              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isLiked ? 'text-rose-600 fill-rose-600' : 'text-stone-600'
+                }`}
             />
           </button>
 
@@ -126,7 +124,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             BINAYAK INDUSTRIES
           </span>
           <Link to={detailUrl} className="block group/title">
-            <h3 className="text-base sm:text-lg font-bold text-stone-900 group-hover/title:text-[#006090] font-brand sm:font-serif-heading leading-tight line-clamp-2 transition-colors">
+            <h3 className="text-base sm:text-lg font-bold text-stone-900 group-hover/title:text-[#006090] font-brand sm: leading-tight line-clamp-2 transition-colors">
               {product.title || product.name}
             </h3>
           </Link>

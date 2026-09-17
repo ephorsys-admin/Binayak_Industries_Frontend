@@ -94,7 +94,7 @@ const Cart = () => {
   return (
     <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
-        
+
         {/* Cart Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
           <div className="space-y-1">
@@ -102,7 +102,7 @@ const Cart = () => {
               <ShoppingBag className="w-3.5 h-3.5 text-[#003060]" />
               <span>Your Shopping Cart</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight">
               Artisanal Selection & Checkout
             </h1>
           </div>
@@ -122,7 +122,7 @@ const Cart = () => {
               <ShoppingBag className="w-8 h-8" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-xl font-bold font-serif-heading text-stone-900">
+              <h3 className="text-xl font-bold  text-stone-900">
                 Your Cart is Empty
               </h3>
               <p className="text-xs sm:text-sm text-stone-500">
@@ -131,7 +131,7 @@ const Cart = () => {
             </div>
             <Link
               to="/explore"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#981b2e] hover:bg-[#801424] active:scale-95 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E0B529] hover:bg-[#d6a818] active:scale-95 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               <span>Explore Snacks Menu</span>
               <ArrowRight className="w-4 h-4" />
@@ -139,10 +139,10 @@ const Cart = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            
+
             {/* Left: Cart Items List (8 cols) */}
             <div className="lg:col-span-8 space-y-4">
-              
+
               {/* Free Delivery Bar */}
               <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
@@ -250,8 +250,8 @@ const Cart = () => {
 
             {/* Right: Order Summary & Checkout (4 cols) */}
             <div className="lg:col-span-4 space-y-4">
-              
-             
+
+
 
               {/* Price Breakdown Card */}
               <div className="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-4">
@@ -301,7 +301,7 @@ const Cart = () => {
                   <span>Proceed to Order</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-              
+
               </div>
 
             </div>

@@ -23,7 +23,7 @@ const ForgotEmailForm = ({
         <div className="w-12 h-12 rounded-2xl bg-sky-100 text-[#083358] border border-sky-200 flex items-center justify-center shadow-md">
           <KeyRound className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif-heading tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900  tracking-tight">
           Account Recovery
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-medium">

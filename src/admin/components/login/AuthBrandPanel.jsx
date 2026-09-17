@@ -49,7 +49,7 @@ const AuthBrandPanel = () => {
 
 
           <div>
-            <h2 className="text-[15px] xl:text-base font-black tracking-[0.18em] font-serif-heading">
+            <h2 className="text-[15px] xl:text-base font-black tracking-[0.18em] ">
               BINAYAK INDUSTRIES
             </h2>
 
@@ -86,9 +86,9 @@ const AuthBrandPanel = () => {
 
             {/* MAIN HEADING */}
 
-            <h1 className="text-4xl xl:text-[54px] font-black font-serif-heading leading-[1.05] tracking-tight">
+            <h1 className="text-4xl xl:text-[54px] font-black  leading-[1.05] tracking-tight">
 
-              Where quality 
+              Where quality
 
               <br />
 

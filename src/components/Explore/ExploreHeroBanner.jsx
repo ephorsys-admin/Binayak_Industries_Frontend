@@ -1,25 +1,16 @@
 import React from 'react';
-import BgHero from '../ui/BgHero';
-import cleanHeroImg from '../../assets/clean_snacks_hero.jpg';
-import { Sparkles, ShieldCheck, Award, Leaf } from 'lucide-react';
+import heroImg from '../../assets/hero.webp';
 
 const ExploreHeroBanner = () => {
   return (
-    <BgHero
-      badgeText="100% COLD-PRESSED GROUNDNUT OIL"
-      badgeIcon={Sparkles}
-      title="Artisanal Snacks & Fresh Delicacies"
-      highlightText="Artisanal Snacks"
-      subtitle="Handcrafted daily in pure single-press groundnut oil with zero palm oil."
-      image={cleanHeroImg}
-      imageLayout="background"
-      theme="crimson"
-      trustPoints={[
-        { icon: ShieldCheck, text: '0% Palm Oil' },
-        { icon: Award, text: 'Small Batch Fresh' },
-        { icon: Leaf, text: '100% Pure Veg' },
-      ]}
-    />
+    <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-sky-100/80 bg-gradient-to-r from-[#003c60] via-[#004f7c] to-[#003859] transition-all duration-300 my-1">
+      <img
+        src={heroImg}
+        alt="Binayak - Crispy & Crunchy Namkeen Delights"
+        className="w-full h-auto object-cover rounded-2xl sm:rounded-3xl block shadow-sm select-none"
+        loading="eager"
+      />
+    </div>
   );
 };
 

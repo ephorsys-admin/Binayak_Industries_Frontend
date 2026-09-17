@@ -50,7 +50,7 @@ const AboutStory = () => {
               <span>Our Heritage & Craft</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight leading-tight">
               The Taste of Tradition{" "}
               <span className="text-[#006090]">Made for Today</span>
             </h2>

@@ -10,7 +10,7 @@ const OrderHeader = () => {
           <Sparkles className="w-3.5 h-3.5" />
           <span>Storefront Orders & Dispatch Manager</span>
         </div>
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900  tracking-tight">
           Orders Management
         </h1>
       </div>

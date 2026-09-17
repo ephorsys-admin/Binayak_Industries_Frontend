@@ -35,7 +35,7 @@ const categories = [
 const AboutCategories = () => {
   return (
     <div className="space-y-5 sm:space-y-6">
-      
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="space-y-1.5">
@@ -43,7 +43,7 @@ const AboutCategories = () => {
             <Sparkles className="w-3.5 h-3.5" />
             <span>Artisanal Specialties</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight">
             Crafted for <span className="text-[#004060]">Every Craving</span>
           </h2>
         </div>
@@ -71,13 +71,13 @@ const AboutCategories = () => {
               alt={cat.title}
               className="absolute inset-0 w-full h-full object-cover object-center opacity-70 group-hover:scale-105 group-hover:opacity-85 transition-all duration-700 pointer-events-none"
             />
-            
+
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-transparent pointer-events-none" />
 
             {/* Top Bar */}
             <div className="relative z-10 flex items-center justify-between">
-             
+
               <span className="text-[11px] font-bold text-stone-200 bg-white/10 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/15">
                 {cat.tag}
               </span>

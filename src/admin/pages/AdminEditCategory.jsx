@@ -182,7 +182,7 @@ const AdminEditCategory = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      
+
       {/* Top Navigation Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-stone-200">
         <div className="flex items-center gap-3">
@@ -199,7 +199,7 @@ const AdminEditCategory = () => {
               <Layers className="w-3 h-3" />
               <span>Edit Mode</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-stone-900  tracking-tight">
               Edit Category: {name || 'Loading...'}
             </h1>
           </div>
@@ -216,7 +216,7 @@ const AdminEditCategory = () => {
       {/* Main Edit Form Card */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-2xs">
         <form onSubmit={handleUpdate} className="space-y-6">
-          
+
           {/* Cover Image Upload Section */}
           <div className="space-y-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-stone-600">

@@ -96,7 +96,7 @@ const CustomerReviews = () => {
             <span>Verified Foodie Reviews</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-black text-[#004060] font-serif-heading tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#004060]  tracking-tight">
             Loved by 50,000+ Snack Enthusiasts
           </h2>
 
@@ -276,15 +276,14 @@ const CustomerReviews = () => {
                   duration-700
                   ease-[cubic-bezier(0.22,1,0.36,1)]
 
-                  ${
-                    isCenter
-                      ? `
+                  ${isCenter
+                    ? `
                         z-20
                         bg-white
                         border-[#D79F26]
                         shadow-[0_25px_60px_rgba(0,0,0,0.35)]
                       `
-                      : `
+                    : `
                         z-10
                         bg-white/95
                         border-white/40
@@ -331,10 +330,9 @@ const CustomerReviews = () => {
                     transition-all
                     duration-500
 
-                    ${
-                      isCenter
-                        ? 'bg-[#D79F26]'
-                        : 'bg-[#004060]/10'
+                    ${isCenter
+                      ? 'bg-[#D79F26]'
+                      : 'bg-[#004060]/10'
                     }
                   `}
                 />
@@ -362,10 +360,9 @@ const CustomerReviews = () => {
                       transition-all
                       duration-500
 
-                      ${
-                        isCenter
-                          ? 'text-[#D79F26]'
-                          : 'text-[#004060]/15'
+                      ${isCenter
+                        ? 'text-[#D79F26]'
+                        : 'text-[#004060]/15'
                       }
                     `}
                   />
@@ -384,10 +381,9 @@ const CustomerReviews = () => {
                       leading-relaxed
                       font-medium
 
-                      ${
-                        isCenter
-                          ? 'text-[#004060]'
-                          : 'text-stone-600'
+                      ${isCenter
+                        ? 'text-[#004060]'
+                        : 'text-stone-600'
                       }
                     `}
                   >
@@ -417,10 +413,9 @@ const CustomerReviews = () => {
                             object-cover
                             border-2
 
-                            ${
-                              isCenter
-                                ? 'border-[#D79F26]'
-                                : 'border-[#004060]/10'
+                            ${isCenter
+                              ? 'border-[#D79F26]'
+                              : 'border-[#004060]/10'
                             }
                           `}
                         />
@@ -541,10 +536,9 @@ const CustomerReviews = () => {
                   transition-all
                   duration-500
 
-                  ${
-                    index === currentIndex
-                      ? 'w-6 h-1.5 bg-[#D79F26]'
-                      : 'w-1.5 h-1.5 bg-white/50'
+                  ${index === currentIndex
+                    ? 'w-6 h-1.5 bg-[#D79F26]'
+                    : 'w-1.5 h-1.5 bg-white/50'
                   }
                 `}
               />
