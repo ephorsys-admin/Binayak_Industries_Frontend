@@ -59,10 +59,10 @@ export default function OrderSuccessAnimation({
     <div className="fixed inset-0 z-[99999] bg-white flex flex-col items-center justify-center p-6 font-sans text-center overflow-y-auto">
       {/* Container Box */}
       <div className="max-w-md w-full flex flex-col items-center justify-center space-y-6 my-auto">
-        
+
         {/* GPAY STYLE TICK ANIMATION CONTAINER */}
         <div className="relative w-44 h-44 flex items-center justify-center">
-          
+
           {/* Outer Pulsing Green Glow Ring */}
           <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping opacity-75" />
           <div className="absolute -inset-4 rounded-full bg-emerald-100/50 animate-pulse" />
@@ -98,16 +98,15 @@ export default function OrderSuccessAnimation({
 
         {/* ORDER SUCCESS TEXT CONTENT */}
         <div
-          className={`space-y-3 transition-all duration-700 ${
-            showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
+          className={`space-y-3 transition-all duration-700 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
         >
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider">
             <Sparkles size={14} className="text-emerald-600" />
             <span>Order Confirmed & Placed</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-black font-serif-heading text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black  text-slate-900 tracking-tight">
             Thank You For Your Order!
           </h2>
 
@@ -135,9 +134,8 @@ export default function OrderSuccessAnimation({
 
         {/* ACTION BUTTONS */}
         <div
-          className={`w-full space-y-2.5 pt-2 transition-all duration-700 delay-200 ${
-            showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
+          className={`w-full space-y-2.5 pt-2 transition-all duration-700 delay-200 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
         >
           <button
             type="button"

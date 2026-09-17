@@ -158,7 +158,7 @@ const AdminCategories = () => {
 
   return (
     <div className="space-y-5 sm:space-y-6 pb-10">
-      
+
       {/* 1. Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-stone-200">
         <div>
@@ -166,7 +166,7 @@ const AdminCategories = () => {
             <Layers className="w-3.5 h-3.5" />
             <span>Product Taxonomy</span>
           </div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900  tracking-tight">
             Categories Management
           </h1>
           <p className="text-xs text-stone-500">
@@ -270,11 +270,10 @@ const AdminCategories = () => {
                 <button
                   type="button"
                   onClick={() => handleToggleStatus(cat)}
-                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
-                    isActive
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${isActive
                       ? 'bg-emerald-100 text-emerald-800'
                       : 'bg-stone-100 text-stone-600'
-                  }`}
+                    }`}
                 >
                   <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-600' : 'bg-stone-400'}`} />
                   <span>{isActive ? 'Active' : 'Inactive'}</span>
@@ -367,11 +366,10 @@ const AdminCategories = () => {
                       <button
                         type="button"
                         onClick={() => handleToggleStatus(cat)}
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
-                          isActive
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${isActive
                             ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
                             : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                        }`}
+                          }`}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-600' : 'bg-stone-400'}`} />
                         <span>{isActive ? 'Active' : 'Inactive'}</span>

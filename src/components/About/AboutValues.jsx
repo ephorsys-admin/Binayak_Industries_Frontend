@@ -47,14 +47,14 @@ const values = [
 const AboutValues = () => {
   return (
     <div className="space-y-6 sm:space-y-8">
-      
+
       {/* Section Header */}
       <div className="text-center max-w-2xl mx-auto space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D79F26]/10 border border-[#D79F26]/20 text-[#D79F26] text-xs font-bold uppercase tracking-wider">
           <Award className="w-3.5 h-3.5 text-[#D79F26]" />
           <span>Our Guiding Principles</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-serif-heading text-stone-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight">
           The Pillars Behind <span className="text-[#004060]">Binayak Purity</span>
         </h2>
         <p className="text-xs sm:text-sm text-stone-600">
@@ -76,7 +76,7 @@ const AboutValues = () => {
                   <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${val.iconBg}`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  
+
                 </div>
 
                 <div className="space-y-1.5">

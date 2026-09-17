@@ -26,8 +26,8 @@ const LoginForm = ({
       {/* ================= HEADER ================= */}
 
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif-heading tracking-tight">
-         Admin Signin
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900  tracking-tight">
+          Admin Signin
         </h2>
 
         <p className="text-sm text-slate-500 font-medium">

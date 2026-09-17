@@ -42,24 +42,7 @@ const ArtisanalCategoryCircles = ({
         </div>
 
         {/* Scroll Controls on Desktop */}
-        <div className="hidden sm:flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => handleScroll('left')}
-            className="w-8 h-8 rounded-full border border-stone-200 bg-white hover:bg-stone-50 hover:border-stone-300 flex items-center justify-center text-stone-600 transition-all active:scale-95 shadow-xs cursor-pointer"
-            aria-label="Scroll categories left"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => handleScroll('right')}
-            className="w-8 h-8 rounded-full border border-stone-200 bg-white hover:bg-stone-50 hover:border-stone-300 flex items-center justify-center text-stone-600 transition-all active:scale-95 shadow-xs cursor-pointer"
-            aria-label="Scroll categories right"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+    
       </div>
 
       {/* Circle Categories Scrollable Track */}

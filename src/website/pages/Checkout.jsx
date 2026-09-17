@@ -64,7 +64,7 @@ export default function Checkout() {
     try {
       const saved = localStorage.getItem('binayak_user_contact');
       if (saved) return JSON.parse(saved);
-    } catch (e) {}
+    } catch (e) { }
     return { name: '', phone: '', email: '' };
   };
 
@@ -268,7 +268,7 @@ export default function Checkout() {
           email: formData.email.trim(),
         })
       );
-    } catch (e) {}
+    } catch (e) { }
 
     const payload = {
       customer: {
@@ -374,7 +374,7 @@ export default function Checkout() {
         <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
           <ShoppingBag className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-bold font-serif-heading text-stone-900">Your Cart is Empty</h2>
+        <h2 className="text-2xl font-bold  text-stone-900">Your Cart is Empty</h2>
         <p className="text-sm text-stone-500 max-w-md">
           Please add delicious artisanal snacks to your cart before proceeding to order.
         </p>
@@ -409,14 +409,14 @@ export default function Checkout() {
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
-        
+
         {/* Page Header */}
         <div className="mb-6 space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[11px] font-extrabold uppercase tracking-wider">
             <ShoppingBag className="w-3 h-3 text-[#003060]" />
             <span>Simple 1-Step Checkout</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black font-serif-heading text-stone-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black  text-stone-900 tracking-tight">
             Delivery Details & Place Order
           </h1>
           <p className="text-xs text-stone-500">
@@ -426,10 +426,10 @@ export default function Checkout() {
 
         {/* 2-Column Responsive Layout */}
         <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
+
           {/* Left Column: Delivery Form (7 Cols) */}
           <div className="lg:col-span-7 space-y-5">
-            
+
             {/* 1. Contact & Customer Information */}
             <div className="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200/80 shadow-xs space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
@@ -460,9 +460,8 @@ export default function Checkout() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="e.g. Binayak Patel"
-                      className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                        errors.name ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                      }`}
+                      className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.name ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                        }`}
                     />
                   </div>
                   {errors.name && <p className="text-[10px] text-rose-500 mt-1">{errors.name}</p>}
@@ -484,9 +483,8 @@ export default function Checkout() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="9876543210"
-                      className={`w-full pl-11 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                        errors.phone ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                      }`}
+                      className={`w-full pl-11 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.phone ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                        }`}
                     />
                   </div>
                   {errors.phone && <p className="text-[10px] text-rose-500 mt-1">{errors.phone}</p>}
@@ -505,9 +503,8 @@ export default function Checkout() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="name@example.com"
-                      className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                        errors.email ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                      }`}
+                      className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.email ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                        }`}
                     />
                   </div>
                   {errors.email && <p className="text-[10px] text-rose-500 mt-1">{errors.email}</p>}
@@ -565,11 +562,10 @@ export default function Checkout() {
                         key={tab.id}
                         type="button"
                         onClick={() => setFormData((prev) => ({ ...prev, addressType: tab.id }))}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                          isActive
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${isActive
                             ? 'bg-[#003060] text-white shadow-2xs'
                             : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
-                        }`}
+                          }`}
                       >
                         <Icon className="w-3 h-3" />
                         <span>{tab.label}</span>
@@ -590,9 +586,8 @@ export default function Checkout() {
                   value={formData.addressLine}
                   onChange={handleChange}
                   placeholder="e.g. Flat 402, Royal Residency, Khandagiri"
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                    errors.addressLine ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                  }`}
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.addressLine ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                    }`}
                 />
                 {errors.addressLine && <p className="text-[10px] text-rose-500 mt-1">{errors.addressLine}</p>}
               </div>
@@ -610,9 +605,8 @@ export default function Checkout() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Bhubaneswar"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                      errors.city ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                    }`}
+                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.city ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                      }`}
                   />
                   {errors.city && <p className="text-[10px] text-rose-500 mt-1">{errors.city}</p>}
                 </div>
@@ -628,9 +622,8 @@ export default function Checkout() {
                     value={formData.state}
                     onChange={handleChange}
                     placeholder="Odisha"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                      errors.state ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                    }`}
+                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.state ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                      }`}
                   />
                   {errors.state && <p className="text-[10px] text-rose-500 mt-1">{errors.state}</p>}
                 </div>
@@ -647,9 +640,8 @@ export default function Checkout() {
                     value={formData.pincode}
                     onChange={handleChange}
                     placeholder="751001"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${
-                      errors.pincode ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
-                    }`}
+                    className={`w-full px-3 py-2 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.pincode ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
+                      }`}
                   />
                   {errors.pincode && <p className="text-[10px] text-rose-500 mt-1">{errors.pincode}</p>}
                 </div>
@@ -733,9 +725,9 @@ export default function Checkout() {
           {/* Right Column: Order Summary & Instant Checkout CTA (5 Cols) */}
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200/80 shadow-xs space-y-5 sticky top-24">
-              
+
               <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-                <h3 className="text-base font-bold font-serif-heading text-stone-900">
+                <h3 className="text-base font-bold  text-stone-900">
                   Order Summary ({cartItems.length} {cartItems.length === 1 ? 'item' : 'items'})
                 </h3>
                 <Link to="/cart" className="text-xs font-bold text-[#003060] hover:underline">

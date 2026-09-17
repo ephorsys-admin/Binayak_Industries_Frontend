@@ -51,9 +51,8 @@ const BgHero = ({
       {/* ========================================================================= */}
       <div className="sm:hidden">
         <div
-          className={`relative rounded-3xl overflow-hidden text-white p-5 shadow-lg border ${
-            themeClasses[theme] || themeClasses.crimson
-          }`}
+          className={`relative rounded-3xl overflow-hidden text-white p-5 shadow-lg border ${themeClasses[theme] || themeClasses.crimson
+            }`}
         >
           {/* Background Image with Ambient Overlay */}
           {image && (
@@ -82,7 +81,7 @@ const BgHero = ({
             )}
 
             {/* Main Heading */}
-            <h2 className="text-2xl font-black font-serif-heading tracking-tight leading-tight text-white drop-shadow-sm">
+            <h2 className="text-2xl font-black  tracking-tight leading-tight text-white drop-shadow-sm">
               {renderTitle()}
             </h2>
 
@@ -144,9 +143,8 @@ const BgHero = ({
       {/* 2. DESKTOP / LAPTOP VIEW ONLY (hidden sm:block) - Clean Premium Banner    */}
       {/* ========================================================================= */}
       <div
-        className={`hidden sm:block relative w-full rounded-3xl overflow-hidden shadow-xl border text-white ${
-          themeClasses[theme] || themeClasses.crimson
-        }`}
+        className={`hidden sm:block relative w-full rounded-3xl overflow-hidden shadow-xl border text-white ${themeClasses[theme] || themeClasses.crimson
+          }`}
       >
         {/* Ambient Halos */}
         <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-amber-500/20 blur-3xl" />
@@ -193,7 +191,7 @@ const BgHero = ({
 
             {/* Heading */}
             <div className="space-y-1">
-              <h1 className="font-serif-heading text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-sm">
+              <h1 className=" text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-sm">
                 {renderTitle()}
               </h1>
               {subtitle && (
@@ -256,15 +254,14 @@ const BgHero = ({
                 className="h-full w-full object-cover object-center"
               />
               <div
-                className={`pointer-events-none absolute inset-y-0 left-0 hidden w-20 bg-gradient-to-r ${
-                  theme === 'navy'
+                className={`pointer-events-none absolute inset-y-0 left-0 hidden w-20 bg-gradient-to-r ${theme === 'navy'
                     ? 'from-[#0a2540]'
                     : theme === 'dark'
-                    ? 'from-[#1c1917]'
-                    : theme === 'teal'
-                    ? 'from-[#064e62]'
-                    : 'from-[#851526]'
-                } to-transparent md:block`}
+                      ? 'from-[#1c1917]'
+                      : theme === 'teal'
+                        ? 'from-[#064e62]'
+                        : 'from-[#851526]'
+                  } to-transparent md:block`}
               />
             </div>
           )}

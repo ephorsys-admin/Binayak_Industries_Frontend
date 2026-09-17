@@ -28,7 +28,7 @@ const ForgotOtpForm = ({
         <div className="w-12 h-12 rounded-2xl bg-sky-100 border border-sky-200 text-[#083358] flex items-center justify-center shadow-md mx-auto">
           <ShieldCheck className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif-heading tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900  tracking-tight">
           Enter 6-Digit OTP
         </h2>
         <p className="text-xs text-slate-500 font-medium">

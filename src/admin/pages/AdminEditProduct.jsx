@@ -53,8 +53,8 @@ const AdminEditProduct = () => {
     adminCategories && adminCategories.length > 0
       ? adminCategories
       : publicCategories && publicCategories.length > 0
-      ? publicCategories
-      : fallbackCategories;
+        ? publicCategories
+        : fallbackCategories;
 
   // Form State
   const [name, setName] = useState('');
@@ -220,7 +220,7 @@ const AdminEditProduct = () => {
 
   return (
     <div className="space-y-5 sm:space-y-6 max-w-4xl mx-auto pb-12">
-      
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-stone-200">
         <div className="flex items-center gap-3">
@@ -237,7 +237,7 @@ const AdminEditProduct = () => {
               <ChefHat className="w-3 h-3" />
               <span>Edit Record</span>
             </div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900  tracking-tight">
               Edit {name || 'Product'}
             </h1>
           </div>
@@ -254,7 +254,7 @@ const AdminEditProduct = () => {
       {/* Main Form Card */}
       <div className="bg-white rounded-3xl p-5 sm:p-8 border border-stone-200/80 shadow-2xs">
         <form onSubmit={handleUpdate} className="space-y-5 sm:space-y-6">
-          
+
           {/* Photos Management Section */}
           <div className="space-y-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-stone-600">

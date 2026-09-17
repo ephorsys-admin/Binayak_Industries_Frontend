@@ -29,7 +29,7 @@ const OrderSuccessModal = ({ isOpen, order, onClose }) => {
         title: `Binayak Industries Order #${order.id}`,
         text: `I just ordered fresh artisanal namkeens from Binayak Industries! Order #${order.id}`,
         url: window.location.origin + '/orders',
-      }).catch(() => {});
+      }).catch(() => { });
     } else {
       navigator.clipboard.writeText(`Binayak Order #${order.id}`);
       toast.success('Order details copied to clipboard!');
@@ -39,7 +39,7 @@ const OrderSuccessModal = ({ isOpen, order, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/75 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-lg w-full border border-stone-200 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
-        
+
         {/* Top Celebration Banner */}
         <div className="p-6 sm:p-7 bg-gradient-to-br from-[#0a2540] via-[#083358] to-[#981b2e] text-white text-center relative overflow-hidden shrink-0">
           {/* Subtle Glow Circle */}
@@ -56,7 +56,7 @@ const OrderSuccessModal = ({ isOpen, order, onClose }) => {
             <span>Order Confirmed & Received!</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-black font-serif-heading">
+          <h3 className="text-xl sm:text-2xl font-black ">
             Thank You, {order.shippingAddress.name.split(' ')[0]}!
           </h3>
           <p className="text-xs text-stone-200 mt-1 max-w-xs mx-auto">
@@ -73,7 +73,7 @@ const OrderSuccessModal = ({ isOpen, order, onClose }) => {
 
         {/* Order Details Body */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs text-stone-700">
-          
+
           {/* Estimated Delivery Strip */}
           <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-center justify-between">
             <div className="flex items-center gap-2.5">

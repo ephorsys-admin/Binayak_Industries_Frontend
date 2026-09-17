@@ -50,7 +50,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
   return (
     <div className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-stone-950/75 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-2xl w-full border border-stone-200 shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
-        
+
         {/* Top Control Bar (Non-Printable) */}
         <div className="no-print p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
             <span className="font-bold text-xs sm:text-sm">Official Order Receipt & Bill</span>
           </div>
           <div className="flex items-center gap-2">
-       
+
             <button
               type="button"
               onClick={onClose}
@@ -71,7 +71,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
 
         {/* Printable Bill Area */}
         <div id="printable-order-bill" className="p-6 sm:p-8 overflow-y-auto space-y-6 text-xs text-stone-700 bg-white">
-          
+
           {/* Company Invoice Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b-2 border-stone-900 gap-4">
             <div>
@@ -79,7 +79,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
                 <Sparkles className="w-3 h-3 text-[#981b2e]" />
                 <span>Binayak Industries</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black font-serif-heading text-stone-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black  text-stone-900 tracking-tight">
                 TAX INVOICE & ORDER BILL
               </h1>
               <p className="text-[11px] text-stone-500">

@@ -29,7 +29,7 @@ const SpecialOfferBanner = () => {
       <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-rose-500/20 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        
+
         {/* Left Info (Matching 50% OFF reference banner) */}
         <div className="space-y-2.5 text-center md:text-left max-w-xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[#ffd25d] text-xs font-black uppercase tracking-wider border border-white/20">
@@ -38,7 +38,7 @@ const SpecialOfferBanner = () => {
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif-heading tracking-tight text-white leading-none">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black  tracking-tight text-white leading-none">
               50% OFF
             </h2>
             <p className="text-sm sm:text-base font-bold text-stone-100">

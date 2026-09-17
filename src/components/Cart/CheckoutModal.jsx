@@ -381,7 +381,7 @@ const CheckoutModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/70 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-2xl w-full border border-stone-200 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
-        
+
         {/* Modal Header */}
         <div className="p-4 sm:p-5 bg-[#0a2540] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
@@ -390,7 +390,7 @@ const CheckoutModal = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-lg font-bold font-serif-heading">
+                <h3 className="text-base sm:text-lg font-bold ">
                   Delivery Details & Checkout
                 </h3>
                 <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
@@ -405,7 +405,7 @@ const CheckoutModal = ({
           </div>
 
           <div className="flex items-center gap-2">
-           
+
 
             <button
               type="button"
@@ -420,7 +420,7 @@ const CheckoutModal = ({
 
         {/* Modal Form Body */}
         <form onSubmit={handleSubmit} className="overflow-y-auto p-4 sm:p-6 space-y-5 text-xs text-stone-700">
-          
+
           {/* Mobile Fill Demo Button */}
           <div className="sm:hidden flex justify-end">
             <button
@@ -453,9 +453,8 @@ const CheckoutModal = ({
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="e.g. Binayak Patel"
-                    className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${
-                      errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                    }`}
+                    className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                      }`}
                   />
                 </div>
                 {errors.name && <p className="text-[10px] text-rose-600 font-semibold">{errors.name}</p>}
@@ -475,9 +474,8 @@ const CheckoutModal = ({
                     onChange={handleChange}
                     placeholder="9876543210"
                     maxLength={10}
-                    className={`w-full pl-10 pr-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 font-mono ${
-                      errors.phone ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                    }`}
+                    className={`w-full pl-10 pr-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 font-mono ${errors.phone ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                      }`}
                   />
                 </div>
                 {errors.phone && <p className="text-[10px] text-rose-600 font-semibold">{errors.phone}</p>}
@@ -494,9 +492,8 @@ const CheckoutModal = ({
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="name@example.com"
-                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${
-                    errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                  }`}
+                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                    }`}
                 />
                 {errors.email && <p className="text-[10px] text-rose-600 font-semibold">{errors.email}</p>}
               </div>
@@ -538,11 +535,10 @@ const CheckoutModal = ({
                       key={type.id}
                       type="button"
                       onClick={() => setFormData((prev) => ({ ...prev, addressType: type.id }))}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                        isSelected
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${isSelected
                           ? 'bg-[#0a2540] text-white shadow-2xs'
                           : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                      }`}
+                        }`}
                     >
                       <Icon className="w-3 h-3" />
                       <span>{type.label}</span>
@@ -563,9 +559,8 @@ const CheckoutModal = ({
                 value={formData.addressLine}
                 onChange={handleChange}
                 placeholder="e.g. Flat 402, Royal Residency, Sector 5, Malviya Nagar"
-                className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 resize-none ${
-                  errors.addressLine ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                }`}
+                className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 resize-none ${errors.addressLine ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                  }`}
               />
               {errors.addressLine && (
                 <p className="text-[10px] text-rose-600 font-semibold">{errors.addressLine}</p>
@@ -585,9 +580,8 @@ const CheckoutModal = ({
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="Jaipur"
-                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${
-                    errors.city ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                  }`}
+                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${errors.city ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                    }`}
                 />
                 {errors.city && <p className="text-[10px] text-rose-600 font-semibold">{errors.city}</p>}
               </div>
@@ -603,9 +597,8 @@ const CheckoutModal = ({
                   value={formData.state}
                   onChange={handleChange}
                   placeholder="Rajasthan"
-                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${
-                    errors.state ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                  }`}
+                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 ${errors.state ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                    }`}
                 />
                 {errors.state && <p className="text-[10px] text-rose-600 font-semibold">{errors.state}</p>}
               </div>
@@ -622,9 +615,8 @@ const CheckoutModal = ({
                   onChange={handleChange}
                   placeholder="302017"
                   maxLength={6}
-                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 font-mono ${
-                    errors.pincode ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
-                  }`}
+                  className={`w-full px-3 py-2 rounded-xl border bg-stone-50 text-stone-900 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-300 font-mono ${errors.pincode ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200'
+                    }`}
                 />
                 {errors.pincode && <p className="text-[10px] text-rose-600 font-semibold">{errors.pincode}</p>}
               </div>
@@ -659,11 +651,10 @@ const CheckoutModal = ({
                   <div
                     key={pm.id}
                     onClick={() => setFormData((prev) => ({ ...prev, paymentMethod: pm.id }))}
-                    className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
-                      isSelected
+                    className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 ${isSelected
                         ? 'border-[#981b2e] bg-rose-50/40 ring-2 ring-rose-200 shadow-2xs'
                         : 'border-stone-200 bg-stone-50 hover:bg-stone-100/80'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="w-8 h-8 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-stone-800">

@@ -177,7 +177,7 @@ const ArtisanalCategories = ({ activeCategory, onSelectCategory, categories: pro
       <div className="hidden sm:block space-y-3.5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900 font-serif-heading tracking-tight">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-stone-900  tracking-tight">
               Popular Cuisines
             </h2>
             <p className="text-xs text-stone-500">

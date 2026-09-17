@@ -29,7 +29,7 @@ const ResetPasswordForm = ({
         <div className="w-12 h-12 rounded-2xl bg-sky-100 border border-sky-200 text-[#083358] flex items-center justify-center shadow-md">
           <LockKeyhole className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif-heading tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900  tracking-tight">
           Create New Password
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-medium">
