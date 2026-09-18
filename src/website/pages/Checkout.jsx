@@ -134,7 +134,7 @@ export default function Checkout() {
     }
 
     setIsDetectingLocation(true);
-    const loadingToast = toast.loading('Detecting your live GPS location...');
+    const loadingToast = toast.loading('Detecting your live location...');
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -192,7 +192,7 @@ export default function Checkout() {
           }));
 
           toast.dismiss(loadingToast);
-          toast.success(`📍 Live GPS detected: ${detectedCity} (${detectedPincode})`);
+          toast.success(`📍 Live Location detected: ${detectedCity} (${detectedPincode})`);
         } catch (err) {
           console.error('Reverse geocoding error:', err);
           toast.dismiss(loadingToast);
@@ -544,7 +544,7 @@ export default function Checkout() {
                   ) : (
                     <>
                       <LocateFixed className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>📍 Use Live GPS Location</span>
+                      <span>📍 Use Live Location Location</span>
                     </>
                   )}
                 </button>

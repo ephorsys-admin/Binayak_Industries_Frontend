@@ -191,7 +191,7 @@ const Navbar = () => {
     }
 
     setIsDetectingGps(true);
-    const toastId = toast.loading('🛰️ Detecting live GPS satellites...');
+    const toastId = toast.loading('Detecting live Location...');
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -347,7 +347,7 @@ const Navbar = () => {
 
                   <div className="text-left leading-tight min-w-0">
                     <span className="hidden sm:block text-[9px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">
-                      {currentLocation.isGpsLive ? '🛰️ Live GPS' : 'Express Dispatch'}
+                      {currentLocation.isGpsLive ? 'Live Location' : 'Express Dispatch'}
                     </span>
                     <div className="flex items-center gap-0.5 xs:gap-1">
                       <span className="text-[11px] xs:text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[45px] xs:max-w-[70px] sm:max-w-[110px] lg:max-w-[130px]">
@@ -395,9 +395,7 @@ const Navbar = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                          ⚡ Pan-India Shipping
-                        </span>
+                      
                         <button
                           type="button"
                           onClick={() => setIsLocationOpen(false)}
