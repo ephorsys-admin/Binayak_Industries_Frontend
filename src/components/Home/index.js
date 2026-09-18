@@ -1,0 +1,13 @@
+export { default as HeroSection } from './HeroSection';
+export { default as BrandTrustSection } from './BrandTrustSection';
+export { default as ArtisanalCategories } from './ArtisanalCategories';
+export { default as CategoryFilter } from './CategoryFilter';
+export { default as ProductCard } from './ProductCard';
+export { default as PopularProducts } from './PopularProducts';
+export { default as SpecialOfferBanner } from './SpecialOfferBanner';
+export { default as CustomerReviews } from './CustomerReviews';
+export { default as FaqSection } from './FaqSection';
+export { default as NewsletterSection } from './NewsletterSection';
+export { default as FloatingCartBar } from './FloatingCartBar';
+export { default as MobileBottomNav } from './MobileBottomNav';
+
