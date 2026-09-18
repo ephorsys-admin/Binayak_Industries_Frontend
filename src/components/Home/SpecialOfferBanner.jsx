@@ -75,7 +75,7 @@ const SpecialOfferBanner = () => {
             to="/explore"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-white hover:bg-stone-100 active:scale-95 text-stone-950 font-black text-sm shadow-xl transition-all group cursor-pointer"
           >
-            <ShoppingBag className="w-4 h-4 text-[#981b2e]" />
+            <ShoppingBag className="w-4 h-4 text-[#F5C542]" />
             <span>Order Now</span>
             <ArrowRight className="w-4 h-4 text-stone-900 group-hover:translate-x-1 transition-transform" />
           </Link>
