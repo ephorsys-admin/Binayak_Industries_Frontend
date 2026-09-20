@@ -47,48 +47,6 @@ const SparkleRays = ({ className = '' }) => (
   </div>
 );
 
-/* Golden swirl flourish hugging bottom-left curve of search bar */
-const SearchGoldSwirl = () => (
-  <div
-    className="absolute -bottom-2 -left-2 pointer-events-none w-16 h-8 overflow-visible z-10 animate-goldAura"
-    aria-hidden="true"
-  >
-    <svg
-      viewBox="0 0 70 32"
-      fill="none"
-      className="w-full h-full drop-shadow-[0_0_6px_rgba(245,197,66,0.65)]"
-    >
-      <path
-        d="M 6 3 C 6 18, 20 28, 64 27"
-        stroke="url(#searchGoldGrad)"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 12 7 C 12 18, 22 25, 45 25"
-        stroke="url(#searchGoldGrad2)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        opacity="0.8"
-      />
-      <defs>
-        <linearGradient id="searchGoldGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#d97706" stopOpacity="0.2" />
-          <stop offset="35%" stopColor="#f59e0b" />
-          <stop offset="65%" stopColor="#fef08a" />
-          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="searchGoldGrad2" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
-          <stop offset="50%" stopColor="#fde047" />
-          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-    </svg>
-    {/* Sparkling star dot */}
-    <span className="absolute bottom-1 left-4 w-1.5 h-1.5 bg-yellow-200 rounded-full shadow-[0_0_6px_#fde047] animate-ping" />
-  </div>
-);
 
 /* Custom Snack Bowl Icon matching the Explore Snacks emblem */
 const SnackBowlIcon = ({ className = 'w-4 h-4' }) => (
@@ -299,11 +257,10 @@ const Navbar = () => {
       {/* Floating Capsule Header Container */}
       <header className="sticky top-1.5 sm:top-3 z-50 px-2 sm:px-4 lg:px-6 w-full max-w-[1420px] mx-auto transition-all duration-300">
         <div
-          className={`relative bg-white/95 backdrop-blur-xl border border-sky-100/90 rounded-full px-2.5 xs:px-3.5 sm:px-5 lg:px-6 py-1.5 sm:py-2 transition-all duration-300 ${
-            isScrolled
-              ? 'shadow-[0_12px_38px_-6px_rgba(0,40,90,0.12),0_2px_15px_rgba(0,100,200,0.06)] border-sky-200/90 bg-white/98'
-              : 'shadow-[0_8px_30px_-5px_rgba(0,40,90,0.08),0_2px_10px_rgba(0,100,200,0.04)]'
-          }`}
+          className={`relative bg-white/95 backdrop-blur-xl border border-sky-100/90 rounded-full px-2.5 xs:px-3.5 sm:px-5 lg:px-6 py-1.5 sm:py-2 transition-all duration-300 ${isScrolled
+            ? 'shadow-[0_12px_38px_-6px_rgba(0,40,90,0.12),0_2px_15px_rgba(0,100,200,0.06)] border-sky-200/90 bg-white/98'
+            : 'shadow-[0_8px_30px_-5px_rgba(0,40,90,0.08),0_2px_10px_rgba(0,100,200,0.04)]'
+            }`}
         >
           <div className="flex items-center justify-between gap-1.5 xs:gap-2 sm:gap-3 lg:gap-5 min-w-0">
 
@@ -328,20 +285,19 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={() => setIsLocationOpen(!isLocationOpen)}
-                  className="bg-[#f0f7fd]/90 hover:bg-[#e4f1fc] border border-[#d2e8f8] rounded-full px-2 xs:px-2.5 sm:px-3 py-1 sm:py-1.5 flex items-center gap-1.5 xs:gap-2 cursor-pointer transition-all shadow-2xs group focus:outline-none max-w-[110px] xs:max-w-[140px] sm:max-w-[185px] lg:max-w-[210px]"
+                  className="bg-[#f0f7fd]/90 hover:bg-[#e4f1fc] border border-[#d2e8f8] rounded-full px-1.5 xs:px-2.5 sm:px-3 py-1 sm:py-1.5 flex items-center gap-1 xs:gap-1.5 sm:gap-2 cursor-pointer transition-all shadow-2xs group focus:outline-none max-w-[95px] xs:max-w-[130px] sm:max-w-[185px] lg:max-w-[210px]"
                   aria-expanded={isLocationOpen}
                   aria-label="Delivery Location"
                 >
                   {/* Icon with pulse dot */}
-                  <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-7.5 sm:h-7.5 rounded-lg xs:rounded-xl bg-[#0080B0]/15 flex items-center justify-center relative text-[#0080B0] shrink-0 group-hover:scale-105 transition-transform">
+                  <div className="w-5.5 h-5.5 xs:w-7 xs:h-7 sm:w-7.5 sm:h-7.5 rounded-lg xs:rounded-xl bg-[#0080B0]/15 flex items-center justify-center relative text-[#0080B0] shrink-0 group-hover:scale-105 transition-transform">
                     <MapPin className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 stroke-[2.3]" />
                     {/* Live indicator dot */}
                     <span
-                      className={`absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full border border-white sm:border-2 shadow-xs ${
-                        currentLocation.isGpsLive
-                          ? 'bg-sky-500 animate-ping'
-                          : 'bg-emerald-500 animate-pulse'
-                      }`}
+                      className={`absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full border border-white sm:border-2 shadow-xs ${currentLocation.isGpsLive
+                        ? 'bg-sky-500 animate-ping'
+                        : 'bg-emerald-500 animate-pulse'
+                        }`}
                     />
                   </div>
 
@@ -350,26 +306,25 @@ const Navbar = () => {
                       {currentLocation.isGpsLive ? 'Live Location' : 'Express Dispatch'}
                     </span>
                     <div className="flex items-center gap-0.5 xs:gap-1">
-                      <span className="text-[11px] xs:text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[45px] xs:max-w-[70px] sm:max-w-[110px] lg:max-w-[130px]">
+                      <span className="text-[10px] xs:text-xs sm:text-sm font-bold text-slate-800 truncate max-w-[42px] xs:max-w-[65px] sm:max-w-[110px] lg:max-w-[130px]">
                         {currentLocation.city
                           ? currentLocation.city
                           : currentLocation.label}
                       </span>
                       <ChevronDown
-                        className={`w-3 h-3 text-slate-500 shrink-0 transition-transform duration-200 ${
-                          isLocationOpen ? 'rotate-180' : ''
-                        }`}
+                        className={`w-2.5 h-2.5 xs:w-3 xs:h-3 text-slate-500 shrink-0 transition-transform duration-200 ${isLocationOpen ? 'rotate-180' : ''
+                          }`}
                       />
                     </div>
                   </div>
                 </button>
 
-                {/* Direct GPS Fetch Location Button beside Logo & Pill */}
+                {/* Direct GPS Fetch Location Button beside Logo & Pill (Visible on Desktop where width allows) */}
                 <button
                   type="button"
                   onClick={handleDetectGpsLocation}
                   disabled={isDetectingGps}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#004060]/10 hover:bg-[#004060]/20 active:scale-95 border border-[#004060]/30 text-[#004060] text-xs font-bold transition-all cursor-pointer shrink-0 shadow-2xs group"
+                  className="hidden xl:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#004060]/10 hover:bg-[#004060]/20 active:scale-95 border border-[#004060]/30 text-[#004060] text-xs font-bold transition-all cursor-pointer shrink-0 shadow-2xs group"
                   title="Detect live coordinates via GPS"
                   aria-label="Fetch Current GPS Location"
                 >
@@ -378,156 +333,160 @@ const Navbar = () => {
                   ) : (
                     <Navigation className="w-3.5 h-3.5 text-[#004060] group-hover:rotate-45 transition-transform" />
                   )}
-                  <span className="hidden md:inline font-extrabold text-[11px] sm:text-xs">
+                  <span className="font-extrabold text-[11px] sm:text-xs">
                     {isDetectingGps ? 'Locating...' : 'Fetch Location'}
                   </span>
                 </button>
 
                 {/* Location Dropdown / Popover Modal */}
                 {isLocationOpen && (
-                  <div className="absolute top-full mt-3 left-0 w-[calc(100vw-28px)] max-w-[370px] sm:w-92 sm:max-w-none bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,40,90,0.25),0_0_0_1px_rgba(0,0,0,0.06)] border border-stone-200 p-4 z-[100] animate-in fade-in slide-in-from-top-2 duration-200 space-y-3">
-                    {/* Header */}
-                    <div className="flex items-center justify-between pb-2 border-b border-stone-100">
-                      <div className="flex items-center gap-1.5">
-                        <Building2 className="w-4 h-4 text-[#004060]" />
-                        <span className="text-xs font-black uppercase tracking-wider text-stone-800">
-                          Delivery Location
+                  <>
+                    {/* Mobile Backdrop Overlay to dismiss on tap outside */}
+                    <div
+                      className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs z-[99] sm:hidden"
+                      onClick={() => setIsLocationOpen(false)}
+                      aria-hidden="true"
+                    />
+
+                    <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-auto sm:top-full sm:mt-3 sm:left-0 sm:w-92 max-w-[calc(100vw-24px)] sm:max-w-none bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,40,90,0.25),0_0_0_1px_rgba(0,0,0,0.06)] border border-stone-200 p-3.5 sm:p-4 z-[100] animate-in fade-in slide-in-from-top-2 duration-200 space-y-3 max-h-[85vh] overflow-y-auto">
+                      {/* Header */}
+                      <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+                        <div className="flex items-center gap-1.5">
+                          <Building2 className="w-4 h-4 text-[#004060]" />
+                          <span className="text-xs font-black uppercase tracking-wider text-stone-800">
+                            Delivery Location
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setIsLocationOpen(false)}
+                            className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
+                            aria-label="Close"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Primary Action: One-Click Fetch Live GPS Location */}
+                      <button
+                        type="button"
+                        onClick={handleDetectGpsLocation}
+                        disabled={isDetectingGps}
+                        className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-gradient-to-r from-[#004060]/10 via-[#0080B0]/10 to-amber-500/10 hover:from-[#004060]/20 hover:to-amber-500/20 border border-[#004060]/30 hover:border-[#004060] transition-all cursor-pointer group text-left"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0 pr-1">
+                          <div className="w-8 h-8 rounded-xl bg-[#004060] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                            {isDetectingGps ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Navigation className="w-4 h-4" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-black text-[#004060] truncate">
+                              {isDetectingGps
+                                ? 'Scanning GPS Satellites...'
+                                : 'Fetch Current GPS Location'}
+                            </p>
+                            <p className="text-[10px] text-stone-500 font-medium truncate">
+                              Auto-detect city, state & postal pincode
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-black text-white bg-[#004060] px-2 py-0.5 rounded-full shadow-2xs shrink-0">
+                          Auto
                         </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                      
-                        <button
-                          type="button"
-                          onClick={() => setIsLocationOpen(false)}
-                          className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
-                          aria-label="Close"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
+                      </button>
 
-                    {/* Primary Action: One-Click Fetch Live GPS Location */}
-                    <button
-                      type="button"
-                      onClick={handleDetectGpsLocation}
-                      disabled={isDetectingGps}
-                      className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-gradient-to-r from-[#004060]/10 via-[#0080B0]/10 to-amber-500/10 hover:from-[#004060]/20 hover:to-amber-500/20 border border-[#004060]/30 hover:border-[#004060] transition-all cursor-pointer group text-left"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-xl bg-[#004060] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                          {isDetectingGps ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Navigation className="w-4 h-4" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-xs font-black text-[#004060]">
-                            {isDetectingGps
-                              ? 'Scanning GPS Satellites...'
-                              : 'Fetch Current GPS Location'}
-                          </p>
-                          <p className="text-[10px] text-stone-500 font-medium">
-                            Auto-detect city, state & postal pincode
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-black text-white bg-[#004060] px-2 py-0.5 rounded-full shadow-2xs">
-                        Auto
-                      </span>
-                    </button>
+                      {/* Popular Dispatch Hubs Grid */}
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
+                          Select Major Dispatch Hub
+                        </span>
 
-                    {/* Popular Dispatch Hubs Grid */}
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
-                        Select Major Dispatch Hub
-                      </span>
+                        <div className="grid grid-cols-2 gap-1.5 max-h-44 overflow-y-auto pr-0.5">
+                          {popularDeliveryHubs.map((hub, idx) => {
+                            const isSelected =
+                              currentLocation.pincode === hub.pincode;
 
-                      <div className="grid grid-cols-2 gap-1.5 max-h-44 overflow-y-auto pr-0.5">
-                        {popularDeliveryHubs.map((hub, idx) => {
-                          const isSelected =
-                            currentLocation.pincode === hub.pincode;
-
-                          return (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => {
-                                dispatch(
-                                  setLocation({
-                                    label: `${hub.city}, ${hub.state}`,
-                                    city: hub.city,
-                                    state: hub.state,
-                                    pincode: hub.pincode,
-                                    address: `${hub.city}, ${hub.state} - ${hub.pincode}`,
-                                    addressLine: `${hub.city}, ${hub.state}`,
-                                    isGpsLive: false,
-                                  })
-                                );
-                                setIsLocationOpen(false);
-                                toast.success(`Delivery set to ${hub.city}!`);
-                              }}
-                              className={`p-2 rounded-xl text-left transition-all cursor-pointer border flex flex-col justify-between ${
-                                isSelected
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => {
+                                  dispatch(
+                                    setLocation({
+                                      label: `${hub.city}, ${hub.state}`,
+                                      city: hub.city,
+                                      state: hub.state,
+                                      pincode: hub.pincode,
+                                      address: `${hub.city}, ${hub.state} - ${hub.pincode}`,
+                                      addressLine: `${hub.city}, ${hub.state}`,
+                                      isGpsLive: false,
+                                    })
+                                  );
+                                  setIsLocationOpen(false);
+                                  toast.success(`Delivery set to ${hub.city}!`);
+                                }}
+                                className={`p-2 rounded-xl text-left transition-all cursor-pointer border flex flex-col justify-between ${isSelected
                                   ? 'bg-[#004060]/5 border-[#004060] text-stone-900 font-bold shadow-2xs'
                                   : 'bg-stone-50/70 hover:bg-stone-100 border-stone-200 text-stone-700'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between gap-1">
-                                <span className="font-bold text-[11px] truncate">
-                                  {hub.city}
-                                </span>
-                                {isSelected && (
-                                  <Check className="w-3 h-3 text-[#004060] shrink-0" />
-                                )}
-                              </div>
-                              <div className="flex items-center justify-between mt-1 text-[9px] text-stone-400">
-                                <span className="font-mono">{hub.pincode}</span>
-                                <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 font-bold border border-amber-200 text-[8px]">
-                                  {hub.tag}
-                                </span>
-                              </div>
-                            </button>
-                          );
-                        })}
+                                  }`}
+                              >
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="font-bold text-[11px] truncate">
+                                    {hub.city}
+                                  </span>
+                                  {isSelected && (
+                                    <Check className="w-3 h-3 text-[#004060] shrink-0" />
+                                  )}
+                                </div>
+                                <div className="flex items-center justify-between mt-1 text-[9px] text-stone-400">
+                                  <span className="font-mono">{hub.pincode}</span>
+                                  <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 font-bold border border-amber-200 text-[8px]">
+                                    {hub.tag}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Custom Pincode Input Form */}
-                    <form
-                      onSubmit={handleApplyCustomPincode}
-                      className="pt-2 border-t border-stone-100 flex items-center gap-2"
-                    >
-                      <input
-                        type="text"
-                        placeholder="Enter 6-digit Pincode"
-                        maxLength={6}
-                        value={customPincode}
-                        onChange={(e) => setCustomPincode(e.target.value)}
-                        className="flex-1 text-xs px-3 py-1.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004060]/30 font-medium"
-                      />
-                      <button
-                        type="submit"
-                        className="px-3 py-1.5 bg-[#004060] hover:bg-[#003048] text-white text-xs font-bold rounded-xl transition-colors shrink-0 cursor-pointer shadow-xs"
+                      {/* Custom Pincode Input Form */}
+                      <form
+                        onSubmit={handleApplyCustomPincode}
+                        className="pt-2 border-t border-stone-100 flex items-center gap-2"
                       >
-                        Set Pin
-                      </button>
-                    </form>
-                  </div>
+                        <input
+                          type="text"
+                          placeholder="Enter 6-digit Pincode"
+                          maxLength={6}
+                          value={customPincode}
+                          onChange={(e) => setCustomPincode(e.target.value)}
+                          className="flex-1 min-w-0 text-xs px-3 py-1.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004060]/30 font-medium"
+                        />
+                        <button
+                          type="submit"
+                          className="px-3 py-1.5 bg-[#004060] hover:bg-[#003048] text-white text-xs font-bold rounded-xl transition-colors shrink-0 cursor-pointer shadow-xs"
+                        >
+                          Set Pin
+                        </button>
+                      </form>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
 
-            {/* 2. MIDDLE: Expanded Search Bar with Golden Flourish Swirl */}
-            <div className="flex flex-1 min-w-0 max-w-xs xs:max-w-sm md:max-w-md lg:max-w-sm xl:max-w-md mx-1 sm:mx-2 lg:mx-3 relative group">
-              {/* Bottom-left Golden Swirl flourish */}
-              <SearchGoldSwirl />
-
+            {/* 2. MIDDLE: Clean Search Bar with Uniform Golden Accent (Visible on Tablet & Desktop) */}
+            <div className="hidden md:flex flex-1 min-w-[180px] max-w-md lg:max-w-sm xl:max-w-md mx-2 lg:mx-3 relative group border border-amber-400/80 hover:border-amber-500 rounded-full transition-colors shadow-2xs">
               <button
                 type="button"
                 onClick={() => setIsSearchModalOpen(true)}
-                className="w-full relative flex items-center justify-between pl-2.5 xs:pl-3.5 sm:pl-4 pr-1 sm:pr-1.5 py-1 sm:py-1.5 bg-white hover:bg-stone-50/80 border border-slate-200/90 hover:border-slate-300 text-stone-400 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.02),0_2px_10px_rgba(0,0,0,0.03)] transition-all cursor-pointer text-left"
+                className="w-full relative flex items-center justify-between pl-3 sm:pl-4 pr-1 sm:pr-1.5 py-1 sm:py-1.5 bg-white hover:bg-amber-50/20 text-stone-400 rounded-full transition-all cursor-pointer text-left"
                 aria-label="Open global search"
               >
                 <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 pr-1">
@@ -547,6 +506,17 @@ const Navbar = () => {
             {/* 3. RIGHT: Animated Nav Items & Glossy Cart Capsule */}
             <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 lg:gap-4 shrink-0">
 
+              {/* Mobile & Small Tablet Quick Search Button */}
+              <button
+                type="button"
+                onClick={() => setIsSearchModalOpen(true)}
+                className="md:hidden w-7.5 h-7.5 xs:w-8 xs:h-8 rounded-full bg-[#f0f7fd] hover:bg-[#e4f1fc] active:scale-95 border border-[#d2e8f8] text-[#006090] flex items-center justify-center transition-all shadow-2xs cursor-pointer shrink-0"
+                aria-label="Open global search"
+                title="Search snacks"
+              >
+                <Search className="w-3.5 h-3.5 xs:w-4 xs:h-4 stroke-[2.2]" />
+              </button>
+
               {/* Desktop Navigation Links */}
               <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2">
                 {navLinks.map((item) => {
@@ -557,8 +527,7 @@ const Navbar = () => {
                       key={item.path}
                       to={item.path}
                       className={({ isActive }) =>
-                        `relative group flex flex-col items-center justify-center px-3 sm:px-3.5 py-1.5 -my-1 rounded-3xl border border-transparent transition-all duration-300 cursor-pointer hover:bg-gradient-to-b hover:from-[#fffbeb] hover:via-[#fef3c7]/75 hover:to-[#fef9c3]/90 hover:border-amber-300/80 hover:shadow-[0_4px_16px_rgba(245,197,66,0.3)] hover:scale-102 active:scale-95 ${
-                          isActive ? 'text-[#004060]' : 'text-slate-600'
+                        `relative group flex flex-col items-center justify-center px-3 sm:px-3.5 py-1.5 -my-1 rounded-3xl border border-transparent transition-all duration-300 cursor-pointer hover:bg-gradient-to-b hover:from-[#fffbeb] hover:via-[#fef3c7]/75 hover:to-[#fef9c3]/90 hover:border-amber-300/80 hover:shadow-[0_4px_16px_rgba(245,197,66,0.3)] hover:scale-102 active:scale-95 ${isActive ? 'text-[#004060]' : 'text-slate-600'
                         }`
                       }
                     >
@@ -576,11 +545,10 @@ const Navbar = () => {
 
                           {/* Label */}
                           <span
-                            className={`text-[11px] sm:text-xs tracking-tight transition-colors duration-200 mt-0.5 whitespace-nowrap ${
-                              isActive
-                                ? 'font-black text-[#004060]'
-                                : 'font-bold text-slate-600'
-                            } group-hover:text-[#78350f] group-hover:font-black`}
+                            className={`text-[11px] sm:text-xs tracking-tight transition-colors duration-200 mt-0.5 whitespace-nowrap ${isActive
+                              ? 'font-black text-[#004060]'
+                              : 'font-bold text-slate-600'
+                              } group-hover:text-[#78350f] group-hover:font-black`}
                           >
                             {item.name}
                           </span>
@@ -598,7 +566,7 @@ const Navbar = () => {
 
               {/* --- Glossy 3D Blue Cart Capsule Button with Golden Rays --- */}
               <div className="relative shrink-0">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 pointer-events-none">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 pointer-events-none scale-75 sm:scale-100">
                   <SparkleRays />
                 </div>
 
@@ -629,7 +597,7 @@ const Navbar = () => {
                     </span>
                   )}
 
-                  <ArrowRight className="hidden md:inline w-3.5 h-3.5 text-white/90 group-hover:translate-x-1 transition-transform shrink-0" />
+                  <ArrowRight className="hidden xl:inline w-3.5 h-3.5 text-white/90 group-hover:translate-x-1 transition-transform shrink-0" />
                 </Link>
               </div>
 
@@ -733,10 +701,9 @@ const Navbar = () => {
                       to={item.path}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
-                          isActive
-                            ? 'bg-[#004060] text-white shadow-xs'
-                            : 'text-stone-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-amber-100/60 hover:text-amber-900'
+                        `flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all ${isActive
+                          ? 'bg-[#004060] text-white shadow-xs'
+                          : 'text-stone-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-amber-100/60 hover:text-amber-900'
                         }`
                       }
                     >
