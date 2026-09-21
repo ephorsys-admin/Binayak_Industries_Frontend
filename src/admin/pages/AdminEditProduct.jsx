@@ -81,6 +81,12 @@ const AdminEditProduct = () => {
   const [selectedNewImageFiles, setSelectedNewImageFiles] = useState([]);
   const [newImagePreviewUrls, setNewImagePreviewUrls] = useState([]);
 
+  // Hover Animated GIF
+  const [existingGif, setExistingGif] = useState('');
+  const [selectedNewGifFile, setSelectedNewGifFile] = useState(null);
+  const [newGifPreviewUrl, setNewGifPreviewUrl] = useState('');
+  const [removeGifFlag, setRemoveGifFlag] = useState(false);
+
   // Fetch categories and product
   useEffect(() => {
     dispatch(fetchAdminCategories({ limit: 100 }));
@@ -118,6 +124,13 @@ const AdminEditProduct = () => {
       setIsNewArrival(Boolean(selectedProduct.isNewArrival));
 
       setExistingImages(selectedProduct.images || []);
+
+      const gifSrc =
+        selectedProduct.gif?.url ||
+        (typeof selectedProduct.gif === 'string' ? selectedProduct.gif : '') ||
+        '';
+      setExistingGif(gifSrc);
+      setRemoveGifFlag(false);
     }
   }, [selectedProduct]);
 
@@ -125,8 +138,11 @@ const AdminEditProduct = () => {
   useEffect(() => {
     return () => {
       newImagePreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      if (newGifPreviewUrl && newGifPreviewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(newGifPreviewUrl);
+      }
     };
-  }, [newImagePreviewUrls]);
+  }, [newImagePreviewUrls, newGifPreviewUrl]);
 
   const handleNewImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -155,6 +171,37 @@ const AdminEditProduct = () => {
     }
   };
 
+  // GIF Selection & Removal Handlers
+  const handleNewGifChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error('GIF file size must be less than 15MB');
+      return;
+    }
+
+    if (newGifPreviewUrl && newGifPreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(newGifPreviewUrl);
+    }
+
+    setSelectedNewGifFile(file);
+    setNewGifPreviewUrl(URL.createObjectURL(file));
+    setRemoveGifFlag(false);
+    toast.success('New Hover Animated GIF selected!');
+  };
+
+  const handleRemoveGif = () => {
+    if (newGifPreviewUrl && newGifPreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(newGifPreviewUrl);
+    }
+    setSelectedNewGifFile(null);
+    setNewGifPreviewUrl('');
+    setExistingGif('');
+    setRemoveGifFlag(true);
+    toast.success('GIF removed.');
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
 
@@ -175,26 +222,31 @@ const AdminEditProduct = () => {
       return;
     }
 
-    const updatePayload = {
-      name: name.trim(),
-      category,
-      shortDescription: shortDescription.trim(),
-      description: description.trim(),
-      mrp: Number(mrp),
-      sellingPrice: Number(sellingPrice),
-      stock: Number(stock) || 0,
-      unit,
-      weight: weight.trim(),
-      shelfLife: shelfLife.trim(),
-      status,
-      isAvailable,
-      isBestSeller,
-      isFeatured,
-      isTrending,
-      isNewArrival,
-    };
+    const formData = new FormData();
+    formData.append('name', name.trim());
+    formData.append('category', category);
+    formData.append('shortDescription', shortDescription.trim());
+    formData.append('description', description.trim());
+    formData.append('mrp', mrp);
+    formData.append('sellingPrice', sellingPrice);
+    formData.append('stock', stock || 0);
+    formData.append('unit', unit);
+    formData.append('weight', weight.trim());
+    formData.append('shelfLife', shelfLife.trim());
+    formData.append('status', status);
+    formData.append('isAvailable', isAvailable);
+    formData.append('isBestSeller', isBestSeller);
+    formData.append('isFeatured', isFeatured);
+    formData.append('isTrending', isTrending);
+    formData.append('isNewArrival', isNewArrival);
 
-    const res = await dispatch(updateProduct(productId, updatePayload));
+    if (selectedNewGifFile) {
+      formData.append('gif', selectedNewGifFile);
+    } else if (removeGifFlag) {
+      formData.append('removeGif', 'true');
+    }
+
+    const res = await dispatch(updateProduct(productId, formData));
 
     if (res.success && selectedNewImageFiles.length > 0) {
       const imgFormData = new FormData();
@@ -332,6 +384,70 @@ const AdminEditProduct = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hover Animated GIF / Reel Section */}
+          <div className="space-y-2 p-4 rounded-2xl bg-amber-50/40 border border-amber-200/60">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                <span>Hover Animated GIF / Reel (Optional)</span>
+              </label>
+              {(newGifPreviewUrl || existingGif) && (
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs">
+                  {newGifPreviewUrl ? '✨ New GIF Selected' : '✨ Active Live GIF'}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* GIF Preview Box */}
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-900 border-2 border-amber-300 overflow-hidden flex items-center justify-center shrink-0 shadow-md">
+                {newGifPreviewUrl || existingGif ? (
+                  <>
+                    <img
+                      src={newGifPreviewUrl || existingGif}
+                      alt="Hover GIF Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveGif}
+                      className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/80 hover:bg-rose-600 text-white flex items-center justify-center transition-colors shadow cursor-pointer z-10"
+                      title="Remove GIF"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-2 text-center">
+                    <span className="text-xl">🎬</span>
+                    <span className="text-[9px] font-black text-amber-200 mt-1 uppercase">
+                      No GIF
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Upload GIF Dropzone */}
+              <div className="flex-1 space-y-1.5">
+                <label className="px-4 py-3 border-2 border-dashed border-amber-300 hover:border-amber-600 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-white/80 hover:bg-amber-100/50 transition-all group">
+                  <Upload className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform mb-1" />
+                  <span className="text-xs font-bold text-amber-950">
+                    {newGifPreviewUrl || existingGif ? 'Click to Change / Replace Animated GIF' : 'Click to Upload Animated GIF / WebP (From Device)'}
+                  </span>
+                  <span className="text-[10px] text-amber-700/80">
+                    Plays automatically when user hovers the product card (GIF, Animated WebP, up to 15MB)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/gif,image/webp,video/mp4,.gif"
+                    onChange={handleNewGifChange}
+                    className="hidden"
+                  />
+                </label>
               </div>
             </div>
           </div>

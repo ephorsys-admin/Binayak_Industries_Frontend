@@ -68,6 +68,10 @@ const AdminAddProduct = () => {
   const [selectedImageFiles, setSelectedImageFiles] = useState([]);
   const [imagePreviewUrls, setImagePreviewUrls] = useState([]);
 
+  // Hover Animated GIF
+  const [selectedGifFile, setSelectedGifFile] = useState(null);
+  const [gifPreviewUrl, setGifPreviewUrl] = useState('');
+
   // Fetch Categories on mount from API
   useEffect(() => {
     dispatch(fetchAdminCategories({ limit: 100 }));
@@ -86,8 +90,11 @@ const AdminAddProduct = () => {
   useEffect(() => {
     return () => {
       imagePreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      if (gifPreviewUrl && gifPreviewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(gifPreviewUrl);
+      }
     };
-  }, [imagePreviewUrls]);
+  }, [imagePreviewUrls, gifPreviewUrl]);
 
   // Multi Image Selection
   const handleImageChange = (e) => {
@@ -106,6 +113,33 @@ const AdminAddProduct = () => {
     URL.revokeObjectURL(imagePreviewUrls[index]);
     setSelectedImageFiles((prev) => prev.filter((_, i) => i !== index));
     setImagePreviewUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // GIF Selection
+  const handleGifChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error('GIF file size must be less than 15MB');
+      return;
+    }
+
+    if (gifPreviewUrl && gifPreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(gifPreviewUrl);
+    }
+
+    setSelectedGifFile(file);
+    setGifPreviewUrl(URL.createObjectURL(file));
+    toast.success('Hover Animated GIF attached!');
+  };
+
+  const handleRemoveGif = () => {
+    if (gifPreviewUrl && gifPreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(gifPreviewUrl);
+    }
+    setSelectedGifFile(null);
+    setGifPreviewUrl('');
   };
 
   // Submit Handler
@@ -154,6 +188,10 @@ const AdminAddProduct = () => {
     selectedImageFiles.forEach((file) => {
       formData.append('images', file);
     });
+
+    if (selectedGifFile) {
+      formData.append('gif', selectedGifFile);
+    }
 
     const res = await dispatch(createProduct(formData));
 
@@ -260,6 +298,70 @@ const AdminAddProduct = () => {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+
+          {/* Hover Animated GIF / Reel Upload Section */}
+          <div className="space-y-2 p-4 rounded-2xl bg-amber-50/40 border border-amber-200/60">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                <span>Hover Animated GIF / Reel (Optional)</span>
+              </label>
+              {gifPreviewUrl && (
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs">
+                  ✨ Active GIF Attached
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* GIF Preview Box */}
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-900 border-2 border-amber-300 overflow-hidden flex items-center justify-center shrink-0 shadow-md">
+                {gifPreviewUrl ? (
+                  <>
+                    <img
+                      src={gifPreviewUrl}
+                      alt="Hover GIF Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveGif}
+                      className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/80 hover:bg-rose-600 text-white flex items-center justify-center transition-colors shadow cursor-pointer z-10"
+                      title="Remove GIF"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-2 text-center">
+                    <span className="text-xl">🎬</span>
+                    <span className="text-[9px] font-black text-amber-200 mt-1 uppercase">
+                      No GIF
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Upload GIF Dropzone */}
+              <div className="flex-1 space-y-1.5">
+                <label className="px-4 py-3 border-2 border-dashed border-amber-300 hover:border-amber-600 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-white/80 hover:bg-amber-100/50 transition-all group">
+                  <Upload className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform mb-1" />
+                  <span className="text-xs font-bold text-amber-950">
+                    {gifPreviewUrl ? 'Click to Change / Replace Animated GIF' : 'Click to Upload Animated GIF / WebP (From Device)'}
+                  </span>
+                  <span className="text-[10px] text-amber-700/80">
+                    Plays automatically when user hovers the product card (GIF, Animated WebP, up to 15MB)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/gif,image/webp,video/mp4,.gif"
+                    onChange={handleGifChange}
+                    className="hidden"
+                  />
+                </label>
               </div>
             </div>
           </div>

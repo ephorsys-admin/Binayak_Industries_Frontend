@@ -12,6 +12,7 @@ const SnackCard = ({
   const navigate = useNavigate();
   const [selectedPackIndex, setSelectedPackIndex] = useState(0);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   const packs = snack.packOptions || [{ weight: snack.weight, price: snack.price, originalPrice: snack.originalPrice }];
   const currentPack = packs[selectedPackIndex] || packs[0];
@@ -24,6 +25,13 @@ const SnackCard = ({
 
   const currentDisplayImage = imagesList[currentImgIndex] || snack.image;
   const productDetailPageUrl = `/product/${snack.id || snack._id}`;
+
+  // Uploaded GIF from device / admin
+  const gifUrl =
+    snack.gif?.url ||
+    (typeof snack.gif === 'string' && snack.gif ? snack.gif : '') ||
+    snack.hoverGif ||
+    null;
 
   const handleNextImage = (e) => {
     e.preventDefault();
@@ -42,17 +50,38 @@ const SnackCard = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative">
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onTouchCancel={() => setIsHovered(false)}
+      className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative"
+    >
       <div>
-        {/* Product Image Container with Multi-Photo Browsing */}
+        {/* Product Image Container with Multi-Photo Browsing & Hover GIF */}
         <div className="relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 mb-2 sm:mb-3 select-none">
-          <Link to={productDetailPageUrl} className="block w-full h-full">
+          <Link to={productDetailPageUrl} className="block w-full h-full relative">
             <img
               src={currentDisplayImage}
               alt={snack.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 cursor-pointer ${
+                isHovered && gifUrl ? 'opacity-0' : 'opacity-100'
+              }`}
               loading="lazy"
             />
+
+            {/* Uploaded GIF on Hover / Mobile Touch */}
+            {gifUrl && (
+              <img
+                src={gifUrl}
+                alt={`${snack.title} Animated GIF`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none ${
+                  isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
+                }`}
+                loading="eager"
+              />
+            )}
           </Link>
 
           {/* Top-Left Badges */}
@@ -114,11 +143,10 @@ const SnackCard = ({
                       e.stopPropagation();
                       setCurrentImgIndex(dotIdx);
                     }}
-                    className={`rounded-full transition-all cursor-pointer ${
-                      currentImgIndex === dotIdx
+                    className={`rounded-full transition-all cursor-pointer ${currentImgIndex === dotIdx
                         ? 'w-3 h-1.5 bg-white'
                         : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
-                    }`}
+                      }`}
                     aria-label={`Photo ${dotIdx + 1}`}
                   />
                 ))}
@@ -177,11 +205,10 @@ const SnackCard = ({
                 key={p.weight}
                 type="button"
                 onClick={() => setSelectedPackIndex(idx)}
-                className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
-                  selectedPackIndex === idx
+                className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${selectedPackIndex === idx
                     ? 'border-stone-900 bg-stone-900 text-white shadow-2xs'
                     : 'border-stone-200 text-stone-600 hover:border-stone-400 bg-stone-50'
-                }`}
+                  }`}
               >
                 {p.weight}
               </button>
