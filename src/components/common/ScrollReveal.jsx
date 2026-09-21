@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 /**
  * ScrollReveal: Animates elements into view when scrolled.
- * Mobile-safe with amount: 0.01 so it never stays hidden on small screens.
+ * Fail-safe: Self-contained so async data never gets stuck at opacity 0.
  */
 export const ScrollReveal = ({
   children,
@@ -15,7 +15,7 @@ export const ScrollReveal = ({
   once = true,
   ...props
 }) => {
-  const getInitialVariants = () => {
+  const getInitial = () => {
     switch (direction) {
       case "up":
         return { opacity: 0, y: distance };
@@ -33,7 +33,7 @@ export const ScrollReveal = ({
     }
   };
 
-  const getAnimateVariants = () => {
+  const getAnimate = () => {
     switch (direction) {
       case "scale":
         return { opacity: 1, scale: 1 };
@@ -51,8 +51,8 @@ export const ScrollReveal = ({
 
   return (
     <motion.div
-      initial={getInitialVariants()}
-      whileInView={getAnimateVariants()}
+      initial={getInitial()}
+      whileInView={getAnimate()}
       viewport={{ once, amount: "some", margin: "0px 0px 50px 0px" }}
       transition={{
         duration,
@@ -68,73 +68,55 @@ export const ScrollReveal = ({
 };
 
 /**
- * ScrollStagger: Stagger container for animating lists/grids of cards.
+ * ScrollStagger: Container for lists/grids.
  */
 export const ScrollStagger = ({
   children,
-  staggerChildren = 0.06,
+  staggerChildren = 0.05,
   delayChildren = 0,
   className = "",
-  once = true,
   ...props
 }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren,
-        delayChildren,
-      },
-    },
-  };
-
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once, amount: "some", margin: "0px 0px 50px 0px" }}
-      className={className}
-      {...props}
-    >
+    <div className={className} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
 /**
- * ScrollItem: Child element inside a ScrollStagger container.
+ * ScrollItem: Self-contained motion item that animates smoothly into view.
+ * Even if data loads asynchronously from backend API, it will ALWAYS animate and show.
  */
 export const ScrollItem = ({
   children,
   direction = "up",
   distance = 15,
-  duration = 0.4,
+  duration = 0.35,
+  delay = 0,
   className = "",
   ...props
 }) => {
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: direction === "up" ? distance : direction === "down" ? -distance : 0,
-      x: direction === "left" ? distance : direction === "right" ? -distance : 0,
-      scale: direction === "scale" ? 0.95 : 1,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      scale: 1,
-      transition: {
-        duration,
-        ease: [0.25, 0.1, 0.25, 1],
-      },
-    },
+  const initialVariants = {
+    opacity: 0,
+    y: direction === "up" ? distance : direction === "down" ? -distance : 0,
+    x: direction === "left" ? distance : direction === "right" ? -distance : 0,
+    scale: direction === "scale" ? 0.96 : 1,
   };
 
   return (
-    <motion.div variants={itemVariants} className={className} {...props}>
+    <motion.div
+      initial={initialVariants}
+      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+      viewport={{ once: true, amount: "some" }}
+      transition={{
+        duration,
+        delay,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      className={className}
+      {...props}
+    >
       {children}
     </motion.div>
   );
