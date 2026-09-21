@@ -48,6 +48,7 @@ import {
 } from '../../Redux/features/location/locationSlice';
 import { placeOrderApi } from '../../Redux/services/orderService';
 import { OrderSuccessAnimation, OrderBillModal } from '../../components/Cart';
+import { ScrollReveal } from '../../components/common/ScrollReveal';
 
 const addressTypes = [
   { id: 'Home', label: 'Home', icon: Home },
@@ -592,21 +593,25 @@ export default function Checkout() {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
 
         {/* Page Header */}
-        <div className="mb-6 space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[11px] font-extrabold uppercase tracking-wider">
-            <ShoppingBag className="w-3 h-3 text-[#003060]" />
-            <span>Simple 1-Step Checkout</span>
+        <ScrollReveal direction="fade" duration={0.55}>
+          <div className="mb-6 space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[11px] font-extrabold uppercase tracking-wider">
+              <ShoppingBag className="w-3 h-3 text-[#003060]" />
+              <span>Simple 1-Step Checkout</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black  text-stone-900 tracking-tight">
+              Delivery Details & Place Order
+            </h1>
+            <p className="text-xs text-stone-500">
+              Enter where we should deliver your fresh batch snacks. Payment is collected in cash or UPI upon delivery.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black  text-stone-900 tracking-tight">
-            Delivery Details & Place Order
-          </h1>
-          <p className="text-xs text-stone-500">
-            Enter where we should deliver your fresh batch snacks. Payment is collected in cash or UPI upon delivery.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* 2-Column Responsive Layout */}
-        <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
 
           {/* Left Column: Delivery Form (7 Cols) */}
           <div className="lg:col-span-7 space-y-5">
@@ -1278,6 +1283,7 @@ export default function Checkout() {
           </div>
 
         </form>
+        </ScrollReveal>
 
       </div>
 

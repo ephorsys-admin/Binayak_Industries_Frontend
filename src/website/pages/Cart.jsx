@@ -17,6 +17,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { MobileBottomNav } from '../../components/Home';
+import { ScrollReveal } from '../../components/common/ScrollReveal';
+
 import {
   selectCartItems,
   selectCartSubtotal,
@@ -96,49 +98,55 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
 
         {/* Cart Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#003060]/10 text-[#003060] text-xs font-bold uppercase tracking-wider">
-              <ShoppingBag className="w-3.5 h-3.5 text-[#003060]" />
-              <span>Your Shopping Cart</span>
+        <ScrollReveal direction="fade" duration={0.55}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#003060]/10 text-[#003060] text-xs font-bold uppercase tracking-wider">
+                <ShoppingBag className="w-3.5 h-3.5 text-[#003060]" />
+                <span>Your Shopping Cart</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight">
+                Artisanal Selection & Checkout
+              </h1>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black  text-stone-900 tracking-tight">
-              Artisanal Selection & Checkout
-            </h1>
-          </div>
 
-          <Link
-            to="/explore"
-            className="text-xs sm:text-sm font-bold text-[#D79F26] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
-          >
-            <span>+ Add More Snacks</span>
-          </Link>
-        </div>
+            <Link
+              to="/explore"
+              className="text-xs sm:text-sm font-bold text-[#D79F26] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+            >
+              <span>+ Add More Snacks</span>
+            </Link>
+          </div>
+        </ScrollReveal>
 
         {cartItems.length === 0 ? (
           /* Empty Cart State */
-          <div className="bg-white rounded-3xl p-8 sm:p-14 border border-stone-200/80 text-center max-w-md mx-auto shadow-xs space-y-4">
-            <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-700">
-              <ShoppingBag className="w-8 h-8" />
+          <ScrollReveal direction="scale" duration={0.5}>
+            <div className="bg-white rounded-3xl p-8 sm:p-14 border border-stone-200/80 text-center max-w-md mx-auto shadow-xs space-y-4">
+              <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-700">
+                <ShoppingBag className="w-8 h-8" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-xl font-bold  text-stone-900">
+                  Your Cart is Empty
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-500">
+                  Explore our freshly fried namkeens, sev, and pure desi ghee sweets.
+                </p>
+              </div>
+              <Link
+                to="/explore"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E0B529] hover:bg-[#d6a818] active:scale-95 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+              >
+                <span>Explore Snacks Menu</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold  text-stone-900">
-                Your Cart is Empty
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-500">
-                Explore our freshly fried namkeens, sev, and pure desi ghee sweets.
-              </p>
-            </div>
-            <Link
-              to="/explore"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E0B529] hover:bg-[#d6a818] active:scale-95 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
-            >
-              <span>Explore Snacks Menu</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+          </ScrollReveal>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
 
             {/* Left: Cart Items List (8 cols) */}
             <div className="lg:col-span-8 space-y-4">
@@ -307,7 +315,8 @@ const Cart = () => {
             </div>
 
           </div>
-        )}
+        </ScrollReveal>
+      )}
 
       </div>
 

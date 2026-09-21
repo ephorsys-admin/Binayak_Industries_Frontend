@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Minus, Clock, Bike, Leaf, Droplets, ShieldCheck, Heart } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { Plus, Minus, Clock, Bike, Leaf, Droplets, ShieldCheck } from 'lucide-react';
 
 const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
-  const [isLiked, setIsLiked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   if (!product) return null;
@@ -33,16 +31,6 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
     product.hoverGif ||
     null;
 
-  const handleToggleLike = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsLiked(!isLiked);
-    if (!isLiked) {
-      toast.success(`Saved ${product.title || product.name} to your Favorites!`);
-    } else {
-      toast('Removed from Favorites', { icon: '🤍' });
-    }
-  };
 
   return (
     <div
@@ -98,19 +86,6 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             {/* Subtle Gradient Overlay for Top Badges Readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/20 pointer-events-none" />
           </Link>
-
-          {/* Floating Wishlist Heart (Top Left) */}
-          <button
-            type="button"
-            onClick={handleToggleLike}
-            className="absolute top-2.5 left-2.5 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 hover:bg-white backdrop-blur-md flex items-center justify-center text-stone-700 shadow-md transition-transform hover:scale-110 active:scale-95 cursor-pointer"
-            aria-label="Add to Wishlist"
-          >
-            <Heart
-              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isLiked ? 'text-rose-600 fill-rose-600' : 'text-stone-600'
-                }`}
-            />
-          </button>
 
           {/* Top Right: "Taste of Purity" Calligraphy Script */}
 

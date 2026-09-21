@@ -13,6 +13,7 @@ import {
   MobileBottomNav,
 } from '../../components/Home';
 import { ChaiPairingBanner } from '../../components/Explore';
+import { ScrollReveal } from '../../components/common/ScrollReveal';
 import { fetchCategories } from '../../Redux/features/category/categoryThunk';
 import { selectCategories } from '../../Redux/features/category/categorySlice';
 import { fetchProducts } from '../../Redux/features/product/productThunk';
@@ -260,21 +261,27 @@ const Home = () => {
   });
 
   return (
-    <div className="min-h-screen bg-stone-50/50 pb-20">
+    <div className="min-h-screen bg-stone-50/50 pb-32 sm:pb-20">
       {/* Standardized Full-Width Layout Container Matching All Pages */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
         
         {/* 1. Hero Section */}
-        <HeroSection />
+        <ScrollReveal direction="fade" duration={0.65}>
+          <HeroSection />
+        </ScrollReveal>
 
         {/* 2. Brand Trust Strip */}
-        <BrandTrustSection />
+        <ScrollReveal direction="up" delay={0.1} duration={0.55}>
+          <BrandTrustSection />
+        </ScrollReveal>
 
         {/* 3. Artisanal Categories */}
-        <ArtisanalCategories
-          activeCategory={activeCategory}
-          onSelectCategory={setActiveCategory}
-        />
+        <ScrollReveal direction="up" delay={0.1} duration={0.55}>
+          <ArtisanalCategories
+            activeCategory={activeCategory}
+            onSelectCategory={setActiveCategory}
+          />
+        </ScrollReveal>
 
         {/* 4. Popular & Handcrafted Products */}
         <PopularProducts
@@ -285,19 +292,24 @@ const Home = () => {
         />
 
         {/* 5. Chai-Time Pairing Experience */}
-        <ChaiPairingBanner />
+        <ScrollReveal direction="scale" delay={0.1} duration={0.6}>
+          <ChaiPairingBanner />
+        </ScrollReveal>
 
         {/* 6. Special Festive Offer Banner */}
-        <SpecialOfferBanner />
+        <ScrollReveal direction="up" delay={0.1} duration={0.6}>
+          <SpecialOfferBanner />
+        </ScrollReveal>
 
         {/* 7. Verified Customer Reviews */}
-        <CustomerReviews />
+        <ScrollReveal direction="up" delay={0.1} duration={0.6}>
+          <CustomerReviews />
+        </ScrollReveal>
 
         {/* 8. Frequently Asked Questions */}
-        <FaqSection />
-
-        {/* 9. Newsletter Subscription */}
-       
+        <ScrollReveal direction="up" delay={0.1} duration={0.6}>
+          <FaqSection />
+        </ScrollReveal>
 
       </div>
 

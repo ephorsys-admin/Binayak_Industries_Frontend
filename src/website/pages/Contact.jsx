@@ -7,6 +7,7 @@ import {
   ContactFaqAccordion,
 } from '../../components/Contact';
 import { MobileBottomNav } from '../../components/Home';
+import { ScrollReveal } from '../../components/common/ScrollReveal';
 import { Clock, ShieldCheck, Truck, Sparkles, Phone, MessageSquare } from 'lucide-react';
 
 const Contact = () => {
@@ -15,98 +16,108 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-7 space-y-6 sm:space-y-8">
         
         {/* 1. Hero Banner */}
-        <ContactHero />
+        <ScrollReveal direction="fade" duration={0.65}>
+          <ContactHero />
+        </ScrollReveal>
 
         {/* 2. Direct Contact Options (Phone, WhatsApp, Email, Office) */}
-        <ContactInfoCards />
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <ContactInfoCards />
+        </ScrollReveal>
 
         {/* 3. Main Form & Support Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
-  {/* Contact Inquiry Form (8 cols on desktop) */}
-  <div className="lg:col-span-8">
-    <ContactForm />
-  </div>
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Contact Inquiry Form (8 cols on desktop) */}
+            <div className="lg:col-span-8">
+              <ContactForm />
+            </div>
 
-  {/* Quick Support & Dispatch Assistance Sidebar (4 cols on desktop) */}
-  <div className="lg:col-span-4 space-y-4">
-    
-    {/* Quick WhatsApp Card */}
-    <div className="bg-gradient-to-br from-[#003060] via-[#004060] to-[#006090] text-white rounded-3xl p-6 border border-[#D79F26]/50 shadow-md space-y-3.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#003060]/20">
-      <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-xl bg-[#D79F26]/20 border border-[#F5C542]/40 flex items-center justify-center text-[#F5C542]">
-          <MessageSquare className="w-5 h-5" />
-        </div>
-        <div>
-          <h4 className="text-sm font-bold font-brand text-white">
-            Need Instant Help?
-          </h4>
-          <span className="text-[11px] text-[#F5C542] font-medium">
-            WhatsApp Chat Active
-          </span>
-        </div>
-      </div>
+            {/* Quick Support & Dispatch Assistance Sidebar (4 cols on desktop) */}
+            <div className="lg:col-span-4 space-y-4">
+              
+              {/* Quick WhatsApp Card */}
+              <div className="bg-gradient-to-br from-[#003060] via-[#004060] to-[#006090] text-white rounded-3xl p-6 border border-[#D79F26]/50 shadow-md space-y-3.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#003060]/20">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-[#D79F26]/20 border border-[#F5C542]/40 flex items-center justify-center text-[#F5C542]">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold font-brand text-white">
+                      Need Instant Help?
+                    </h4>
+                    <span className="text-[11px] text-[#F5C542] font-medium">
+                      WhatsApp Chat Active
+                    </span>
+                  </div>
+                </div>
 
-      <p className="text-xs text-white/80 leading-relaxed">
-        Connect directly with our support specialist on WhatsApp for quick order tracking, custom gifting, or payment queries.
-      </p>
+                <p className="text-xs text-white/80 leading-relaxed">
+                  Connect directly with our support specialist on WhatsApp for quick order tracking, custom gifting, or payment queries.
+                </p>
 
-      <a
-        href="https://wa.me/919876543210?text=Hi%20Binayak%20Industries%2C%20I%20need%20quick%20support"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-full py-2.5 rounded-full bg-[#F5C542] hover:bg-[#D79F26] text-[#003060] text-xs font-black transition-transform active:scale-95 shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-      >
-        <span>Start WhatsApp Chat</span>
-      </a>
-    </div>
+                <a
+                  href="https://wa.me/919876543210?text=Hi%20Binayak%20Industries%2C%20I%20need%20quick%20support"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 rounded-full bg-[#F5C542] hover:bg-[#D79F26] text-[#003060] text-xs font-black transition-transform active:scale-95 shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Start WhatsApp Chat</span>
+                </a>
+              </div>
 
-    {/* Kitchen Hours & Dispatch Quality */}
-    <div className="bg-white rounded-3xl p-6 border border-[#003060]/15 shadow-2xs space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#D79F26]/10">
-      <h4 className="text-sm font-black font-brand text-[#003060] pb-2 border-b border-[#003060]/10 flex items-center gap-2">
-        <Clock className="w-4 h-4 text-[#D79F26]" />
-        <span>Kitchen & Dispatch Hours</span>
-      </h4>
+              {/* Kitchen Hours & Dispatch Quality */}
+              <div className="bg-white rounded-3xl p-6 border border-[#003060]/15 shadow-2xs space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#D79F26]/10">
+                <h4 className="text-sm font-black font-brand text-[#003060] pb-2 border-b border-[#003060]/10 flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#D79F26]" />
+                  <span>Kitchen & Dispatch Hours</span>
+                </h4>
 
-      <div className="space-y-2.5 text-xs text-stone-600">
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-[#003060]">Fresh Batch Frying:</span>
-          <span className="font-bold text-[#003060]">6:00 AM – 2:00 PM</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-[#003060]">Customer Support:</span>
-          <span className="font-bold text-[#003060]">9:00 AM – 8:00 PM</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-[#003060]">Same-Day Dispatch:</span>
-          <span className="font-bold text-[#006090]">Orders before 1 PM</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-[#003060]">Sunday:</span>
-          <span className="font-bold text-stone-500">10:00 AM – 4:00 PM</span>
-        </div>
-      </div>
+                <div className="space-y-2.5 text-xs text-stone-600">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#003060]">Fresh Batch Frying:</span>
+                    <span className="font-bold text-[#003060]">6:00 AM – 2:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#003060]">Customer Support:</span>
+                    <span className="font-bold text-[#003060]">9:00 AM – 8:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#003060]">Same-Day Dispatch:</span>
+                    <span className="font-bold text-[#006090]">Orders before 1 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#003060]">Sunday:</span>
+                    <span className="font-bold text-stone-500">10:00 AM – 4:00 PM</span>
+                  </div>
+                </div>
 
-      <div className="pt-3 border-t border-[#003060]/10 space-y-2">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[#003060]">
-          <ShieldCheck className="w-4 h-4 text-[#D79F26] shrink-0" />
-          <span>100% Groundnut Oil Certified</span>
-        </div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-[#003060]">
-          <Truck className="w-4 h-4 text-[#006090] shrink-0" />
-          <span>Pan-India Express Courier</span>
-        </div>
-      </div>
-    </div>
+                <div className="pt-3 border-t border-[#003060]/10 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#003060]">
+                    <ShieldCheck className="w-4 h-4 text-[#D79F26] shrink-0" />
+                    <span>100% Groundnut Oil Certified</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#003060]">
+                    <Truck className="w-4 h-4 text-[#006090] shrink-0" />
+                    <span>Pan-India Express Courier</span>
+                  </div>
+                </div>
+              </div>
 
-  </div>
-</div>
+            </div>
+          </div>
+        </ScrollReveal>
 
         {/* 4. Bulk & Corporate Gifting Section */}
-        <BulkCorporateGiftingSection />
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <BulkCorporateGiftingSection />
+        </ScrollReveal>
 
         {/* 5. Support FAQs Accordion */}
-        <ContactFaqAccordion />
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <ContactFaqAccordion />
+        </ScrollReveal>
 
       </div>
 

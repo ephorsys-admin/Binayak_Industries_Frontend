@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, SlidersHorizontal, Star, ShieldCheck, Flame, Bike } from 'lucide-react';
 import ProductCard from './ProductCard';
+import { ScrollStagger, ScrollItem } from '../common/ScrollReveal';
 
 const filterPills = [
   { id: 'all', label: 'All Items' },
@@ -81,17 +82,18 @@ const PopularProducts = ({
       </div>
 
       {/* Product Grid (1 column on mobile like reference card, 2 columns on tablet, 3 columns on PC/Laptop) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <ScrollStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" staggerChildren={0.08}>
         {filteredList.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onIncrement={onIncrement}
-            onDecrement={onDecrement}
-            onAdd={onAdd}
-          />
+          <ScrollItem key={product.id} direction="up" distance={20}>
+            <ProductCard
+              product={product}
+              onIncrement={onIncrement}
+              onDecrement={onDecrement}
+              onAdd={onAdd}
+            />
+          </ScrollItem>
         ))}
-      </div>
+      </ScrollStagger>
 
       {/* View Full Menu Footer Link */}
       <div className="text-center pt-2">

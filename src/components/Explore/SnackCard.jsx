@@ -56,7 +56,7 @@ const SnackCard = ({
       onTouchStart={() => setIsHovered(true)}
       onTouchEnd={() => setIsHovered(false)}
       onTouchCancel={() => setIsHovered(false)}
-      className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative"
+      className="bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 border border-stone-200/80 shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
     >
       <div>
         {/* Product Image Container with Multi-Photo Browsing & Hover GIF */}
@@ -106,7 +106,7 @@ const SnackCard = ({
 
           {/* Top-Right Rating Badge */}
           <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 pointer-events-none">
-            <span className="bg-white/95 backdrop-blur-xs text-stone-900 text-[9px] sm:text-xs font-black px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs border border-stone-100">
+            <span className="bg-white/95 backdrop-blur-xs text-stone-900 text-[9px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-0.5 sm:gap-1 shadow-xs border border-stone-100">
               <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 fill-amber-500 shrink-0" />
               <span>{snack.rating}</span>
             </span>
@@ -174,13 +174,13 @@ const SnackCard = ({
 
         {/* Oil & Feature Tag */}
         <div className="flex items-center gap-1 mb-1.5 flex-wrap">
-          <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+          <span className="text-[8px] sm:text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1 max-w-full">
+            <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600 shrink-0" />
             <span className="truncate">{snack.oilType}</span>
           </span>
           {imagesList.length > 1 && (
-            <span className="text-[9px] font-bold text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded-md">
-              📷 {imagesList.length} photos
+            <span className="text-[8px] sm:text-[9px] font-bold text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded-md shrink-0">
+              📷 {imagesList.length}
             </span>
           )}
         </div>
@@ -193,7 +193,7 @@ const SnackCard = ({
         </Link>
 
         {/* Description snippet */}
-        <p className="text-[10px] sm:text-xs text-stone-500 font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1 mb-2 leading-tight sm:leading-relaxed">
+        <p className="text-[10px] sm:text-xs text-stone-500 font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1 mb-1.5 sm:mb-2 leading-tight sm:leading-relaxed">
           {snack.description}
         </p>
 
@@ -205,7 +205,7 @@ const SnackCard = ({
                 key={p.weight}
                 type="button"
                 onClick={() => setSelectedPackIndex(idx)}
-                className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${selectedPackIndex === idx
+                className={`text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${selectedPackIndex === idx
                     ? 'border-stone-900 bg-stone-900 text-white shadow-2xs'
                     : 'border-stone-200 text-stone-600 hover:border-stone-400 bg-stone-50'
                   }`}
@@ -218,54 +218,54 @@ const SnackCard = ({
       </div>
 
       {/* Price & Add to Cart Controls */}
-      <div className="flex items-center justify-between pt-2 border-t border-stone-100 mt-1 gap-1">
-        <div className="min-w-0">
-          <div className="flex items-baseline gap-1">
-            <span className="text-sm sm:text-lg lg:text-xl font-black text-stone-900 font-brand">
+      <div className="flex items-center justify-between pt-2 border-t border-stone-100 mt-1 gap-1 min-w-0">
+        <div className="min-w-0 shrink">
+          <div className="flex items-baseline gap-1 flex-wrap">
+            <span className="text-xs sm:text-base lg:text-xl font-black text-stone-900 font-brand">
               ₹{currentPack.price}
             </span>
             {currentPack.originalPrice && (
-              <span className="text-[10px] sm:text-xs text-stone-400 line-through truncate">
+              <span className="text-[9px] sm:text-xs text-stone-400 line-through truncate">
                 ₹{currentPack.originalPrice}
               </span>
             )}
           </div>
           {snack.discount && (
-            <span className="block text-[9px] sm:text-[10px] font-extrabold text-emerald-600 truncate">
+            <span className="block text-[8px] sm:text-[10px] font-extrabold text-emerald-600 truncate">
               {snack.discount}
             </span>
           )}
         </div>
 
         {snack.quantity > 0 ? (
-          <div className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-2.5 py-1 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-[11px] sm:text-xs shadow-xs border border-amber-300 shrink-0">
+          <div className="inline-flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#ffd25d] text-stone-900 font-bold text-[10px] sm:text-xs shadow-xs border border-amber-300 shrink-0">
             <button
               type="button"
               onClick={() => onDecrement(snack.id || snack._id)}
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-70 focus:outline-none cursor-pointer"
+              className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-70 focus:outline-none cursor-pointer"
               aria-label="Decrease quantity"
             >
-              <Minus className="w-3 h-3 stroke-[3]" />
+              <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
             </button>
-            <span className="min-w-2.5 text-center text-[10px] sm:text-xs font-black">
+            <span className="min-w-2 text-center text-[10px] sm:text-xs font-black">
               {snack.quantity}
             </span>
             <button
               type="button"
               onClick={() => onIncrement(snack.id || snack._id)}
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-70 focus:outline-none cursor-pointer"
+              className="w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center hover:opacity-70 focus:outline-none cursor-pointer"
               aria-label="Increase quantity"
             >
-              <Plus className="w-3 h-3 stroke-[3]" />
+              <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
             </button>
           </div>
         ) : (
           <button
             type="button"
             onClick={() => onAdd(snack.id || snack._id)}
-            className="px-3.5 sm:px-5 py-1.5 rounded-full bg-[#0a2540] hover:bg-[#061727] text-white text-[10px] sm:text-xs font-black transition-all active:scale-95 shadow-xs cursor-pointer flex items-center gap-1 shrink-0"
+            className="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#0a2540] hover:bg-[#061727] text-white text-[9px] sm:text-xs font-black transition-all active:scale-95 shadow-xs cursor-pointer flex items-center gap-1 shrink-0"
           >
-            <Plus className="w-3 h-3 stroke-[2.5]" />
+            <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[2.5]" />
             <span>Add</span>
           </button>
         )}
