@@ -29,7 +29,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="relative overflow-hidden bg-[#F7F9FC] px-3 pb-4 pt-10 sm:px-5 lg:px-8">
+        <footer className="relative overflow-hidden bg-[#F7F9FC] px-3 pb-32 sm:pb-6 pt-10 sm:px-5 lg:px-8">
             <div className="relative mx-auto max-w-362.5 overflow-hidden rounded-[35px] bg-[#031525] text-white shadow-[0_25px_80px_rgba(3,21,37,0.28)] sm:rounded-[45px] lg:rounded-[55px]">
 
 

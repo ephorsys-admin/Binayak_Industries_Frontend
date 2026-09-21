@@ -15,12 +15,13 @@ const SnackFilterBar = ({
   const hasActiveFilters = activeCategory !== 'all' || activeFilterTag !== 'all' || searchQuery.trim() !== '';
 
   return (
-    <div className="bg-white rounded-2xl p-3 sm:p-4 border border-stone-200/80 shadow-xs flex flex-wrap items-center justify-between gap-3">
+    <div className="bg-white rounded-2xl p-2.5 sm:p-4 border border-stone-200/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 w-full max-w-full overflow-hidden">
       {/* Left: Result Count & Active Filter Badges */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs sm:text-sm font-bold text-stone-900">
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0 w-full sm:w-auto">
+        <span className="text-[11px] sm:text-sm font-bold text-stone-900 shrink-0">
           Showing <span className="text-[#981b2e]">{resultsCount}</span> {resultsCount === 1 ? 'snack' : 'artisanal snacks'}
         </span>
+
 
         {/* Filter Pills */}
         {activeCategory !== 'all' && (

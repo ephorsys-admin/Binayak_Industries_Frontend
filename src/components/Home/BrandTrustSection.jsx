@@ -1,5 +1,6 @@
 import React from 'react';
 import { Droplet, Zap, CheckCircle, ShieldCheck } from 'lucide-react';
+import { ScrollStagger, ScrollItem } from '../common/ScrollReveal';
 
 const trustFeatures = [
   {
@@ -35,12 +36,14 @@ const trustFeatures = [
 const BrandTrustSection = () => {
   return (
     <section className="bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-5 border border-stone-200/80 shadow-2xs">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+      <ScrollStagger className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4" staggerChildren={0.08}>
         {trustFeatures.map((item) => {
           const Icon = item.icon;
           return (
-            <div
+            <ScrollItem
               key={item.id}
+              direction="up"
+              distance={15}
               className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-stone-50/70 hover:bg-stone-50 border border-stone-200/60 hover:border-stone-300 transition-all duration-300 flex items-center gap-2.5 sm:gap-3 group"
             >
               {/* Icon Container */}
@@ -59,12 +62,13 @@ const BrandTrustSection = () => {
                   {item.desc}
                 </p>
               </div>
-            </div>
+            </ScrollItem>
           );
         })}
-      </div>
+      </ScrollStagger>
     </section>
   );
 };
 
 export default BrandTrustSection;
+

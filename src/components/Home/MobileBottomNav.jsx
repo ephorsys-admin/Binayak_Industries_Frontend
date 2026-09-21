@@ -1,33 +1,29 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Home as HomeIcon, 
+  Home, 
   Compass, 
   ShoppingBag, 
-  Clock, 
   Info 
 } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { selectCartTotalCount } from '../../Redux/features/cart/cartSlice';
 
-const MobileBottomNav = ({ cartCount: propCount }) => {
+const MobileBottomNav = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const reduxCount = useSelector(selectCartTotalCount);
-
-  const cartCount = propCount !== undefined ? propCount : reduxCount;
 
   const navItems = [
-    { name: 'Home', path: '/', icon: HomeIcon },
+    { name: 'Home', path: '/', icon: Home },
     { name: 'Explore', path: '/explore', icon: Compass },
-    { name: 'Cart', path: '/cart', icon: ShoppingBag, isCart: true },
-    { name: 'Orders', path: '/orders', icon: Clock },
+    { name: 'Cart', path: '/cart', icon: ShoppingBag },
     { name: 'About', path: '/about', icon: Info },
   ];
 
   return (
-    <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-stone-200/90 px-2 py-1.5 shadow-xl">
-      <div className="grid grid-cols-5 items-center">
+    <nav 
+      aria-label="Mobile Bottom Navigation" 
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-sky-100 px-3 py-2 shadow-[0_-8px_25px_rgba(0,40,90,0.08)]"
+    >
+      <div className="grid grid-cols-4 items-center gap-2 max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentPath === item.path;
@@ -36,27 +32,31 @@ const MobileBottomNav = ({ cartCount: propCount }) => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center justify-center py-1 transition-all ${
-                isActive ? 'text-[#0a2540] font-black' : 'text-stone-500 hover:text-stone-900'
-              }`}
+              className="relative flex flex-col items-center justify-center py-0.5 group select-none cursor-pointer"
             >
+              {/* 3D Solid Button Container */}
               <div
-                className={`w-9 h-9 rounded-2xl flex items-center justify-center relative transition-all ${
+                className={`relative w-12 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 ${
                   isActive
-                    ? 'bg-[#0a2540] text-white shadow-2xs'
-                    : 'text-stone-600 hover:bg-stone-100'
+                    ? 'bg-gradient-to-r from-[#00558f] via-[#006ea8] to-[#004771] border border-amber-300/80 shadow-[0_4px_14px_rgba(0,80,150,0.32)] scale-105'
+                    : 'bg-[#f0f7fd]/80 hover:bg-[#e4f1fc] border border-[#d2e8f8]/80 text-[#006090] hover:scale-102 active:scale-95 shadow-2xs'
                 }`}
               >
-                <Icon className="w-4.5 h-4.5" />
-                {item.isCart && cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-[#ffd25d] text-stone-950 text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-xs">
-                    {cartCount}
-                  </span>
-                )}
+                <Icon 
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isActive 
+                      ? 'text-[#F5C542] fill-amber-300/20 drop-shadow-[0_0_6px_rgba(245,197,66,0.6)] scale-110' 
+                      : 'text-[#005080] group-hover:scale-110'
+                  }`} 
+                />
               </div>
+
+              {/* Label */}
               <span
-                className={`text-[10px] mt-1 tracking-tight ${
-                  isActive ? 'text-[#0a2540] font-black' : 'text-stone-500 font-medium'
+                className={`text-[10px] mt-1 tracking-tight transition-all duration-200 ${
+                  isActive
+                    ? 'font-black text-[#004060] drop-shadow-2xs scale-105'
+                    : 'font-bold text-slate-600 group-hover:text-[#004060]'
                 }`}
               >
                 {item.name}
@@ -65,7 +65,7 @@ const MobileBottomNav = ({ cartCount: propCount }) => {
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 };
 

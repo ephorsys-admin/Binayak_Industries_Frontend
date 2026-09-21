@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Quote, X, Star, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Quote, X, Star, CheckCircle2, User, UserCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ===== Custom Hooks =====
@@ -283,13 +282,12 @@ const TestimonialCard = ({
 
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-5 mt-1">
                 <div className="relative flex-shrink-0">
-                  <ProfileImage
-                    src={testimonial.profileImage}
-                    alt={testimonial.name}
-                    className="w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] border-2 border-[#d79f26] shadow-sm"
+                  <AvatarBadge
+                    name={testimonial.name}
+                    className="w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] text-xl sm:text-2xl border-2 border-[#d79f26] shadow-md"
                   />
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#004060] text-white flex items-center justify-center border border-white shadow-xs">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#d79f26]" />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#003058] text-white flex items-center justify-center border-2 border-white shadow-xs">
+                    <CheckCircle2 className="w-4 h-4 text-[#d79f26]" />
                   </div>
                 </div>
 
@@ -353,15 +351,14 @@ const TestimonialCard = ({
           {/* Subtle Warm Top Corner Glow */}
           <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#d79f26]/12 to-transparent rounded-bl-full pointer-events-none" />
 
-          {/* Top Profile Image with Gold Ring & Verified Badge */}
+          {/* Top Avatar Badge with Gold Ring & Verified Badge */}
           <div className="relative z-10 pt-1.5 flex flex-col items-center">
             <div className="relative">
-              <ProfileImage
-                src={testimonial.profileImage}
-                alt={testimonial.name}
+              <AvatarBadge
+                name={testimonial.name}
                 className="w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] border-2 border-[#d79f26] shadow-sm"
               />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#004060] text-white flex items-center justify-center border border-white shadow-xs">
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#003058] text-white flex items-center justify-center border border-white shadow-xs">
                 <CheckCircle2 className="w-3 h-3 text-[#d79f26]" />
               </div>
             </div>
@@ -411,41 +408,51 @@ const TestimonialCard = ({
   );
 };
 
-// ===== Profile Image Component =====
-const ProfileImage = ({
-  src,
-  alt = "Profile image",
+// ===== Customer Avatar Badge Component =====
+const AvatarBadge = ({
+  name = "Customer",
   className = "",
-  ...rest
 }) => {
-  const [isLoading, setLoading] = useState(true);
+  // Extract clean initials (e.g. "Pooja Sharma" -> "PS")
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "B";
+
+  // Deterministic pleasing gradient backgrounds
+  const gradients = [
+    "from-[#003058] via-[#004060] to-[#0c233c]",
+    "from-[#004060] via-[#003058] to-[#12283f]",
+    "from-[#0c233c] via-[#004060] to-[#003058]",
+    "from-[#003058] via-[#0a2744] to-[#004060]",
+  ];
+  
+  const charCode = name.charCodeAt(0) || 0;
+  const gradient = gradients[charCode % gradients.length];
 
   return (
     <div
       className={cn(
-        "w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] overflow-hidden rounded-full aspect-square flex-none relative shadow-sm bg-stone-100",
+        "rounded-full aspect-square flex-none relative shadow-sm overflow-hidden flex items-center justify-center select-none bg-gradient-to-br",
+        gradient,
         className
       )}
     >
-      <Image
-        className={cn(
-          "transition duration-300 absolute top-0 inset-0 w-full h-full object-cover z-50",
-          isLoading ? "blur-sm" : "blur-0"
-        )}
-        onLoad={() => setLoading(false)}
-        src={src}
-        width={100}
-        height={100}
-        loading="lazy"
-        decoding="async"
-        blurDataURL={typeof src === "string" ? src : undefined}
-        alt={alt}
-        {...rest}
-      />
+      {/* Subtle Golden Sheen Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#d79f26]/20 to-transparent pointer-events-none" />
+      
+      {/* Customer Initials with Royal Gold Brand Font */}
+      <span className="relative z-10 font-brand font-black text-white tracking-wider flex items-center gap-0.5">
+        <span className="text-[#ffd25d]">{initials[0]}</span>
+        {initials[1] && <span>{initials[1]}</span>}
+      </span>
     </div>
   );
 };
 
 // Export the components
-export { Carousel, TestimonialCard, ProfileImage };
+export { Carousel, TestimonialCard, AvatarBadge };
 export default Carousel;

@@ -18,6 +18,7 @@ import {
   formatApiProduct,
 } from '../../components/Explore';
 import { FloatingCartBar, MobileBottomNav } from '../../components/Home';
+import { ScrollReveal, ScrollStagger, ScrollItem } from '../../components/common/ScrollReveal';
 import { SearchX, RefreshCw, Layers } from 'lucide-react';
 import { fetchCategories } from '../../Redux/features/category/categoryThunk';
 import {
@@ -333,156 +334,175 @@ const ExploreSnacks = () => {
   }, [quickViewSnack, cartItems]);
 
   return (
-    <div className="min-h-screen pb-28 sm:pb-20 bg-stone-50/40">
+    <div className="min-h-screen pb-36 sm:pb-20 bg-stone-50/40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 space-y-6 sm:space-y-8">
         
         {/* 1. Explore Hero Banner */}
-        <ExploreHeroBanner />
+        <ScrollReveal direction="fade" duration={0.6}>
+          <ExploreHeroBanner />
+        </ScrollReveal>
 
         {/* 2. Artisanal Categories Scrollable Row with Real API Data */}
-        <ArtisanalCategoryCircles
-          categories={displayCategoriesList}
-          activeCategory={activeCategory}
-          onSelectCategory={(catId) => {
-            setActiveCategory(catId);
-            setActiveMood('all');
-          }}
-          snackCounts={snackCounts}
-          isLoading={categoryLoading}
-        />
+        <ScrollReveal direction="up" delay={0.05} duration={0.55}>
+          <ArtisanalCategoryCircles
+            categories={displayCategoriesList}
+            activeCategory={activeCategory}
+            onSelectCategory={(catId) => {
+              setActiveCategory(catId);
+              setActiveMood('all');
+            }}
+            snackCounts={snackCounts}
+            isLoading={categoryLoading}
+          />
+        </ScrollReveal>
 
         {/* 3. Daily Kitchen Fresh Spotlight Carousel */}
         {activeCategory === 'all' && !searchQuery && activeMood === 'all' && (
-          <ExploreSpotlightCarousel
-            spotlightSnacks={spotlightSnacks}
-            onIncrement={handleIncrement}
-            onDecrement={handleDecrement}
-            onAdd={handleAdd}
-            onQuickView={(item) => setQuickViewSnack(item)}
-          />
+          <ScrollReveal direction="scale" delay={0.08} duration={0.6}>
+            <ExploreSpotlightCarousel
+              spotlightSnacks={spotlightSnacks}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
+              onAdd={handleAdd}
+              onQuickView={(item) => setQuickViewSnack(item)}
+            />
+          </ScrollReveal>
         )}
 
         {/* 4. Interactive Taste & Craving Mood Filter Bar */}
-        <TasteMoodFilter
-          activeMood={activeMood}
-          onSelectMood={(moodId) => {
-            setActiveMood((prev) => (prev === moodId ? 'all' : moodId));
-            if (moodId !== 'all') setActiveCategory('all');
-          }}
-        />
+        <ScrollReveal direction="up" delay={0.05} duration={0.55}>
+          <TasteMoodFilter
+            activeMood={activeMood}
+            onSelectMood={(moodId) => {
+              setActiveMood((prev) => (prev === moodId ? 'all' : moodId));
+              if (moodId !== 'all') setActiveCategory('all');
+            }}
+          />
+        </ScrollReveal>
 
         {/* 5. Filter, Count & Sort Bar */}
-        <SnackFilterBar
-          resultsCount={filteredAndSortedSnacks.length}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          activeFilterTag={activeFilterTag}
-          onResetFilterTag={() => setActiveFilterTag('all')}
-          activeCategory={activeCategory}
-          onResetCategory={() => setActiveCategory('all')}
-          searchQuery={searchQuery}
-          onClearSearch={() => handleSearchChange('')}
-        />
+        <ScrollReveal direction="up" delay={0.05} duration={0.55}>
+          <SnackFilterBar
+            resultsCount={filteredAndSortedSnacks.length}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            activeFilterTag={activeFilterTag}
+            onResetFilterTag={() => setActiveFilterTag('all')}
+            activeCategory={activeCategory}
+            onResetCategory={() => setActiveCategory('all')}
+            searchQuery={searchQuery}
+            onClearSearch={() => handleSearchChange('')}
+          />
+        </ScrollReveal>
 
         {/* 6. Active Category Info Header */}
         {activeCategory !== 'all' && activeCategoryObj && (
-          <div className="flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs">
-            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${activeCategoryObj.bg || 'bg-rose-50'} ${activeCategoryObj.border || 'border-rose-100'} border flex items-center justify-center shrink-0 overflow-hidden shadow-2xs`}>
-                {activeCategoryObj.image?.url || (typeof activeCategoryObj.image === 'string' && activeCategoryObj.image) ? (
-                  <img
-                    src={activeCategoryObj.image?.url || activeCategoryObj.image}
-                    alt={activeCategoryObj.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = activeCategoryObj.fallbackImg || '';
-                    }}
-                    className="w-full h-full object-cover"
-                  />
-                ) : activeCategoryObj.icon ? (
-                  <activeCategoryObj.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${activeCategoryObj.iconColor || 'text-[#981b2e]'}`} />
-                ) : (
-                  <Layers className="w-5 h-5 text-[#981b2e]" />
-                )}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm sm:text-lg font-black text-stone-900 font-brand truncate">
-                    {activeCategoryObj.name}
-                  </h3>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-stone-500 bg-stone-100 px-1.5 sm:px-2 py-0.5 rounded-full border border-stone-200 shrink-0">
-                    {filteredAndSortedSnacks.length} items
-                  </span>
+          <ScrollReveal direction="fade" duration={0.45}>
+            <div className="flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${activeCategoryObj.bg || 'bg-rose-50'} ${activeCategoryObj.border || 'border-rose-100'} border flex items-center justify-center shrink-0 overflow-hidden shadow-2xs`}>
+                  {activeCategoryObj.image?.url || (typeof activeCategoryObj.image === 'string' && activeCategoryObj.image) ? (
+                    <img
+                      src={activeCategoryObj.image?.url || activeCategoryObj.image}
+                      alt={activeCategoryObj.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = activeCategoryObj.fallbackImg || '';
+                      }}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : activeCategoryObj.icon ? (
+                    <activeCategoryObj.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${activeCategoryObj.iconColor || 'text-[#981b2e]'}`} />
+                  ) : (
+                    <Layers className="w-5 h-5 text-[#981b2e]" />
+                  )}
                 </div>
-                <p className="text-[11px] sm:text-xs text-stone-500 font-medium line-clamp-1">
-                  {activeCategoryObj.description || activeCategoryObj.subtitle}
-                </p>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-lg font-black text-stone-900 font-brand truncate">
+                      {activeCategoryObj.name}
+                    </h3>
+                    <span className="text-[10px] sm:text-[11px] font-bold text-stone-500 bg-stone-100 px-1.5 sm:px-2 py-0.5 rounded-full border border-stone-200 shrink-0">
+                      {filteredAndSortedSnacks.length} items
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-stone-500 font-medium line-clamp-1">
+                    {activeCategoryObj.description || activeCategoryObj.subtitle}
+                  </p>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setActiveCategory('all')}
+                className="text-[11px] sm:text-xs font-bold text-[#981b2e] hover:underline cursor-pointer shrink-0 ml-2"
+              >
+                View All →
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setActiveCategory('all')}
-              className="text-[11px] sm:text-xs font-bold text-[#981b2e] hover:underline cursor-pointer shrink-0 ml-2"
-            >
-              View All →
-            </button>
-          </div>
+          </ScrollReveal>
         )}
 
         {/* 7. Continuous Gap-Free Responsive Products Grid */}
         {filteredAndSortedSnacks.length === 0 ? (
           /* Empty State Fallback */
-          <div className="bg-white rounded-3xl p-6 sm:p-12 border border-stone-200/80 text-center max-w-lg mx-auto shadow-xs space-y-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto text-[#981b2e]">
-              <SearchX className="w-6 h-6 sm:w-7 sm:h-7" />
+          <ScrollReveal direction="scale" duration={0.5}>
+            <div className="bg-white rounded-3xl p-6 sm:p-12 border border-stone-200/80 text-center max-w-lg mx-auto shadow-xs space-y-3">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto text-[#981b2e]">
+                <SearchX className="w-6 h-6 sm:w-7 sm:h-7" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base sm:text-lg font-bold text-stone-900 font-brand">
+                  No Artisanal Snacks Found
+                </h3>
+                <p className="text-xs text-stone-500">
+                  We couldn't find any snack matching your current search or filters. Try adjusting your terms or browse all categories.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveCategory('all');
+                  setActiveFilterTag('all');
+                  setActiveMood('all');
+                  handleSearchChange('');
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#083358] hover:bg-[#0c4a6e] text-white text-xs font-bold transition-transform active:scale-95 shadow-xs cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Reset All Filters</span>
+              </button>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-base sm:text-lg font-bold text-stone-900 font-brand">
-                No Artisanal Snacks Found
-              </h3>
-              <p className="text-xs text-stone-500">
-                We couldn't find any snack matching your current search or filters. Try adjusting your terms or browse all categories.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveCategory('all');
-                setActiveFilterTag('all');
-                setActiveMood('all');
-                handleSearchChange('');
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#083358] hover:bg-[#0c4a6e] text-white text-xs font-bold transition-transform active:scale-95 shadow-xs cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Reset All Filters</span>
-            </button>
-          </div>
+          </ScrollReveal>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          <ScrollStagger className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4" staggerChildren={0.06}>
             {filteredAndSortedSnacks.map((snack) => (
-              <SnackCard
-                key={snack.id || snack._id}
-                snack={snack}
-                onIncrement={handleIncrement}
-                onDecrement={handleDecrement}
-                onAdd={handleAdd}
-                onQuickView={(item) => setQuickViewSnack(item)}
-              />
+              <ScrollItem key={snack.id || snack._id} direction="up" distance={18}>
+                <SnackCard
+                  snack={snack}
+                  onIncrement={handleIncrement}
+                  onDecrement={handleDecrement}
+                  onAdd={handleAdd}
+                  onQuickView={(item) => setQuickViewSnack(item)}
+                />
+              </ScrollItem>
             ))}
-          </div>
+          </ScrollStagger>
         )}
 
         {/* 8. Chai & Tea-Time Pairing Experience Banner */}
-        <ChaiPairingBanner
-          onSelectChaiSpecials={() => {
-            setActiveMood('chai-time');
-            setActiveCategory('all');
-          }}
-        />
+        <ScrollReveal direction="scale" delay={0.08} duration={0.6}>
+          <ChaiPairingBanner
+            onSelectChaiSpecials={() => {
+              setActiveMood('chai-time');
+              setActiveCategory('all');
+            }}
+          />
+        </ScrollReveal>
 
         {/* 9. Artisanal Quality & Heritage Trust Strip */}
-        <ExploreTrustHighlights />
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <ExploreTrustHighlights />
+        </ScrollReveal>
 
       </div>
 

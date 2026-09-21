@@ -47,7 +47,7 @@ export const PageLoader = ({ fade = false }) => {
           Binayak Industries
         </span>
         <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">
-          Loading experience...
+          Loading ...
         </span>
       </div>
     </div>
