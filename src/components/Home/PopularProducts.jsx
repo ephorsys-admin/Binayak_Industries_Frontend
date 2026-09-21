@@ -82,9 +82,9 @@ const PopularProducts = ({
       </div>
 
       {/* Product Grid (1 column on mobile like reference card, 2 columns on tablet, 3 columns on PC/Laptop) */}
-      <ScrollStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" staggerChildren={0.08}>
-        {filteredList.map((product) => (
-          <ScrollItem key={product.id} direction="up" distance={20}>
+      <ScrollStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {filteredList.map((product, idx) => (
+          <ScrollItem key={product.id || product._id || product.slug || idx} direction="up" distance={15}>
             <ProductCard
               product={product}
               onIncrement={onIncrement}
