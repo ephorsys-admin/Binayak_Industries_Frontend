@@ -32,38 +32,19 @@ export const getSingleProductApi = async (productId) => {
 
 // 5. Create Product (Admin with multi-part images upload)
 export const createProductApi = async (formData) => {
-  const response = await api.post("/product/create", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.post("/product/create", formData);
   return response.data;
 };
 
 // 6. Update Product (Admin)
 export const updateProductApi = async (productId, data) => {
-  const isFormData = data instanceof FormData;
-  const response = await api.put(
-    `/product/update/${productId}`,
-    data,
-    isFormData
-      ? {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      : {}
-  );
+  const response = await api.put(`/product/update/${productId}`, data);
   return response.data;
 };
 
 // 7. Add Product Images (Admin)
 export const addProductImagesApi = async (productId, formData) => {
-  const response = await api.post(`/product/${productId}/images`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.post(`/product/${productId}/images`, formData);
   return response.data;
 };
 
