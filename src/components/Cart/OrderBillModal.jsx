@@ -43,6 +43,14 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
 
   const items = order?.items || [];
 
+  const isOrderingForSomeoneElse = Boolean(
+    order?.isOrderingForSomeoneElse || order?.customer?.isOrderingForSomeoneElse
+  );
+  const recipient = order?.recipient || order?.customer?.recipient || null;
+  const recipientName = recipient?.name || '';
+  const recipientPhone = recipient?.phone || '';
+  const giftMessage = recipient?.giftMessage || '';
+
   const handlePrint = () => {
     window.print();
   };
@@ -55,7 +63,9 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
         <div className="no-print p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            <span className="font-bold text-xs sm:text-sm">Official Order Receipt & Bill</span>
+            <span className="font-bold text-xs sm:text-sm">
+              {isOrderingForSomeoneElse ? 'Official Gift Order Receipt & Bill' : 'Official Order Receipt & Bill'}
+            </span>
           </div>
           <div className="flex items-center gap-2">
 
@@ -75,8 +85,8 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
           {/* Company Invoice Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b-2 border-stone-900 gap-4">
             <div>
-              <div className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest font-black text-[#981b2e] bg-rose-50 px-2 py-0.5 rounded-full mb-1">
-                <Sparkles className="w-3 h-3 text-[#981b2e]" />
+              <div className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest font-black text-amber-800 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full mb-1">
+                <Sparkles className="w-3 h-3 text-amber-600" />
                 <span>Binayak Industries</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black  text-stone-900 tracking-tight">
@@ -88,7 +98,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
             </div>
 
             <div className="text-left sm:text-right space-y-0.5">
-              <span className="font-mono text-base sm:text-lg font-black text-[#981b2e]">
+              <span className="font-mono text-base sm:text-lg font-black text-amber-700">
                 {orderId}
               </span>
               <p className="text-[11px] text-stone-500">
@@ -101,38 +111,63 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
           </div>
 
           {/* Customer & Billing Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-stone-50 border border-stone-200">
-            <div className="space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
-                Billed & Delivered To:
-              </span>
-              <p className="font-bold text-stone-900 text-sm">{customerName}</p>
-              <p className="text-stone-600 flex items-center gap-1.5 text-[11px]">
-                <Phone className="w-3 h-3 text-stone-400" />
-                <span className="font-mono">{customerPhone}</span>
-              </p>
-              {customerEmail && (
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-stone-50 border border-stone-200">
+              {/* Buyer / Sender Info */}
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
+                  {isOrderingForSomeoneElse ? 'Billed To (Sender / Buyer):' : 'Billed & Delivered To:'}
+                </span>
+                <p className="font-bold text-stone-900 text-sm">{customerName}</p>
                 <p className="text-stone-600 flex items-center gap-1.5 text-[11px]">
-                  <Mail className="w-3 h-3 text-stone-400" />
-                  <span>{customerEmail}</span>
+                  <Phone className="w-3 h-3 text-stone-400" />
+                  <span className="font-mono">{customerPhone}</span>
                 </p>
-              )}
-            </div>
+                {customerEmail && (
+                  <p className="text-stone-600 flex items-center gap-1.5 text-[11px]">
+                    <Mail className="w-3 h-3 text-stone-400" />
+                    <span>{customerEmail}</span>
+                  </p>
+                )}
+                <div className="pt-1 flex items-center gap-1.5 text-[11px] text-stone-700 font-semibold">
+                  <CreditCard className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Payment: {paymentMethod} ({paymentStatus})</span>
+                </div>
+              </div>
 
-            <div className="space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
-                Delivery Location ({customerAddressType}):
-              </span>
-              <p className="text-stone-700 leading-relaxed text-[11px]">
-                {customerAddress}
-                {customerLandmark ? `, Near ${customerLandmark}` : ''},<br />
-                {customerCity}, {customerState} - {customerPincode}
-              </p>
-              <div className="pt-1 flex items-center gap-1.5 text-[11px] text-stone-700 font-semibold">
-                <CreditCard className="w-3.5 h-3.5 text-[#981b2e]" />
-                <span>Payment: {paymentMethod} ({paymentStatus})</span>
+              {/* Recipient / Delivery Info */}
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
+                  {isOrderingForSomeoneElse
+                    ? `Delivered To Recipient (${customerAddressType}):`
+                    : `Delivery Location (${customerAddressType}):`}
+                </span>
+                {isOrderingForSomeoneElse && recipientName && (
+                  <p className="font-bold text-stone-900 text-sm">{recipientName}</p>
+                )}
+                {isOrderingForSomeoneElse && recipientPhone && (
+                  <p className="text-stone-600 flex items-center gap-1.5 text-[11px] pb-0.5">
+                    <Phone className="w-3 h-3 text-emerald-600" />
+                    <span className="font-mono">{recipientPhone}</span>
+                  </p>
+                )}
+                <p className="text-stone-700 leading-relaxed text-[11px]">
+                  {customerAddress}
+                  {customerLandmark ? `, Near ${customerLandmark}` : ''},<br />
+                  {customerCity}, {customerState} - {customerPincode}
+                </p>
               </div>
             </div>
+
+            {/* Gift Message Callout if present */}
+            {isOrderingForSomeoneElse && giftMessage && (
+              <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-stone-800 text-[11px] space-y-0.5">
+                <span className="font-extrabold text-amber-900 text-[10px] uppercase tracking-wider block">
+                  💌 Personalized Gift Message:
+                </span>
+                <p className="italic text-stone-700">"{giftMessage}"</p>
+              </div>
+            )}
           </div>
 
           {/* Itemized Products Table */}
@@ -192,7 +227,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
               </div>
               <div className="pt-2 border-t border-stone-300 flex justify-between items-baseline font-black">
                 <span className="text-stone-900 text-sm">Grand Total:</span>
-                <span className="text-base sm:text-lg text-[#981b2e] font-mono">₹{grandTotal}</span>
+                <span className="text-base sm:text-lg text-amber-700 font-mono">₹{grandTotal}</span>
               </div>
             </div>
           </div>
@@ -214,7 +249,7 @@ export default function OrderBillModal({ isOpen, order, onClose }) {
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-[#981b2e] hover:bg-[#801424] text-white font-bold text-xs transition-all cursor-pointer shadow-md active:scale-95"
+            className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#D79F26] via-[#E0B529] to-[#F5C542] hover:from-[#c58f1f] hover:via-[#d4a520] hover:to-[#e0b030] text-[#003060] font-black text-xs transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-95"
           >
             <Download className="w-4 h-4" />
             <span>Download / Print Invoice</span>

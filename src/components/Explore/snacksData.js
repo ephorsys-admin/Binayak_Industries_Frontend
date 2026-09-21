@@ -136,6 +136,8 @@ export const formatApiProduct = (prod) => {
     isAvailable: prod.isAvailable !== false,
     image: primaryImg,
     secondaryImage: secondaryImg,
+    gif: prod.gif?.url || (typeof prod.gif === 'string' ? prod.gif : '') || prod.hoverGif || '',
+    rawGif: prod.gif || null,
     images: rawImagesList.length > 0 ? rawImagesList : [primaryImg],
     ingredients: prod.ingredients || 'Artisanal Spices, Gram Flour, Groundnut Oil',
     nutritionHighlights: prod.nutritionHighlights || ['Zero Trans Fat', 'Rich in Protein'],

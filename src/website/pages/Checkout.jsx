@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -22,6 +22,14 @@ import {
   Clock,
   Truck,
   Check,
+  Gift,
+  Heart,
+  UserCheck,
+  MessageSquareHeart,
+  Info,
+  Search,
+  X,
+  Compass,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -40,6 +48,7 @@ import {
 } from '../../Redux/features/location/locationSlice';
 import { placeOrderApi } from '../../Redux/services/orderService';
 import { OrderSuccessAnimation, OrderBillModal } from '../../components/Cart';
+import { ScrollReveal } from '../../components/common/ScrollReveal';
 
 const addressTypes = [
   { id: 'Home', label: 'Home', icon: Home },
@@ -70,6 +79,7 @@ export default function Checkout() {
 
   const savedContact = getSavedContact();
 
+  // Buyer / Sender Form Data
   const [formData, setFormData] = useState({
     name: savedContact.name || '',
     phone: savedContact.phone || '',
@@ -82,6 +92,21 @@ export default function Checkout() {
     addressType: currentLocation?.addressType || 'Home',
     deliveryNotes: '',
   });
+
+  // Ordering for someone else / Gift state
+  const [isOrderingForSomeoneElse, setIsOrderingForSomeoneElse] = useState(false);
+  const [recipientData, setRecipientData] = useState({
+    name: '',
+    phone: '',
+    giftMessage: '',
+  });
+
+  // Free Online Address Search Autocomplete State (OpenStreetMap Nominatim)
+  const [addressSearchQuery, setAddressSearchQuery] = useState('');
+  const [addressSearchResults, setAddressSearchResults] = useState([]);
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
+  const addressSearchRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,6 +132,98 @@ export default function Checkout() {
     }
   }, [currentLocation]);
 
+  // Debounced Address Search using free OpenStreetMap Nominatim API
+  useEffect(() => {
+    if (!addressSearchQuery || addressSearchQuery.trim().length < 2) {
+      setAddressSearchResults([]);
+      setIsSearchingAddress(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearchingAddress(true);
+      try {
+        const query = addressSearchQuery.trim();
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=6&countrycodes=in`
+        );
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setAddressSearchResults(data);
+          setShowAddressDropdown(true);
+        }
+      } catch (err) {
+        console.error('Address search error:', err);
+      } finally {
+        setIsSearchingAddress(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [addressSearchQuery]);
+
+  // Click outside to close address search dropdown
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (addressSearchRef.current && !addressSearchRef.current.contains(e.target)) {
+        setShowAddressDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectAddressSuggestion = (item) => {
+    const addr = item.address || {};
+
+    const streetParts = [
+      addr.building || addr.house_number,
+      addr.road || addr.street,
+      addr.suburb || addr.neighbourhood || addr.residential || addr.subdivision,
+    ].filter(Boolean);
+
+    const primaryName = item.name || item.display_name?.split(',')[0] || '';
+    const street = streetParts.length > 0 ? streetParts.join(', ') : primaryName;
+
+    const detectedCity =
+      addr.city || addr.town || addr.village || addr.county || addr.state_district || 'Bhubaneswar';
+    const detectedState = addr.state || 'Odisha';
+    const detectedPincode = (addr.postcode || '').replace(/\D/g, '').slice(0, 6);
+    const detectedLandmark = addr.amenity || addr.landmark || addr.suburb || '';
+
+    setFormData((prev) => ({
+      ...prev,
+      addressLine: street || prev.addressLine,
+      city: detectedCity,
+      state: detectedState,
+      pincode: detectedPincode || prev.pincode,
+      landmark: detectedLandmark || prev.landmark,
+    }));
+
+    dispatch(
+      setLocation({
+        city: detectedCity,
+        state: detectedState,
+        pincode: detectedPincode || formData.pincode,
+        addressLine: street || formData.addressLine,
+        landmark: detectedLandmark || formData.landmark,
+        label: `${detectedCity}, ${detectedState}`,
+      })
+    );
+
+    setErrors((prev) => ({
+      ...prev,
+      addressLine: '',
+      city: '',
+      state: '',
+      pincode: '',
+    }));
+
+    setShowAddressDropdown(false);
+    setAddressSearchQuery('');
+    toast.success(`📍 Location loaded: ${detectedCity} (${detectedPincode || detectedState})`);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -123,6 +240,27 @@ export default function Checkout() {
             : {}),
         })
       );
+    }
+  };
+
+  const handleRecipientChange = (e) => {
+    const { name, value } = e.target;
+    setRecipientData((prev) => ({ ...prev, [name]: value }));
+    if (errors[`recipient_${name}`]) {
+      setErrors((prev) => ({ ...prev, [`recipient_${name}`]: '' }));
+    }
+  };
+
+  // Toggle ordering for someone else
+  const handleToggleOrderingForSomeoneElse = (enable) => {
+    setIsOrderingForSomeoneElse(enable);
+    if (!enable) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.recipient_name;
+        delete next.recipient_phone;
+        return next;
+      });
     }
   };
 
@@ -216,17 +354,29 @@ export default function Checkout() {
 
   const validate = () => {
     const errs = {};
-    if (!formData.name.trim()) errs.name = 'Full Name is required';
+    if (!formData.name.trim()) errs.name = isOrderingForSomeoneElse ? 'Your Full Name (Sender) is required' : 'Full Name is required';
     if (!formData.phone.trim()) {
-      errs.phone = 'Phone number is required';
+      errs.phone = isOrderingForSomeoneElse ? 'Your phone number (for updates) is required' : 'Phone number is required';
     } else if (!/^[6-9]\d{9}$/.test(formData.phone.replace(/[\s-]/g, ''))) {
       errs.phone = 'Enter a valid 10-digit Indian mobile number';
     }
 
     if (!formData.email.trim()) {
-      errs.email = 'Email address is required';
+      errs.email = isOrderingForSomeoneElse ? 'Your email (for tax invoice) is required' : 'Email address is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       errs.email = 'Enter a valid email address';
+    }
+
+    // Recipient Validation if ordering for someone else
+    if (isOrderingForSomeoneElse) {
+      if (!recipientData.name.trim()) {
+        errs.recipient_name = "Recipient's Full Name is required";
+      }
+      if (!recipientData.phone.trim()) {
+        errs.recipient_phone = "Recipient's Mobile Number is required for delivery";
+      } else if (!/^[6-9]\d{9}$/.test(recipientData.phone.replace(/[\s-]/g, ''))) {
+        errs.recipient_phone = 'Enter a valid 10-digit Indian mobile number for recipient';
+      }
     }
 
     if (!formData.addressLine.trim()) errs.addressLine = 'Street address / House No. is required';
@@ -252,13 +402,13 @@ export default function Checkout() {
     }
 
     if (!validate()) {
-      toast.error('Please complete all required delivery details.');
+      toast.error('Please complete all required delivery & contact details.');
       return;
     }
 
     setIsSubmitting(true);
 
-    // Persist contact details for user convenience
+    // Persist sender contact details for convenience
     try {
       localStorage.setItem(
         'binayak_user_contact',
@@ -271,6 +421,14 @@ export default function Checkout() {
     } catch (e) { }
 
     const payload = {
+      isOrderingForSomeoneElse,
+      recipient: isOrderingForSomeoneElse
+        ? {
+          name: recipientData.name.trim(),
+          phone: recipientData.phone.trim(),
+          giftMessage: recipientData.giftMessage.trim(),
+        }
+        : undefined,
       customer: {
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -282,6 +440,14 @@ export default function Checkout() {
         landmark: formData.landmark.trim(),
         addressType: formData.addressType || 'Home',
         deliveryNotes: formData.deliveryNotes.trim(),
+        isOrderingForSomeoneElse,
+        recipient: isOrderingForSomeoneElse
+          ? {
+            name: recipientData.name.trim(),
+            phone: recipientData.phone.trim(),
+            giftMessage: recipientData.giftMessage.trim(),
+          }
+          : undefined,
       },
       items: cartItems.map((item) => ({
         productId: item.id || item._id,
@@ -322,6 +488,14 @@ export default function Checkout() {
         orderId: orderId,
         placedDate: placedDateStr,
         estimatedDelivery: estDeliveryStr,
+        isOrderingForSomeoneElse,
+        recipient: isOrderingForSomeoneElse
+          ? {
+            name: recipientData.name.trim(),
+            phone: recipientData.phone.trim(),
+            giftMessage: recipientData.giftMessage.trim(),
+          }
+          : null,
         customer: {
           name: formData.name.trim(),
           phone: formData.phone.trim(),
@@ -332,6 +506,14 @@ export default function Checkout() {
           pincode: formData.pincode.trim(),
           landmark: formData.landmark.trim(),
           addressType: formData.addressType,
+          isOrderingForSomeoneElse,
+          recipient: isOrderingForSomeoneElse
+            ? {
+              name: recipientData.name.trim(),
+              phone: recipientData.phone.trim(),
+              giftMessage: recipientData.giftMessage.trim(),
+            }
+            : null,
         },
         items: cartItems,
         pricing: {
@@ -411,46 +593,62 @@ export default function Checkout() {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
 
         {/* Page Header */}
-        <div className="mb-6 space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[11px] font-extrabold uppercase tracking-wider">
-            <ShoppingBag className="w-3 h-3 text-[#003060]" />
-            <span>Simple 1-Step Checkout</span>
+        <ScrollReveal direction="fade" duration={0.55}>
+          <div className="mb-6 space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[11px] font-extrabold uppercase tracking-wider">
+              <ShoppingBag className="w-3 h-3 text-[#003060]" />
+              <span>Simple 1-Step Checkout</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black  text-stone-900 tracking-tight">
+              Delivery Details & Place Order
+            </h1>
+            <p className="text-xs text-stone-500">
+              Enter where we should deliver your fresh batch snacks. Payment is collected in cash or UPI upon delivery.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black  text-stone-900 tracking-tight">
-            Delivery Details & Place Order
-          </h1>
-          <p className="text-xs text-stone-500">
-            Enter where we should deliver your fresh batch snacks. Payment is collected in cash or UPI upon delivery.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* 2-Column Responsive Layout */}
-        <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <ScrollReveal direction="up" delay={0.08} duration={0.6}>
+          <form onSubmit={handleSubmitOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
 
           {/* Left Column: Delivery Form (7 Cols) */}
           <div className="lg:col-span-7 space-y-5">
 
-            {/* 1. Contact & Customer Information */}
+            {/* 1. Contact / Sender Information */}
             <div className="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200/80 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
-                <div className="w-7 h-7 rounded-full bg-[#003060]/10 text-[#003060] flex items-center justify-center font-bold text-xs">
-                  1
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-[#003060]/10 text-[#003060] flex items-center justify-center font-bold text-xs">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-stone-900">
+                      {isOrderingForSomeoneElse
+                        ? 'Your Details (Sender / Buyer)'
+                        : 'Contact & Customer Information'}
+                    </h3>
+                    <p className="text-[11px] text-stone-500">
+                      {isOrderingForSomeoneElse
+                        ? 'Order confirmation, tax invoice & SMS receipt will be sent to you.'
+                        : 'Order confirmation & delivery SMS updates will be sent here.'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-bold text-stone-900">
-                    Contact & Customer Information
-                  </h3>
-                  <p className="text-[11px] text-stone-500">
-                    Order confirmation & delivery SMS updates will be sent here.
-                  </p>
-                </div>
+                {isOrderingForSomeoneElse && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#003060]/10 text-[#003060] text-[10px] font-bold">
+                    Sender Info
+                  </span>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Full Name */}
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    Full Name <span className="text-rose-500">*</span>
+                    {isOrderingForSomeoneElse ? 'Your Full Name (Sender)' : 'Full Name'}{' '}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -459,7 +657,7 @@ export default function Checkout() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="e.g. Binayak Patel"
+                      placeholder={isOrderingForSomeoneElse ? 'e.g. Binayak Patel (Your Name)' : 'e.g. Binayak Patel'}
                       className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#003060]/20 transition-all ${errors.name ? 'border-rose-500' : 'border-stone-200 focus:border-[#003060]'
                         }`}
                     />
@@ -470,7 +668,8 @@ export default function Checkout() {
                 {/* Mobile Number */}
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    Mobile Number <span className="text-rose-500">*</span>
+                    {isOrderingForSomeoneElse ? 'Your Mobile Number' : 'Mobile Number'}{' '}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-500">
@@ -493,7 +692,8 @@ export default function Checkout() {
                 {/* Email Address */}
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    Email Address <span className="text-rose-500">*</span>
+                    {isOrderingForSomeoneElse ? 'Your Email (For Invoice)' : 'Email Address'}{' '}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -512,6 +712,156 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* 🎁 ORDER FOR SOMEONE ELSE / GIFT TOGGLE CARD */}
+            <div
+              onClick={() => handleToggleOrderingForSomeoneElse(!isOrderingForSomeoneElse)}
+              className={`p-4 sm:p-5 rounded-3xl border transition-all cursor-pointer select-none flex items-center justify-between gap-4 ${isOrderingForSomeoneElse
+                  ? 'bg-gradient-to-r from-amber-50/80 via-rose-50/40 to-white border-amber-300 shadow-sm ring-1 ring-amber-300/60'
+                  : 'bg-white hover:bg-stone-50/80 border-stone-200/90 shadow-2xs'
+                }`}
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-all ${isOrderingForSomeoneElse
+                      ? 'bg-gradient-to-br from-[#D79F26] to-[#b37e17] text-white shadow-sm'
+                      : 'bg-amber-100/70 text-amber-800'
+                    }`}
+                >
+                  <Gift className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-xs sm:text-sm font-black text-stone-900">
+                      Ordering for someone else?
+                    </h4>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full shrink-0">
+                      <Sparkles className="w-2.5 h-2.5" /> Gift & Surprise
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-0.5 truncate sm:whitespace-normal">
+                    Deliver snacks directly to a friend, family, or relative with their contact & custom message.
+                  </p>
+                </div>
+              </div>
+
+              {/* Toggle Switch */}
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isOrderingForSomeoneElse}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleOrderingForSomeoneElse(!isOrderingForSomeoneElse);
+                }}
+                className={`w-12 h-6.5 flex items-center rounded-full p-1 transition-colors duration-300 cursor-pointer shrink-0 ${isOrderingForSomeoneElse ? 'bg-[#003060]' : 'bg-stone-300'
+                  }`}
+              >
+                <div
+                  className={`bg-white w-4.5 h-4.5 rounded-full shadow-md transform transition-transform duration-300 ${isOrderingForSomeoneElse ? 'translate-x-5.5' : 'translate-x-0'
+                    }`}
+                />
+              </button>
+            </div>
+
+            {/* 🎁 RECIPIENT INFORMATION (EXPANDED WHEN TOGGLE IS ON) */}
+            {isOrderingForSomeoneElse && (
+              <div className="bg-gradient-to-br from-amber-50/50 via-white to-white rounded-3xl p-4 sm:p-6 border border-amber-200/90 shadow-xs space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex items-center justify-between pb-2 border-b border-amber-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                      <Gift className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm sm:text-base font-bold text-stone-900">
+                        Recipient Information
+                      </h3>
+                      <p className="text-[11px] text-stone-500">
+                        Who will receive this snack box delivery.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    <Phone className="w-2.5 h-2.5 text-emerald-600" />
+                    <span>Delivery agent will call recipient</span>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {/* Recipient Full Name */}
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 mb-1">
+                      Recipient's Full Name <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <UserCheck className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        name="name"
+                        value={recipientData.name}
+                        onChange={handleRecipientChange}
+                        placeholder="e.g. Sneha Mohanty"
+                        className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all ${errors.recipient_name
+                            ? 'border-rose-500'
+                            : 'border-stone-200 focus:border-amber-500'
+                          }`}
+                      />
+                    </div>
+                    {errors.recipient_name && (
+                      <p className="text-[10px] text-rose-500 mt-1">{errors.recipient_name}</p>
+                    )}
+                  </div>
+
+                  {/* Recipient Mobile Number */}
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 mb-1">
+                      Recipient's Mobile Number <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-500">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        name="phone"
+                        maxLength={10}
+                        value={recipientData.phone}
+                        onChange={handleRecipientChange}
+                        placeholder="9876543210"
+                        className={`w-full pl-11 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all ${errors.recipient_phone
+                            ? 'border-rose-500'
+                            : 'border-stone-200 focus:border-amber-500'
+                          }`}
+                      />
+                    </div>
+                    {errors.recipient_phone && (
+                      <p className="text-[10px] text-rose-500 mt-1">{errors.recipient_phone}</p>
+                    )}
+                  </div>
+
+                  {/* Optional Gift Message / Greeting Note */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-bold text-stone-700 mb-1">
+                      Personalized Gift Message / Note (Optional)
+                    </label>
+                    <div className="relative">
+                      <MessageSquareHeart className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
+                      <textarea
+                        rows={2}
+                        name="giftMessage"
+                        value={recipientData.giftMessage}
+                        onChange={handleRecipientChange}
+                        placeholder="e.g. Wishing you a wonderful festive season! Enjoy these authentic fresh snacks from Binayak Industries."
+                        className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all focus:border-amber-500 resize-none"
+                      />
+                    </div>
+                    <p className="text-[10px] text-stone-400 mt-0.5">
+                      This warm note will be included on the package bill & confirmation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* 2. Delivery Location & Shipping Address */}
             <div className="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200/80 shadow-xs space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-stone-100">
@@ -521,10 +871,14 @@ export default function Checkout() {
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-stone-900">
-                      Delivery Location & Address
+                      {isOrderingForSomeoneElse
+                        ? "Recipient's Delivery Address"
+                        : 'Delivery Location & Address'}
                     </h3>
                     <p className="text-[11px] text-stone-500">
-                      Auto-filled from detected location. You can modify anytime.
+                      {isOrderingForSomeoneElse
+                        ? `Enter where we should deliver snacks to ${recipientData.name ? recipientData.name.trim() : 'the recipient'}.`
+                        : 'Auto-filled from detected location. You can modify anytime.'}
                     </p>
                   </div>
                 </div>
@@ -544,15 +898,107 @@ export default function Checkout() {
                   ) : (
                     <>
                       <LocateFixed className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>📍 Use Live Location Location</span>
+                      <span>📍 Use Live Location</span>
                     </>
                   )}
                 </button>
               </div>
 
+              {/* Informative Note for GPS when Ordering for Someone Else */}
+              {isOrderingForSomeoneElse && (
+                <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80 text-[11px] text-amber-900 flex items-start gap-2">
+                  <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Ordering for someone in another city or area?</strong> Live GPS detects your current phone location. Use the search bar below or type the recipient's house, street, city, and pincode manually.
+                  </span>
+                </div>
+              )}
+
+              {/* 🔍 FREE ONLINE ADDRESS SEARCH AUTOCOMPLETE (OpenStreetMap / Free Geocoding) */}
+              <div ref={addressSearchRef} className="relative">
+                <label className="block text-xs font-bold text-stone-700 mb-1 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-[#003060]">
+                    <Search className="w-3.5 h-3.5 text-[#003060]" />
+                    <span>Search Any Address / Landmark / Area (Free)</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Live Autocomplete
+                  </span>
+                </label>
+                <div className="relative">
+                  <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={addressSearchQuery}
+                    onChange={(e) => {
+                      setAddressSearchQuery(e.target.value);
+                      setShowAddressDropdown(true);
+                    }}
+                    onFocus={() => {
+                      if (addressSearchResults.length > 0) setShowAddressDropdown(true);
+                    }}
+                    placeholder={
+                      isOrderingForSomeoneElse
+                        ? "Search recipient's locality, apartment, landmark, or city (e.g. Khandagiri, Indiranagar, Rohini)..."
+                        : "Search your locality, building, street, or city (e.g. Nayapalli, Koramangala, Malviya Nagar)..."
+                    }
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 bg-stone-50/70 focus:bg-white text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#003060]/20 focus:border-[#003060] transition-all shadow-2xs"
+                  />
+                  {isSearchingAddress ? (
+                    <Loader2 className="w-4 h-4 text-[#003060] animate-spin absolute right-3.5 top-1/2 -translate-y-1/2" />
+                  ) : addressSearchQuery ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAddressSearchQuery('');
+                        setAddressSearchResults([]);
+                        setShowAddressDropdown(false);
+                      }}
+                      className="w-5 h-5 rounded-full bg-stone-200 hover:bg-stone-300 flex items-center justify-center text-stone-600 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  ) : null}
+                </div>
+
+                {/* Floating Autocomplete Suggestions Dropdown */}
+                {showAddressDropdown && addressSearchResults.length > 0 && (
+                  <div className="absolute z-50 left-0 right-0 top-full mt-1.5 bg-white rounded-2xl border border-stone-200 shadow-xl overflow-hidden max-h-60 overflow-y-auto divide-y divide-stone-100 animate-in fade-in duration-200">
+                    <div className="px-3.5 py-1.5 bg-stone-50 text-[10px] font-bold text-stone-500 uppercase tracking-wider flex items-center justify-between">
+                      <span>Matching Locations in India ({addressSearchResults.length})</span>
+                      <span>Click to Auto-fill</span>
+                    </div>
+                    {addressSearchResults.map((item, idx) => {
+                      const title = item.name || item.display_name?.split(',')[0] || 'Location';
+                      const subtitle = item.display_name;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleSelectAddressSuggestion(item)}
+                          className="w-full text-left p-3 hover:bg-[#003060]/5 flex items-start gap-2.5 transition-colors cursor-pointer group"
+                        >
+                          <MapPin className="w-4 h-4 text-[#003060] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                          <div className="min-w-0 flex-1">
+                            <h5 className="text-xs font-bold text-stone-900 line-clamp-1 group-hover:text-[#003060]">
+                              {title}
+                            </h5>
+                            <p className="text-[11px] text-stone-500 line-clamp-1 leading-snug">
+                              {subtitle}
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               {/* Address Type Tabs (Home / Work / Other) */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-stone-500">Save as:</span>
+                <span className="text-xs font-bold text-stone-500">
+                  {isOrderingForSomeoneElse ? "Recipient's Location Type:" : 'Save as:'}
+                </span>
                 <div className="flex items-center gap-1.5">
                   {addressTypes.map((tab) => {
                     const Icon = tab.icon;
@@ -714,7 +1160,10 @@ export default function Checkout() {
                     </span>
                   </div>
                   <p className="text-xs text-stone-600 mt-1 leading-relaxed">
-                    Pay conveniently via <strong>Cash, UPI QR code, or Google Pay</strong> directly to the delivery partner upon inspecting your fresh snack box. No upfront online payment needed!
+                    {isOrderingForSomeoneElse
+                      ? "Pay conveniently via Cash, UPI QR code, or Google Pay directly upon inspecting the fresh snack box at delivery. The recipient or you can pay when the order arrives."
+                      : "Pay conveniently via Cash, UPI QR code, or Google Pay directly to the delivery partner upon inspecting your fresh snack box. No upfront online payment needed!"
+                    }
                   </p>
                 </div>
               </div>
@@ -803,17 +1252,17 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#003865] to-[#005187] hover:from-[#00284d] hover:to-[#003e68] text-white text-sm font-black shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#D79F26] via-[#E0B529] to-[#F5C542] hover:from-[#c58f1f] hover:via-[#d4a520] hover:to-[#e0b030] active:scale-95 text-[#003060] text-sm font-black shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#003060]" />
                     <span>Placing Your Order...</span>
                   </>
                 ) : (
                   <>
-                    <span>Confirm & Place Order (₹{totalAmount})</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>Confirm & Place Order</span>
+                    <ArrowRight className="w-4 h-4 text-[#003060]" />
                   </>
                 )}
               </button>
@@ -834,6 +1283,7 @@ export default function Checkout() {
           </div>
 
         </form>
+        </ScrollReveal>
 
       </div>
 

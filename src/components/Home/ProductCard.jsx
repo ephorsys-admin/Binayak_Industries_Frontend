@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Minus, Clock, Bike, Leaf, Droplets, ShieldCheck, Heart } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { Plus, Minus, Clock, Bike, Leaf, Droplets, ShieldCheck } from 'lucide-react';
 
 const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   if (!product) return null;
 
@@ -17,7 +16,7 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
       ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : 20;
 
-  // Extract primary & alternative hover images
+  // Extract primary image, secondary image, and uploaded GIF
   const rawImages = Array.isArray(product.images)
     ? product.images.map((img) => (typeof img === 'string' ? img : img?.url)).filter(Boolean)
     : [];
@@ -25,39 +24,57 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
   const primaryImage = rawImages[0] || product.image || '';
   const secondaryImage = rawImages[1] || product.secondaryImage || product.hoverImage || null;
 
-  const handleToggleLike = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsLiked(!isLiked);
-    if (!isLiked) {
-      toast.success(`Saved ${product.title || product.name} to your Favorites!`);
-    } else {
-      toast('Removed from Favorites', { icon: '🤍' });
-    }
-  };
+  // Uploaded GIF from device/admin panel
+  const gifUrl =
+    product.gif?.url ||
+    (typeof product.gif === 'string' && product.gif ? product.gif : '') ||
+    product.hoverGif ||
+    null;
+
 
   return (
-    <div className="group relative flex flex-col justify-between bg-white rounded-3xl border-[1.5px] border-[#deb66a]/60 hover:border-[#c59841] shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(197,152,65,0.2)] transition-all duration-500 hover:-translate-y-1.5 overflow-hidden p-3 sm:p-4">
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onTouchCancel={() => setIsHovered(false)}
+      className="group relative flex flex-col justify-between bg-white rounded-3xl border-[1.5px] border-[#deb66a]/60 hover:border-[#c59841] shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(197,152,65,0.2)] transition-all duration-500 hover:-translate-y-1.5 overflow-hidden p-3 sm:p-4"
+    >
 
       {/* Top Media & Content Wrapper */}
       <div className="flex flex-col">
 
-        {/* Top Product Image Container */}
+        {/* Top Product Image / GIF Container */}
         <div className="relative aspect-[16/11] rounded-2xl overflow-hidden bg-slate-950 mb-2.5">
           <Link to={detailUrl} className="block w-full h-full relative">
-            {/* Primary Product Image */}
+
+            {/* Primary Product Static Image */}
             <img
               src={primaryImage}
               alt={product.title || product.name}
-              className={`w-full h-full object-cover transition-all duration-700 ease-out ${secondaryImage
-                  ? 'group-hover:opacity-0 group-hover:scale-105'
-                  : 'group-hover:scale-108'
+              className={`w-full h-full object-cover transition-all duration-300 ease-out ${isHovered && gifUrl
+                  ? 'opacity-0 scale-105'
+                  : secondaryImage
+                    ? 'group-hover:opacity-0 group-hover:scale-105'
+                    : 'group-hover:scale-108'
                 }`}
               loading="lazy"
             />
 
-            {/* Alternative Product Image on Hover */}
-            {secondaryImage && (
+            {/* Uploaded GIF on Hover / Touch (Instantly hides when touch/cursor leaves) */}
+            {gifUrl && (
+              <img
+                src={gifUrl}
+                alt={`${product.title || product.name} Animated GIF`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-out pointer-events-none ${isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
+                  }`}
+                loading="eager"
+              />
+            )}
+
+            {/* Alternative Product Image on Hover (if no GIF) */}
+            {!gifUrl && secondaryImage && (
               <img
                 src={secondaryImage}
                 alt={`${product.title || product.name} Alternate View`}
@@ -70,25 +87,8 @@ const ProductCard = ({ product, onIncrement, onDecrement, onAdd }) => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/20 pointer-events-none" />
           </Link>
 
-          {/* Floating Wishlist Heart (Top Left) */}
-          <button
-            type="button"
-            onClick={handleToggleLike}
-            className="absolute top-2.5 left-2.5 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 hover:bg-white backdrop-blur-md flex items-center justify-center text-stone-700 shadow-md transition-transform hover:scale-110 active:scale-95 cursor-pointer"
-            aria-label="Add to Wishlist"
-          >
-            <Heart
-              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isLiked ? 'text-rose-600 fill-rose-600' : 'text-stone-600'
-                }`}
-            />
-          </button>
-
           {/* Top Right: "Taste of Purity" Calligraphy Script */}
-          <div className="absolute top-2.5 right-2.5 z-10 pointer-events-none">
-            <span className="font-script text-xl sm:text-2xl text-[#f7d794] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] select-none">
-              Taste of Purity
-            </span>
-          </div>
+
 
           {/* Dynamic Golden Curved Wave Separator */}
           <div className="absolute -bottom-[10px] left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
