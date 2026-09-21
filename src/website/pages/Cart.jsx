@@ -147,18 +147,18 @@ const Cart = () => {
               <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
                   <div className="flex items-center gap-2 text-stone-900">
-                    <Truck className="w-4 h-4 text-[#003060]" />
+                    <Truck className="w-4 h-4 text-[#D79F26]" />
                     <span>
                       {subtotal >= freeDeliveryThreshold
                         ? '🎉 You unlocked FREE Pan-India Express Delivery!'
                         : `Add ₹${freeDeliveryThreshold - subtotal} more for FREE Express Delivery!`}
                     </span>
                   </div>
-                  <span className="text-[#003060] font-extrabold">{freeDeliveryProgress}%</span>
+                  <span className="text-[#D79F26] font-extrabold">{freeDeliveryProgress}%</span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-stone-100 overflow-hidden">
+                <div className="w-full h-2.5 rounded-full bg-stone-100 overflow-hidden">
                   <div
-                    className="h-full bg-emerald-600 transition-all duration-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-[#D79F26] via-[#E0B529] to-[#F5C542] transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(215,159,38,0.5)]"
                     style={{ width: `${freeDeliveryProgress}%` }}
                   />
                 </div>
@@ -296,7 +296,7 @@ const Cart = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/checkout')}
-                  className="w-full py-3.5 rounded-full bg-[#003060] hover:bg-[#004060] active:scale-95 text-white text-xs sm:text-sm font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
+                  className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#D79F26] via-[#E0B529] to-[#F5C542] hover:from-[#c58f1f] hover:via-[#d4a520] hover:to-[#e0b030] active:scale-95 text-[#003060] text-xs sm:text-sm font-black shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>Proceed to Order</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

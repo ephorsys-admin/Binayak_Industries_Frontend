@@ -55,6 +55,12 @@ export default function OrderSuccessAnimation({
     };
   }, []);
 
+  const isOrderingForSomeoneElse = Boolean(
+    order?.isOrderingForSomeoneElse || order?.customer?.isOrderingForSomeoneElse
+  );
+  const recipientName =
+    order?.recipient?.name || order?.customer?.recipient?.name || '';
+
   return (
     <div className="fixed inset-0 z-[99999] bg-white flex flex-col items-center justify-center p-6 font-sans text-center overflow-y-auto">
       {/* Container Box */}
@@ -103,15 +109,24 @@ export default function OrderSuccessAnimation({
         >
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider">
             <Sparkles size={14} className="text-emerald-600" />
-            <span>Order Confirmed & Placed</span>
+            <span>
+              {isOrderingForSomeoneElse ? '🎁 Gift Order Confirmed' : 'Order Confirmed & Placed'}
+            </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-black  text-slate-900 tracking-tight">
-            Thank You For Your Order!
+            {isOrderingForSomeoneElse && recipientName
+              ? `Surprise for ${recipientName} is on the way!`
+              : 'Thank You For Your Order!'}
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed font-medium">
-            We have received your order <strong className="text-[#981b2e]">{orderId}</strong>. A confirmation email with your detailed invoice has been sent.
+            We have received your order <strong className="text-amber-700 font-bold">{orderId}</strong>.
+            {isOrderingForSomeoneElse && recipientName ? (
+              <span> Fresh batch snacks will be prepared and delivered directly to <strong>{recipientName}</strong>. A confirmation email and tax invoice have been sent to you.</span>
+            ) : (
+              <span> A confirmation email with your detailed invoice has been sent.</span>
+            )}
           </p>
 
           {/* ORDER SUMMARY MINI BADGE */}
@@ -140,7 +155,7 @@ export default function OrderSuccessAnimation({
           <button
             type="button"
             onClick={handleOpenBill}
-            className="w-full py-3.5 bg-[#981b2e] hover:bg-[#801424] text-white rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-rose-950/20 transition-all cursor-pointer active:scale-98"
+            className="w-full py-3.5 bg-gradient-to-r from-[#D79F26] via-[#E0B529] to-[#F5C542] hover:from-[#c58f1f] hover:via-[#d4a520] hover:to-[#e0b030] text-[#003060] rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-amber-900/10 transition-all cursor-pointer active:scale-98"
           >
             <FileText size={16} /> View & Download Invoice Bill <ArrowRight size={16} />
           </button>
